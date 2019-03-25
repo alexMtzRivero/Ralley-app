@@ -10,6 +10,12 @@ public class MainActivity extends AppCompatActivity implements TimerFragment.OnF
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        QRCodeFragment qrCodeFragment = new QRCodeFragment();
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.fragment_container,qrCodeFragment).commit();
+
+
     }
 
     @Override
