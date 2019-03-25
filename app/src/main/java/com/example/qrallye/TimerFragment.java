@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link TimerFragment.OnFragmentInteractionListener} interface
+ * {@link FragmentCallback} interface
  * to handle interaction events.
  * Use the {@link TimerFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -27,7 +27,7 @@ public class TimerFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private OnFragmentInteractionListener mListener;
+    private FragmentCallback mListener;
 
     public TimerFragment() {
         // Required empty public constructor
@@ -77,8 +77,8 @@ public class TimerFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof FragmentCallback) {
+            mListener = (FragmentCallback) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -101,8 +101,4 @@ public class TimerFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
 }
