@@ -10,12 +10,6 @@ public class MainActivity extends AppCompatActivity implements TimerFragment.OnF
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        TimerFragment timerFragment = new TimerFragment();
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment_container, timerFragment).commit();
-
-
     }
 
     @Override
