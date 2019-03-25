@@ -3,4 +3,11 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+    <color name="appYellow">#FFDD58</color>
+    <color name="appGreen">#64CD81</color>
+    <color name="textColor">#707070</color>
+    <color name="backgroundColor">#F8F4F4</color>
+
+
+
 </resources>
