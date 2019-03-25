@@ -1,28 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/fragment_container"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <fragment
-        android:id="@+id/timerFragment"
+    <include layout="@layout/timer_bar" android:id="@+id/timerBar"/>
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/fragment_container"
+        android:layout_below="@id/timerBar"
+        android:layout_above="@id/navbar"
+        android:layout_centerInParent="true"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:name="com.example.qrallye.TimerFragment">
+        android:layout_height="match_parent">
+    </FrameLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="end"
-            android:gravity="center_vertical"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:text="00:00"
-            android:layout_marginRight="20dp"/>
-
-    </fragment>
-
-
-
-
-</FrameLayout>
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/navbar"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_height="wrap_content"
+        app:menu="@menu/navigation" />
+</RelativeLayout>

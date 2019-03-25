@@ -2,22 +2,29 @@ package com.example.qrallye;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+
+import static android.support.constraint.Constraints.TAG;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link QRCodeFragment.OnFragmentInteractionListener} interface
+ * {@link QRCodeFragment.FragmentCallBack} interface
  * to handle interaction events.
  * Use the {@link QRCodeFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -33,7 +40,7 @@ public class QRCodeFragment extends Fragment {
     private String mParam2;
     private ImageView scan;
 
-    private OnFragmentInteractionListener mListener;
+    private FragmentCallBack mListener;
 
     public QRCodeFragment() {
         // Required empty public constructor
@@ -71,6 +78,7 @@ public class QRCodeFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_qrcode, container, false);
         scan = view.findViewById(R.id.scan);
+        Log.d(TAG, "onCreateView");
         scan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,8 +104,8 @@ public class QRCodeFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof FragmentCallBack) {
+            mListener = (FragmentCallBack) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -110,18 +118,23 @@ public class QRCodeFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode,resultCode,data);
+        Log.d(TAG, "DEBUG M.B onActivityResult ");
+        if (result != null){
+            Log.d(TAG, "DEBUG M.B onActivityResult: QR read ");
+            if (result.getContents() == null){
+                Toast.makeText(getContext(),"pas de data", Toast.LENGTH_LONG).show();
+            }
+            else{
+                Toast.makeText(getContext(), result.getContents(),Toast.LENGTH_LONG).show();
+            }
+        }
+        else{
+            Log.d(TAG, "DEBUG M.B onActivityResult: QR no read");
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }
