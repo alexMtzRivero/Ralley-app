@@ -1,6 +1,5 @@
 package com.example.qrallye;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -11,7 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -24,7 +22,7 @@ import static android.support.constraint.Constraints.TAG;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link QRCodeFragment.FragmentCallBack} interface
+ * {@link QRCodeFragment.FragmentCallback} interface
  * to handle interaction events.
  * Use the {@link QRCodeFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -40,7 +38,7 @@ public class QRCodeFragment extends Fragment {
     private String mParam2;
     private ImageView scan;
 
-    private FragmentCallBack mListener;
+    private FragmentCallback mListener;
 
     public QRCodeFragment() {
         // Required empty public constructor
@@ -104,8 +102,8 @@ public class QRCodeFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof FragmentCallBack) {
-            mListener = (FragmentCallBack) context;
+        if (context instanceof FragmentCallback) {
+            mListener = (FragmentCallback) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
