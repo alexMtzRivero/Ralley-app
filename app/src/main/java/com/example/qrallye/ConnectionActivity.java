@@ -17,12 +17,14 @@ public class ConnectionActivity extends AppCompatActivity {
         final EditText passText = findViewById(R.id.PasswordEdt);
         Button validateBtn = findViewById(R.id.validateBtn);
 
-        if(SessionMGR.isLoged()) goToNext();
+
 
         validateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                   if( SessionMGR.loging(userText.getText().toString(),passText.getText().toString())) goToNext();
+                if(SessionMGR.getInstance().login(userText.getText().toString(),passText.getText().toString())){
+                    goToNext();
+                }
             }
         });
     }

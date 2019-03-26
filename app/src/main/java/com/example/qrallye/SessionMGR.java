@@ -1,55 +1,40 @@
 package com.example.qrallye;
 
-import java.security.Key;
-
-import javax.crypto.Cipher;
-import javax.crypto.spec.SecretKeySpec;
+import android.util.Log;
+import com.example.qrallye.Team;
 
 public class SessionMGR {
-
-    public static Team team;
-
-    public SessionMGR() {
+    private final String TAG = "SessionMGR";
+    private Team team;
+    private static final SessionMGR ourInstance = new SessionMGR();
+    public static SessionMGR getInstance() {
+        return ourInstance;
     }
-    public  static boolean isLoged(){
-        return false;
-    }
-    public static  boolean loging(String user,String password){
 
-        //return password.equals(requirePassOf(user));
-        return true;
-    }
-    public  boolean logout(){
-        return false;
-    }
-    public String getUser(){
-        return "";
-    }
-    public String encript(String text){
-        try {
-            String key = "Bar12345Bar12345"; // 128 bit key
-            // Create key and cipher
-            Key aesKey = new SecretKeySpec(key.getBytes(), "AES");
-            Cipher cipher = Cipher.getInstance("AES");
-            // encrypt the text
-            cipher.init(Cipher.ENCRYPT_MODE, aesKey);
-            byte[] encrypted = cipher.doFinal(text.getBytes());
-
-            System.err.println(new String(encrypted));
-
-            return new String(encrypted);
-
-            // decrypt the text
-            //cipher.init(Cipher.DECRYPT_MODE, aesKey);
-            //String decrypted = new String(cipher.doFinal(encrypted));
-            //System.err.println(decrypted);
+    public CallbackOnTeamFound callbackTeam = new CallbackOnTeamFound() {
+        @Override
+        public void onTeamFound(Team teamRetrieve) {
+            team = teamRetrieve;
+            Log.d(TAG, "callbackCall: sessionTeam color"+team.getColor());
         }
-        catch (Exception e){
-            return "";
+    };
+    private SessionMGR() {
+    }
+
+    public boolean login(String teamName , String password){
+        team = null;
+        DatabaseMGR.getInstance().getTeam("Catsu");
+
+        if(team.getPassword() == Integer.parseInt(password)){
+            return true;
+        }
+        else{
+            return false;
         }
 
+
     }
-    public void setTeam(Team team) {
-        this.team = team;
+    public interface CallbackOnTeamFound {
+        void onTeamFound(Team teamRetrieve);
     }
 }

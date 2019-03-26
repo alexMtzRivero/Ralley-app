@@ -1,14 +1,25 @@
 package com.example.qrallye;
 
 import android.location.Location;
+import android.support.annotation.NonNull;
 import android.util.Log;
+
+import com.example.qrallye.Administrators;
+import com.example.qrallye.Team;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import javax.annotation.Nullable;
 
 
 public class DatabaseMGR {
@@ -22,14 +33,6 @@ public class DatabaseMGR {
     public static DatabaseMGR getInstance() {
         return ourInstance;
     }
-
-    private MyCallback callbackTeam = new MyCallback() {
-        @Override
-        public void callbackCall(Team teamRetrieve) {
-            SessionMGR.team = teamRetrieve;
-            Log.d(TAG, "callbackCall: sessionTeam color"+team.getColor());
-        }
-    };
 
     private DatabaseMGR() {
     }
@@ -50,37 +53,35 @@ public class DatabaseMGR {
         });
     }
 
-    public void getTeam(final String teamName ){
+    public void getTeam(final String teamName){
+        team = null;
         Log.d(TAG, "getTeam: Recherche de la team");
-        teamCollections.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+        DocumentReference teamRef = teamCollections.document(teamName);
+        teamRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                    if(documentSnapshot.getId().compareTo(teamName) == 0){
-                        GeoPoint pos = documentSnapshot.getGeoPoint("pos");
-                        Location position = new Location("");
-                        position.setLongitude(pos.getLongitude());
-                        position.setLatitude(pos.getLatitude());
-                        team = new Team(teamName,
-                                documentSnapshot.getLong("password"),
-                                position,
-                                null,
-                                documentSnapshot.getString("color"),
-                                null,null
-                                );
-                        callbackTeam.callbackCall(team);
-                        Log.d(TAG, "onSuccess: teamcolor "+ team.getColor());
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot doc = task.getResult();
+                    Log.d(TAG, "onComplete: " + doc.getData());
+                    GeoPoint pos = doc.getGeoPoint("pos");
+                    Location position = new Location("");
+                    position.setLongitude(pos.getLongitude());
+                    position.setLatitude(pos.getLatitude());
+                    team = new Team(teamName,
+                            (long)doc.get("password"),
+                            position,
+                            null,
+                            doc.getString("color"),
+                            null,null
+                    );
+                    SessionMGR.getInstance().callbackTeam.onTeamFound(team);
 
-                    }
+                }
+                else{
+                    Log.d(TAG, "onComplete: ERROR");
                 }
             }
         });
+    }
 
-    }
-    public FirebaseFirestore getDb() {
-        return db;
-    }
-    public interface MyCallback {
-        void callbackCall(Team teamRetrieve);
-    }
 }
