@@ -40,12 +40,12 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
                     binding.setSelected((ImageView) findViewById(R.id.navScan));
                     changeFragmentDisplayed(new QRCodeFragment());
                     break;
-                case Progress:
-                    binding.setSelected((ImageView) findViewById(R.id.navProgress));
-                    changeFragmentDisplayed(new MapFragment());
-                    break;
                 case Quizz:
                     binding.setSelected((ImageView) findViewById(R.id.navQuizz));
+                    changeFragmentDisplayed(new QuizzFragment());
+                    break;
+                case Progress:
+                    binding.setSelected((ImageView) findViewById(R.id.navProgress));
                     changeFragmentDisplayed(new MapFragment());
                     break;
             }
@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
                         binding.setSelected((ImageView) view);
                         break;
                     case R.id.navQuizz:
-                        //changeFragmentDisplayed(new UpgradesFragment());
+                        changeFragmentDisplayed(new QuizzFragment());
                         view.setBackgroundColor(getResources().getColor(R.color.navItemSelected));
                         binding.setSelected((ImageView) view);
                         break;
@@ -105,6 +105,11 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    @Override
+    public void onLocationClick(int location) {
+        changeFragmentDisplayed(new QuestionFragment());
     }
 
     @Override
