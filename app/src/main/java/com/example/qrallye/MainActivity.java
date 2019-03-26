@@ -11,11 +11,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Choreographer;
+import android.view.View;
+import android.widget.ImageView;
 
 import com.example.qrallye.databinding.NavigationBarBinding;
 
 public class MainActivity extends AppCompatActivity implements FragmentCallback {
 
+    private final String TAG = "MainActivity";
     public enum fragmentDisplayed{
         Map, Scan, Progress, Quizz
     }
@@ -28,8 +31,7 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
 
         QRCodeFragment qrCodeFragment = new QRCodeFragment();
         DatabaseMGR.getInstance().getAdmin();
-        Team team = DatabaseMGR.getInstance().getTeam("Catsu");
-        Log.d(TAG, "onCreate: team password "+team.getPassword());
+        DatabaseMGR.getInstance().getTeam("Catsu");
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_container,qrCodeFragment,"TAG_QRCODE").commit();
         Intent intent = getIntent();

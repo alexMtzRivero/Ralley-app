@@ -23,6 +23,14 @@ public class DatabaseMGR {
         return ourInstance;
     }
 
+    private MyCallback callbackTeam = new MyCallback() {
+        @Override
+        public void callbackCall(Team teamRetrieve) {
+            SessionMGR.team = teamRetrieve;
+            Log.d(TAG, "callbackCall: sessionTeam color"+team.getColor());
+        }
+    };
+
     private DatabaseMGR() {
     }
 
@@ -42,7 +50,7 @@ public class DatabaseMGR {
         });
     }
 
-    public Team getTeam(final String teamName ){
+    public void getTeam(final String teamName ){
         Log.d(TAG, "getTeam: Recherche de la team");
         teamCollections.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
@@ -60,6 +68,7 @@ public class DatabaseMGR {
                                 documentSnapshot.getString("color"),
                                 null,null
                                 );
+                        callbackTeam.callbackCall(team);
                         Log.d(TAG, "onSuccess: teamcolor "+ team.getColor());
 
                     }
@@ -67,9 +76,11 @@ public class DatabaseMGR {
             }
         });
 
-        return team;
     }
     public FirebaseFirestore getDb() {
         return db;
+    }
+    public interface MyCallback {
+        void callbackCall(Team teamRetrieve);
     }
 }

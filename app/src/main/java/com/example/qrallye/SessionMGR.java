@@ -7,6 +7,8 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class SessionMGR {
 
+    public static Team team;
+
     public SessionMGR() {
     }
     public  static boolean isLoged(){
@@ -46,5 +48,8 @@ public class SessionMGR {
             return "";
         }
 
+    }
+    public void setTeam(Team team) {
+        this.team = team;
     }
 }
