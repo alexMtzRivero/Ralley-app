@@ -10,7 +10,7 @@ import java.util.Date;
 public class Team {
     private String name;
     private long password;
-    private GeoPoint position;
+    private Location position;
     private Color colorB;
     private String color;
     private Date startTimer;
@@ -33,11 +33,11 @@ public class Team {
         this.password = password;
     }
 
-    public GeoPoint getPosition() {
+    public Location getPosition() {
         return position;
     }
 
-    public void setPosition(GeoPoint position) {
+    public void setPosition(Location position) {
         this.position = position;
     }
 
@@ -77,7 +77,7 @@ public class Team {
     public Team(){
     }
 
-    public Team(String name, long password, GeoPoint position, Color colorB, String color, Date startTimer, Date endTimer) {
+    public Team(String name, long password, Location position, Color colorB, String color, Date startTimer, Date endTimer) {
         this.name = name;
         this.password = password;
         this.position = position;

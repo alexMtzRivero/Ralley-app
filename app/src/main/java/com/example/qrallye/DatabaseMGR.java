@@ -14,13 +14,11 @@ import com.google.firebase.firestore.QuerySnapshot;
 public class DatabaseMGR {
     private final String TAG = "DatabaseMGR";
     private static final DatabaseMGR ourInstance = new DatabaseMGR();
-
-
-
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference adminCollections = db.collection("Administrators");
     private CollectionReference teamCollections = db.collection("Groups");
     private CollectionReference quizzesCollections = db.collection("Quizzes");
+    private Team team;
     public static DatabaseMGR getInstance() {
         return ourInstance;
     }
@@ -44,28 +42,32 @@ public class DatabaseMGR {
         });
     }
 
-    public void getTeam(final String teamName){
+    public Team getTeam(final String teamName ){
         Log.d(TAG, "getTeam: Recherche de la team");
         teamCollections.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                     if(documentSnapshot.getId().compareTo(teamName) == 0){
-                        
-                        GeoPoint pos = documentSnapshot.getGeoPoint("position");
+                        GeoPoint pos = documentSnapshot.getGeoPoint("pos");
                         Location position = new Location("");
                         position.setLongitude(pos.getLongitude());
                         position.setLatitude(pos.getLatitude());
-                        Team team = new Team(teamName,
+                        team = new Team(teamName,
                                 documentSnapshot.getLong("password"),
+                                position,
+                                null,
+                                documentSnapshot.getString("color"),
+                                null,null
                                 );
-                       /*Team team = documentSnapshot.toObject(Team.class);*/
                         Log.d(TAG, "onSuccess: teamcolor "+ team.getColor());
+
                     }
                 }
             }
         });
 
+        return team;
     }
     public FirebaseFirestore getDb() {
         return db;
