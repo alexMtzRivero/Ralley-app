@@ -12,7 +12,7 @@ public class ConnectionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_connection);
 
-        findViewById(R.id.connectBtn).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.validateBtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(getApplicationContext(), RulesActivity.class));
