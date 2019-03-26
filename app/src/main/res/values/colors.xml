@@ -7,6 +7,8 @@
     <color name="appGreen">#64CD81</color>
     <color name="textColor">#707070</color>
     <color name="backgroundColor">#F8F4F4</color>
+    <color name="navItemSelected">#dbdbdb</color>
+    <color name="white">#ffffff</color>
 
 
 

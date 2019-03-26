@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/maap" android:icon="@drawable/ic_carte" android:title="Maap" />
-    <item android:id="@+id/scan" android:icon="@drawable/ic_scan" android:title="Scan" />
-    <item android:id="@+id/rules" android:icon="@drawable/ic_regles" android:title="Rules" />
-    <item android:id="@+id/status" android:icon="@drawable/ic_coureur" android:title="Status" />
-    <item android:id="@+id/home" android:icon="@drawable/ic_accueil" android:title="Home" />
-</menu>
