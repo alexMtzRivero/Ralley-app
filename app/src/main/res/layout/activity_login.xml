@@ -27,7 +27,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sécurité"
+            android:text="Connexion"
             android:textStyle="bold"
             android:textSize="39dp"
             />
@@ -35,20 +35,47 @@
 
     </LinearLayout>
 
-    <TextView
+    <LinearLayout
         android:id="@+id/rules"
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:orientation="vertical"
         android:layout_marginTop="10dp"
         android:layout_weight="4"
         android:textAlignment="center"
         android:layout_margin="16dp"
-        android:layout_below="@+id/title"
-        android:text=" Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis mattis faucibus libero vitae ultricies. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer auctor malesuada dapibus. Maecenas lobortis consequat nibh eget mattis. Quisque ut tincidunt enim. Maecenas cursus diam sit amet ligula egestas, at aliquam turpis consectetur. Sed vel neque at massa dapibus pharetra id eget ligula. Integer auctor tincidunt accumsan.
+        android:layout_below="@+id/title">
 
-Nunc et tincidunt lacus, a euismod leo. Praesent libero enim, dictum eu posuere nec, semper ut purus. Quisque id nulla ut ipsum laoreet sagittis. Suspendisse auctor mi lectus, sit amet euismod dui dapibus vulputate. Quisque viverra, ante vitae viverra condimentum, enim elit dictum mauris, ut ultricies enim libero eget metus. Fusce purus mi, mattis porta molestie at, facilisis nec massa. Fusce justo lectus, accumsan at augue eget, dictum venenatis sem. Proin id pulvinar lacus. In varius, justo placerat aliquet finibus, sem ex sagittis velit, eget ullamcorper sapien sem et arcu. Maecenas suscipit ligula eleifend dui laoreet, vitae pulvinar ex pretium. Donec dictum a ligula in efficitur. Suspendisse id volutpat dolor. Vestibulum vel leo quis odio sagittis tempus sit amet et ante. Sed auctor dui non dapibus sodales."/>
-    <Button
-        android:id="@+id/acceptRulesBtn"
+
+        <EditText
+            android:id="@+id/UserEdt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:textColor="@color/textColor"
+            android:layout_marginTop="30dp"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="12dp"
+            android:autoSizeMaxTextSize="39dp"
+            android:autoSizeStepGranularity="2dp"
+            android:layout_marginBottom="60dp"
+            android:inputType="textPersonName"
+            android:text="Name" />
+
+        <EditText
+            android:id="@+id/PasswordEdt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="12dp"
+            android:autoSizeMaxTextSize="39dp"
+            android:autoSizeStepGranularity="2dp"
+            android:hint="mot de pass"
+            android:ems="10"
+            android:inputType="textPassword" />
+    </LinearLayout>
+        <Button
+        android:id="@+id/validateBtn"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_weight="1"
@@ -62,6 +89,6 @@ Nunc et tincidunt lacus, a euismod leo. Praesent libero enim, dictum eu posuere 
         android:layout_margin="16dp"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
-        android:text="Accepter"/>
+        android:text="Valider"/>
 
 </LinearLayout>
