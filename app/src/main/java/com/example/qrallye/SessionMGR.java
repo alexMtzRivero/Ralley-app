@@ -13,6 +13,8 @@ public class SessionMGR {
         return false;
     }
     public static  boolean loging(String user,String password){
+
+        //return password.equals(requirePassOf(user));
         return true;
     }
     public  boolean logout(){
