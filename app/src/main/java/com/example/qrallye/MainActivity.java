@@ -15,14 +15,45 @@ import com.example.qrallye.databinding.NavigationBarBinding;
 
 public class MainActivity extends AppCompatActivity implements FragmentCallback {
 
+    public enum fragmentDisplayed{
+        Map, Scan, Progress, Quizz
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+
         final NavigationBarBinding binding = DataBindingUtil.bind((findViewById(R.id.navbar)));
-        binding.setSelected((ImageView) findViewById(R.id.navMap));
-        changeFragmentDisplayed(new MapFragment());
+
+        if (bundle != null && bundle.get("fragmentType") != null){
+            switch ((fragmentDisplayed)bundle.get("fragmentType")){
+                case Map:
+                    binding.setSelected((ImageView) findViewById(R.id.navMap));
+                    changeFragmentDisplayed(new MapFragment());
+                    break;
+                case Scan:
+                    binding.setSelected((ImageView) findViewById(R.id.navScan));
+                    changeFragmentDisplayed(new QRCodeFragment());
+                    break;
+                case Progress:
+                    binding.setSelected((ImageView) findViewById(R.id.navProgress));
+                    changeFragmentDisplayed(new MapFragment());
+                    break;
+                case Quizz:
+                    binding.setSelected((ImageView) findViewById(R.id.navQuizz));
+                    changeFragmentDisplayed(new MapFragment());
+                    break;
+            }
+        }else{
+            binding.setSelected((ImageView) findViewById(R.id.navMap));
+            changeFragmentDisplayed(new MapFragment());
+        }
+
 
         View.OnClickListener navItemClickListener = new View.OnClickListener() {
             @Override
