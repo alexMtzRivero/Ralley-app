@@ -18,7 +18,6 @@ import android.widget.Toast;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
-import static android.support.constraint.Constraints.TAG;
 
 
 /**
@@ -34,6 +33,7 @@ public class QRCodeFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private final String TAG ="QRCodeFragment";
 
     // TODO: Rename and change types of parameters
     private String mParam1;

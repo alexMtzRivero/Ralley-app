@@ -16,6 +16,8 @@ public class MainActivity extends AppCompatActivity implements FragmentCallBack 
         setContentView(R.layout.activity_main);
 
         QRCodeFragment qrCodeFragment = new QRCodeFragment();
+        DatabaseMGR.getInstance().getAdmin();
+        DatabaseMGR.getInstance().getTeam("Catsu");
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_container,qrCodeFragment,"TAG_QRCODE").commit();
 

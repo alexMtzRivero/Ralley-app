@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
+import com.google.firebase.database.DatabaseReference;
+
 public class RulesActivity extends AppCompatActivity {
 
     @Override
