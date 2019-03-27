@@ -57,7 +57,7 @@
             android:layout_marginTop="30dp"
             android:textSize="40sp"
             android:layout_marginBottom="60dp"
-            android:inputType="textPersonName"
+            android:inputType="text"
             android:hint="@string/name" />
 
         <EditText
@@ -67,7 +67,7 @@
             android:textSize="40sp"
             android:hint="@string/password"
             android:ems="10"
-            android:inputType="textPassword" />
+            android:inputType="numberPassword" />
     </LinearLayout>
     <Button
         android:id="@+id/validateBtn"

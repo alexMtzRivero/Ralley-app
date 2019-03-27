@@ -13,7 +13,7 @@ public class ConnectionActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_connection);
         final EditText userText = findViewById(R.id.UserEdt);
         final EditText passText = findViewById(R.id.PasswordEdt);
         Button validateBtn = findViewById(R.id.validateBtn);
@@ -46,7 +46,7 @@ public class ConnectionActivity extends AppCompatActivity {
         startActivity(new Intent(getApplicationContext(), RulesActivity.class));
     }
     public  void notifyWrongPasword(){
-        Toast.makeText(getApplicationContext(),"wrong pasword",Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(),"wrong password",Toast.LENGTH_SHORT).show();
     }
     public  void notifyWrongUserName(){
         Toast.makeText(getApplicationContext(),"wrong username",Toast.LENGTH_SHORT).show();
