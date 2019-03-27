@@ -119,7 +119,7 @@ public class DatabaseMGR {
                 }
                 else
                 {
-
+                    Log.d(TAG, "onComplete: FAILED GET");
                 }
             }
         });
@@ -153,6 +153,6 @@ public class DatabaseMGR {
         Map<String,Object> toPush = new HashMap<>();
         toPush.put("endQuiz", FieldValue.serverTimestamp());
         toPush.put("choices", choices);
-        teamCollections.document(tmpTeam.getName()).collection("Answers").document(quizName).set(toPush);
+        teamCollections.document(tmpTeam.getName()).collection("Answers").document(quizName).update(toPush);
     }
 }
