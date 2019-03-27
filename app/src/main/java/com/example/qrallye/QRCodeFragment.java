@@ -116,25 +116,4 @@ public class QRCodeFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
-
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        IntentResult result = IntentIntegrator.parseActivityResult(requestCode,resultCode,data);
-        Log.d(TAG, "DEBUG M.B onActivityResult fragement ");
-        if (result != null){
-            Log.d(TAG, "DEBUG M.B onActivityResult: QR read ");
-            if (result.getContents() == null){
-                Toast.makeText(getContext(),"pas de data", Toast.LENGTH_LONG).show();
-            }
-            else{
-                DatabaseMGR.getInstance().getQuestionsFromQuiz(result.getContents());
-                Toast.makeText(getContext(), result.getContents(),Toast.LENGTH_LONG).show();
-            }
-        }
-        else{
-            Log.d(TAG, "DEBUG M.B onActivityResult: QR no read");
-            super.onActivityResult(requestCode, resultCode, data);
-        }
-    }
 }

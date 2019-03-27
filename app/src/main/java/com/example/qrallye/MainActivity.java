@@ -15,6 +15,8 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.example.qrallye.databinding.NavigationBarBinding;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 public class MainActivity extends AppCompatActivity implements FragmentCallback {
 
@@ -44,12 +46,12 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
                     binding.setSelected((ImageView) findViewById(R.id.navScan));
                     changeFragmentDisplayed(new QRCodeFragment(),"TAG_QRCODE");
                     break;
-                case Progress:
-                    binding.setSelected((ImageView) findViewById(R.id.navProgress));
-                    changeFragmentDisplayed(new MapFragment());
-                    break;
                 case Quizz:
                     binding.setSelected((ImageView) findViewById(R.id.navQuizz));
+                    changeFragmentDisplayed(new QuizzFragment());
+                    break;
+                case Progress:
+                    binding.setSelected((ImageView) findViewById(R.id.navProgress));
                     changeFragmentDisplayed(new MapFragment());
                     break;
             }
@@ -74,12 +76,12 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
                         binding.setSelected((ImageView) view);
                         break;
                     case R.id.navQuizz:
-                        //changeFragmentDisplayed(new UpgradesFragment());
+                        changeFragmentDisplayed(new QuizzFragment());
                         view.setBackgroundColor(getResources().getColor(R.color.navItemSelected));
                         binding.setSelected((ImageView) view);
                         break;
                     case R.id.navProgress:
-                        //changeFragmentDisplayed(new UpgradesFragment());
+                        changeFragmentDisplayed(new ProgressFragment());
                         view.setBackgroundColor(getResources().getColor(R.color.navItemSelected));
                         binding.setSelected((ImageView) view);
                         break;
@@ -119,14 +121,25 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
     }
 
     @Override
+    public void onLocationClick(int location) {
+        changeFragmentDisplayed(new QuestionFragment());
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         Log.d(TAG, "DEBUG M.B onActivityResult Main");
         Fragment fragment = getSupportFragmentManager().findFragmentByTag("TAG_QRCODE");
+        QuestionFragment questionFragment = new QuestionFragment();
         if(fragment != null){
+            IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
             Log.d(TAG, "DEBUG M.B onActivityResult fragment found  ");
-            fragment.onActivityResult(requestCode,resultCode,data);
+            questionFragment = new QuestionFragment();
+            Bundle args = new Bundle();
+            args.putString("key", result.getContents());
+            questionFragment.setArguments(args);
         }
         super.onActivityResult(requestCode, resultCode, data);
+        changeFragmentDisplayed(questionFragment);
     }
 
 }

@@ -6,4 +6,6 @@ public interface FragmentCallback {
 
     void onFragmentInteraction(Uri uri);
 
+    void onLocationClick(int location);
+
 }

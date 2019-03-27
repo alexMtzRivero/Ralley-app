@@ -112,6 +112,8 @@ public class DatabaseMGR {
                             Log.d(TAG, "onComplete: question "+tmp.getQuestion());
                             QuizMGR.getInstance().addQuestion(tmp);
                         }
+                        QuizMGR.getInstance().onQuestionListRetrieved();
+
                     }
                     else {
                         Log.d(TAG, "onComplete: ERREUR RECUPERATION QUESTIONS");
@@ -146,7 +148,28 @@ public class DatabaseMGR {
 
         return quizList;
     }
+    public ArrayList<String> getListOfQuiz(final QuizzFragment quizzFragment){
+        final ArrayList<String> quizList = new ArrayList<>();
+        quizzesCollections.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    if(task.getResult() != null){
+                        for (QueryDocumentSnapshot snapshot : task.getResult()) {
+                            quizList.add(snapshot.getId());
+                        }
+                        quizzFragment.onListRecived(quizList);
+                        Log.d(TAG, "onComplete: list "+ quizList);
+                    }
+                    else{
+                        Log.d(TAG, "onComplete: getListOfQuiz = ERROR");
+                    }
+                }
+            }
+        });
 
+        return quizList;
+    }
     public void pushAnswersForQuiz(String quizName, ArrayList choices ){
         Team tmpTeam = SessionMGR.getInstance().getLogedTeam();
         QuizMGR.getInstance().setCurrentQuiz("");

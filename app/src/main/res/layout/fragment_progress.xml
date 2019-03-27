@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    android:background="@color/backgroundColor"
+    android:weightSum="20">
+    <LinearLayout
+        android:layout_marginVertical="32dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_weight="3"
+        android:gravity="center"
+        android:background="#ffffff"
+        android:weightSum="10"
+        android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:weightSum="30"
+            android:layout_weight="7">
+            <View
+                android:layout_width="100dp"
+                android:layout_height="1dp"
+                android:layout_weight="2"
+                android:background="@color/appYellow"/>
+            <TextView
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_weight="20"
+                android:textStyle="bold"
+                android:text="Avancement"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="20dp"
+                android:autoSizeMaxTextSize="40dp"
+                android:autoSizeStepGranularity="1dp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="17"
+        tools:listitem="@layout/progress_list_item"/>
+
+</LinearLayout>
