@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Chronometer;
 import android.widget.TextView;
 
 import com.example.qrallye.databinding.ResponseListItemBinding;
@@ -85,6 +86,12 @@ public class QuestionFragment extends Fragment {
             questions = QuizMGR.getInstance().getQuestionList();
             index = 0;
             updateQuestion();
+
+            TextView QuizzNameView = getActivity().findViewById(R.id.quizzName);
+            QuizzNameView.setText(QuizMGR.getInstance().getCurrentQuiz());
+
+            Chronometer chronometer = getView().findViewById(R.id.quizzTimer);
+            chronometer.start();
         }
 
         @Override
@@ -97,10 +104,11 @@ public class QuestionFragment extends Fragment {
     }
 
     private void updateQuestion() {
-        RecyclerView recyclerView = getView().findViewById(R.id.responsesList);
-        ArrayList responses = new ArrayList();
         TextView questionView = getActivity().findViewById(R.id.questionText);
         questionView.setText(questions.get(index).getQuestion());
+
+        RecyclerView recyclerView = getView().findViewById(R.id.responsesList);
+        ArrayList responses = new ArrayList();
         responses.addAll(questions.get(index).getChoices());
         ResponsesListAdapter responsesListAdapter = new ResponsesListAdapter(responses);
         recyclerView.setAdapter(responsesListAdapter);
@@ -184,6 +192,7 @@ public class QuestionFragment extends Fragment {
             updateQuestion();
         }else{
             DatabaseMGR.getInstance().pushAnswersForQuiz(QuizMGR.getInstance().getCurrentQuiz(), responses);
+            mListener.onQuizzFinish();
         }
     }
 }

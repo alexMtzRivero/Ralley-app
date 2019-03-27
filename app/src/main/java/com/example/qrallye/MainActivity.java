@@ -126,6 +126,11 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
     }
 
     @Override
+    public void onQuizzFinish() {
+        changeFragmentDisplayed(new MapFragment());
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         Log.d(TAG, "DEBUG M.B onActivityResult Main");
         Fragment fragment = getSupportFragmentManager().findFragmentByTag("TAG_QRCODE");
