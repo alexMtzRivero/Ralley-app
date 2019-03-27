@@ -22,7 +22,7 @@ public class Question {
         this.choices = choices;
     }
 
-    public int getGoodAnswer() {
+   public int getGoodAnswer() {
         return goodAnswer;
     }
 
