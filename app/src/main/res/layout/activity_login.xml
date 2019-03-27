@@ -54,7 +54,10 @@
             android:ems="10"
             android:textColor="@color/textColor"
             android:layout_marginTop="30dp"
-            android:textSize="40dp"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="12dp"
+            android:autoSizeMaxTextSize="39dp"
+            android:autoSizeStepGranularity="2dp"
             android:layout_marginBottom="60dp"
             android:inputType="textPersonName"
             android:text="Name" />
@@ -63,10 +66,13 @@
             android:id="@+id/PasswordEdt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="40dp"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="12dp"
+            android:autoSizeMaxTextSize="39dp"
+            android:autoSizeStepGranularity="2dp"
             android:hint="mot de pass"
             android:ems="10"
-            android:inputType="textPassword" />
+            android:inputType="numberPassword" />
     </LinearLayout>
         <Button
         android:id="@+id/validateBtn"
@@ -74,7 +80,10 @@
         android:layout_height="1dp"
         android:layout_weight="1"
         android:background="@color/backgroundColor"
-        android:textSize="40dp"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="12dp"
+        android:autoSizeMaxTextSize="39dp"
+        android:autoSizeStepGranularity="2dp"
         android:textStyle="bold"
         android:textColor="@color/textColor"
         android:layout_margin="16dp"

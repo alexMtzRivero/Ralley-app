@@ -98,15 +98,6 @@ public class QuizzFragment extends Fragment {
         // Replace the contents of a view (invoked by the layout manager)
         @Override
         public void onBindViewHolder(MyViewHolder holder, final int position) {
-            if(position != 0){
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        mListener.onLocationClick(position);
-                    }
-                });
-            }
-
         }
 
         // Return the size of your dataset (invoked by the layout manager)

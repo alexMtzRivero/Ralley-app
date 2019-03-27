@@ -16,13 +16,12 @@ import android.widget.Toast;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
-import static android.support.constraint.Constraints.TAG;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link QRCodeFragment.FragmentCallback} interface
+ * {@link FragmentCallback} interface
  * to handle interaction events.
  * Use the {@link QRCodeFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -32,6 +31,7 @@ public class QRCodeFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private final String TAG ="QRCodeFragment";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -114,25 +114,5 @@ public class QRCodeFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
-
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        IntentResult result = IntentIntegrator.parseActivityResult(requestCode,resultCode,data);
-        Log.d(TAG, "DEBUG M.B onActivityResult ");
-        if (result != null){
-            Log.d(TAG, "DEBUG M.B onActivityResult: QR read ");
-            if (result.getContents() == null){
-                Toast.makeText(getContext(),"pas de data", Toast.LENGTH_LONG).show();
-            }
-            else{
-                Toast.makeText(getContext(), result.getContents(),Toast.LENGTH_LONG).show();
-            }
-        }
-        else{
-            Log.d(TAG, "DEBUG M.B onActivityResult: QR no read");
-            super.onActivityResult(requestCode, resultCode, data);
-        }
     }
 }
