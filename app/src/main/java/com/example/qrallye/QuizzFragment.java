@@ -6,12 +6,14 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 
@@ -26,7 +28,9 @@ import java.util.ArrayList;
 public class QuizzFragment extends Fragment {
 
     private FragmentCallback mListener;
-
+    ArrayList<String> list = new ArrayList<>();
+    LocationsListAdapter locationsListAdapter;
+    RecyclerView recyclerView;
     public QuizzFragment() {
     }
 
@@ -39,9 +43,10 @@ public class QuizzFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_quizz, container, false);
-        RecyclerView recyclerView = view.findViewById(R.id.locationsList);
-        String[] list = {"", "", "", "", "", "", ""};
-        LocationsListAdapter locationsListAdapter = new LocationsListAdapter(list);
+        recyclerView = view.findViewById(R.id.locationsList);
+
+        DatabaseMGR.getInstance().getListOfQuiz(this);
+        locationsListAdapter = new LocationsListAdapter(list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(locationsListAdapter);
         return view;
@@ -57,6 +62,15 @@ public class QuizzFragment extends Fragment {
                     + " must implement OnFragmentInteractionListener");
         }
     }
+    public void  onListRecived(ArrayList<String> list){
+        Log.e("desde quizz",""+list);
+
+        for (String item:
+             list) {
+            this.list.add(item);
+        }
+        locationsListAdapter.notifyDataSetChanged();
+    }
 
     @Override
     public void onDetach() {
@@ -65,7 +79,7 @@ public class QuizzFragment extends Fragment {
     }
 
     class LocationsListAdapter extends RecyclerView.Adapter<LocationsListAdapter.MyViewHolder> {
-        private String[] mDataset;
+        private ArrayList<String> mDataset;
 
         // Provide a reference to the views for each data item
         // Complex data items may need more than one view per item, and
@@ -78,7 +92,7 @@ public class QuizzFragment extends Fragment {
         }
 
         // Provide a suitable constructor (depends on the kind of dataset)
-        public LocationsListAdapter(String[] myDataset) {
+        public LocationsListAdapter(ArrayList<String> myDataset) {
             mDataset = myDataset;
         }
 
@@ -103,7 +117,7 @@ public class QuizzFragment extends Fragment {
         // Return the size of your dataset (invoked by the layout manager)
         @Override
         public int getItemCount() {
-            return mDataset.length;
+            return mDataset.size();
         }
 
         @Override
