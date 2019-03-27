@@ -89,13 +89,10 @@ public class DatabaseMGR {
         });
     }
 
-    // FONCTION POUR LA DATE : FieldValue.serverTimestamp()
-
     public void getQuestionsFromQuiz(String quizName){
 
         Team tmpTeam = SessionMGR.getInstance().getLogedTeam();
         QuizMGR.getInstance().setCurrentQuiz(quizName);
-        getListOfQuiz();
         Map<String,Object> toPush = new HashMap<>();
         toPush.put("startQuiz", FieldValue.serverTimestamp());
         teamCollections.document(tmpTeam.getName()).collection("Answers").document(quizName).set(toPush);
@@ -148,5 +145,14 @@ public class DatabaseMGR {
         });
 
         return quizList;
+    }
+
+    public void pushAnswersForQuiz(String quizName, ArrayList choices ){
+        Team tmpTeam = SessionMGR.getInstance().getLogedTeam();
+        QuizMGR.getInstance().setCurrentQuiz("");
+        Map<String,Object> toPush = new HashMap<>();
+        toPush.put("endQuiz", FieldValue.serverTimestamp());
+        toPush.put("choices", choices);
+        teamCollections.document(tmpTeam.getName()).collection("Answers").document(quizName).set(toPush);
     }
 }
