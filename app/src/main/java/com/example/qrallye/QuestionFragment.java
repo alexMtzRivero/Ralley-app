@@ -9,9 +9,11 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Chronometer;
 import android.widget.TextView;
 
 import com.example.qrallye.databinding.ResponseListItemBinding;
@@ -30,18 +32,8 @@ import java.util.List;
  */
 public class QuestionFragment extends Fragment {
 
-    public class Response{
-        private int position;
-        private String response;
-
-        Response(int position, String response){
-            this.position = position;
-            this.response = response;
-        }
-    }
-
     private FragmentCallback mListener;
-    private ArrayList<Response> responses;
+    private ArrayList<Integer> responses;
     private ArrayList<Question> questions;
     private int index;
 
@@ -55,6 +47,7 @@ public class QuestionFragment extends Fragment {
         super.onCreate(savedInstanceState);
         DatabaseMGR.getInstance().getQuestionsFromQuiz(getArguments().getString("key"));
         responses = new ArrayList<>();
+        questions = new ArrayList<>();
     }
 
     @Override
@@ -89,9 +82,16 @@ public class QuestionFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String result) {
+            Log.d("test", "onPostExecute: ");
             questions = QuizMGR.getInstance().getQuestionList();
             index = 0;
             updateQuestion();
+
+            TextView QuizzNameView = getActivity().findViewById(R.id.quizzName);
+            QuizzNameView.setText(QuizMGR.getInstance().getCurrentQuiz());
+
+            Chronometer chronometer = getView().findViewById(R.id.quizzTimer);
+            chronometer.start();
         }
 
         @Override
@@ -104,10 +104,11 @@ public class QuestionFragment extends Fragment {
     }
 
     private void updateQuestion() {
-        RecyclerView recyclerView = getView().findViewById(R.id.responsesList);
-        ArrayList responses = new ArrayList();
         TextView questionView = getActivity().findViewById(R.id.questionText);
         questionView.setText(questions.get(index).getQuestion());
+
+        RecyclerView recyclerView = getView().findViewById(R.id.responsesList);
+        ArrayList responses = new ArrayList();
         responses.addAll(questions.get(index).getChoices());
         ResponsesListAdapter responsesListAdapter = new ResponsesListAdapter(responses);
         recyclerView.setAdapter(responsesListAdapter);
@@ -170,7 +171,7 @@ public class QuestionFragment extends Fragment {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            validateQuestion(position, mDataset.get(position));
+                            validateQuestion(position);
                         }
                     }, 500);
                 }
@@ -184,13 +185,14 @@ public class QuestionFragment extends Fragment {
         }
     }
 
-    private void validateQuestion(int position, String response){
-        responses.add(new Response(position, response));
+    private void validateQuestion(int position){
+        responses.add(position);
         index++;
         if(index < questions.size()){
             updateQuestion();
         }else{
-
+            DatabaseMGR.getInstance().pushAnswersForQuiz(QuizMGR.getInstance().getCurrentQuiz(), responses);
+            mListener.onQuizzFinish();
         }
     }
 }

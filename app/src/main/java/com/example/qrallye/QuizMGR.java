@@ -19,7 +19,6 @@ public class QuizMGR {
         questionList = new ArrayList<>();
     }
     public boolean isAtGoodPostion(){
-
         return  true;
     }
 
@@ -32,15 +31,18 @@ public class QuizMGR {
         questionList.add(question);
     }
 
-    public void onQuestionListRetrieved(){
-        complete = true;
-    }
-
     public String getCurrentQuiz() {
         return currentQuiz;
     }
 
     public void setCurrentQuiz(String currentQuiz) {
+
         this.currentQuiz = currentQuiz;
+        this.questionList = new ArrayList<>();
+        this.complete = false;
+    }
+
+    public void onQuestionListRetrieved(){
+        complete = true;
     }
 }

@@ -8,4 +8,6 @@ public interface FragmentCallback {
 
     void onLocationClick(int location);
 
+    void onQuizzFinish();
+
 }

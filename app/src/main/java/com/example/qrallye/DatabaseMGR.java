@@ -172,10 +172,10 @@ public class DatabaseMGR {
     }
     public void pushAnswersForQuiz(String quizName, ArrayList choices ){
         Team tmpTeam = SessionMGR.getInstance().getLogedTeam();
-        QuizMGR.getInstance().setCurrentQuiz("");
         Map<String,Object> toPush = new HashMap<>();
         toPush.put("endQuiz", FieldValue.serverTimestamp());
         toPush.put("choices", choices);
         teamCollections.document(tmpTeam.getName()).collection("Answers").document(quizName).update(toPush);
+        QuizMGR.getInstance().setCurrentQuiz("");
     }
 }
