@@ -8,15 +8,16 @@ public class QuizMGR {
     private ArrayList<Question> questionList;
     public boolean complete = false;
 
+    private String currentQuiz = "";
+
     public static QuizMGR getInstance() {
         return ourInstance;
     }
+
     private QuizMGR() {
         questionList = new ArrayList<>();
     }
-
     public boolean isAtGoodPostion(){
-
         return  true;
     }
 
@@ -27,6 +28,17 @@ public class QuizMGR {
 
     public void addQuestion(Question question){
         questionList.add(question);
+    }
+
+    public String getCurrentQuiz() {
+        return currentQuiz;
+    }
+
+    public void setCurrentQuiz(String currentQuiz) {
+
+        this.currentQuiz = currentQuiz;
+        this.questionList = new ArrayList<>();
+        this.complete = false;
     }
 
     public void onQuestionListRetrieved(){

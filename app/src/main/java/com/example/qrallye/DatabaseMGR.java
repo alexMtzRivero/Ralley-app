@@ -4,22 +4,23 @@ import android.location.Location;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.example.qrallye.Administrators;
-import com.example.qrallye.Team;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 public class DatabaseMGR {
@@ -88,9 +89,14 @@ public class DatabaseMGR {
         });
     }
 
-    // FONCTION POUR LA DATE : FieldValue.serverTimestamp()
-
     public void getQuestionsFromQuiz(String quizName){
+
+        Team tmpTeam = SessionMGR.getInstance().getLogedTeam();
+        QuizMGR.getInstance().setCurrentQuiz(quizName);
+        Map<String,Object> toPush = new HashMap<>();
+        toPush.put("startQuiz", FieldValue.serverTimestamp());
+        teamCollections.document(tmpTeam.getName()).collection("Answers").document(quizName).set(toPush);
+
         CollectionReference questionsRef = quizzesCollections.document(quizName).collection("Questions");
 
         questionsRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -115,10 +121,40 @@ public class DatabaseMGR {
                 }
                 else
                 {
-
+                    Log.d(TAG, "onComplete: FAILED GET");
                 }
             }
         });
     }
 
+    public ArrayList<String> getListOfQuiz(){
+        final ArrayList<String> quizList = new ArrayList<>();
+        quizzesCollections.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    if(task.getResult() != null){
+                        for (QueryDocumentSnapshot snapshot : task.getResult()) {
+                            quizList.add(snapshot.getId());
+                        }
+                        Log.d(TAG, "onComplete: list "+ quizList);
+                    }
+                    else{
+                        Log.d(TAG, "onComplete: getListOfQuiz = ERROR");
+                    }
+                }
+            }
+        });
+
+        return quizList;
+    }
+
+    public void pushAnswersForQuiz(String quizName, ArrayList choices ){
+        Team tmpTeam = SessionMGR.getInstance().getLogedTeam();
+        Map<String,Object> toPush = new HashMap<>();
+        toPush.put("endQuiz", FieldValue.serverTimestamp());
+        toPush.put("choices", choices);
+        teamCollections.document(tmpTeam.getName()).collection("Answers").document(quizName).update(toPush);
+        QuizMGR.getInstance().setCurrentQuiz("");
+    }
 }
