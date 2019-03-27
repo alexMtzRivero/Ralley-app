@@ -62,22 +62,25 @@ public class DatabaseMGR {
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if(task.isSuccessful()){
                     DocumentSnapshot doc = task.getResult();
-                    Log.d(TAG, "onComplete: " + doc.getData());
-                    GeoPoint pos = doc.getGeoPoint("pos");
-                    Location position = new Location("");
-                    position.setLongitude(pos.getLongitude());
-                    position.setLatitude(pos.getLatitude());
-                    team = new Team(teamName,
-                            (long)doc.get("password"),
-                            position,
-                            null,
-                            doc.getString("color"),
-                            null,null
-                    );
-                    SessionMGR.getInstance().callbackTeam.onTeamFound(team);
-
+                    if(doc.getData()!=null) {
+                        Log.d(TAG, "onComplete: " + doc.getData());
+                        GeoPoint pos = doc.getGeoPoint("pos");
+                        Location position = new Location("");
+                        position.setLongitude(pos.getLongitude());
+                        position.setLatitude(pos.getLatitude());
+                        team = new Team(teamName,
+                                (long) doc.get("password"),
+                                position,
+                                null,
+                                doc.getString("color"),
+                                null, null
+                        );
+                        SessionMGR.getInstance().onTeamFound(team);
+                    }
+                    else SessionMGR.getInstance().onTeamFound(null);
                 }
                 else{
+                    SessionMGR.getInstance().onTeamFound(null);
                     Log.d(TAG, "onComplete: ERROR");
                 }
             }

@@ -72,7 +72,7 @@
             android:autoSizeStepGranularity="2dp"
             android:hint="mot de pass"
             android:ems="10"
-            android:inputType="textPassword" />
+            android:inputType="numberPassword" />
     </LinearLayout>
         <Button
         android:id="@+id/validateBtn"
