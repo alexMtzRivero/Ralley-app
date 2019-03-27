@@ -120,7 +120,7 @@ public class QRCodeFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode,resultCode,data);
-        Log.d(TAG, "DEBUG M.B onActivityResult ");
+        Log.d(TAG, "DEBUG M.B onActivityResult fragement ");
         if (result != null){
             Log.d(TAG, "DEBUG M.B onActivityResult: QR read ");
             if (result.getContents() == null){

@@ -87,4 +87,20 @@ public class DatabaseMGR {
         });
     }
 
+    public void getQuiz(String quizName){
+        DocumentReference quizRef = quizzesCollections.document(quizName);
+        quizRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    Log.d(TAG, "onComplete: succes quiz");
+
+                }
+                else{
+                    Log.d(TAG, "onComplete: ERROR ON QUIZ");
+                }
+            }
+        });
+    }
+
 }

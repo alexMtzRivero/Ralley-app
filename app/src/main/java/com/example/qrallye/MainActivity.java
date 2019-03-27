@@ -29,11 +29,6 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        QRCodeFragment qrCodeFragment = new QRCodeFragment();
-        DatabaseMGR.getInstance().getAdmin();
-        DatabaseMGR.getInstance().getTeam("Catsu");
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment_container,qrCodeFragment,"TAG_QRCODE").commit();
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
 
@@ -47,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
                     break;
                 case Scan:
                     binding.setSelected((ImageView) findViewById(R.id.navScan));
-                    changeFragmentDisplayed(new QRCodeFragment());
+                    changeFragmentDisplayed(new QRCodeFragment(),"TAG_QRCODE");
                     break;
                 case Progress:
                     binding.setSelected((ImageView) findViewById(R.id.navProgress));
@@ -74,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
                         binding.setSelected((ImageView) view);
                         break;
                     case R.id.navScan:
-                        changeFragmentDisplayed(new QRCodeFragment());
+                        changeFragmentDisplayed(new QRCodeFragment(),"TAG_QRCODE");
                         view.setBackgroundColor(getResources().getColor(R.color.navItemSelected));
                         binding.setSelected((ImageView) view);
                         break;
@@ -111,6 +106,13 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
                 .commit();
     }
 
+    private void changeFragmentDisplayed(Fragment f, String tag) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, f , tag)
+                .commit();
+    }
+
     @Override
     public void onFragmentInteraction(Uri uri) {
 
@@ -118,11 +120,13 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "DEBUG M.B onActivityResult Main");
         Fragment fragment = getSupportFragmentManager().findFragmentByTag("TAG_QRCODE");
         if(fragment != null){
+            Log.d(TAG, "DEBUG M.B onActivityResult fragment found  ");
             fragment.onActivityResult(requestCode,resultCode,data);
         }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
 }
