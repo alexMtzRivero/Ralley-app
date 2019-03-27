@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
                         binding.setSelected((ImageView) view);
                         break;
                     case R.id.navProgress:
-                        //changeFragmentDisplayed(new UpgradesFragment());
+                        changeFragmentDisplayed(new ProgressFragment());
                         view.setBackgroundColor(getResources().getColor(R.color.navItemSelected));
                         binding.setSelected((ImageView) view);
                         break;

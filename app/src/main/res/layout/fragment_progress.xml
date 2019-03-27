@@ -16,7 +16,6 @@
         android:background="#ffffff"
         android:weightSum="10"
         android:orientation="horizontal">
-
         <LinearLayout
             android:layout_width="1dp"
             android:layout_height="match_parent"
@@ -35,44 +34,18 @@
                 android:layout_height="1dp"
                 android:layout_weight="20"
                 android:textStyle="bold"
-                android:text="lieu 1"
+                android:text="Avancement"
                 android:autoSizeTextType="uniform"
                 android:autoSizeMinTextSize="20dp"
                 android:autoSizeMaxTextSize="40dp"
                 android:autoSizeStepGranularity="1dp"/>
         </LinearLayout>
-        <Chronometer
-            android:id="@+id/timer"
-            android:layout_alignParentRight="true"
-            android:gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:textSize="20sp"
-            />
     </LinearLayout>
 
-    <TextView
-        android:layout_margin="32dp"
+    <ListView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2"
-        android:paddingLeft="16dp"
-        android:textStyle="bold"
-        android:gravity="center_vertical"
-        android:autoSizeTextType="uniform"
-        android:autoSizeMinTextSize="20dp"
-        android:autoSizeMaxTextSize="40dp"
-        android:autoSizeStepGranularity="1dp"
-        android:background="@drawable/gradient"
-        android:textColor="#ffffff"
-        android:text="Question here" />
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/responsesList"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="15"
-        tools:listitem="@layout/response_list_item"
-        />
+        android:layout_weight="17"
+        tools:listitem="@layout/progress_list_item"/>
 
 </LinearLayout>
