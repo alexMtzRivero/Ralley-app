@@ -76,6 +76,7 @@ public class DatabaseMGR {
                                 null, null
                         );
                         SessionMGR.getInstance().onTeamFound(team);
+
                     }
                     else SessionMGR.getInstance().onTeamFound(null);
                 }
@@ -87,17 +88,33 @@ public class DatabaseMGR {
         });
     }
 
-    public void getQuiz(String quizName){
-        DocumentReference quizRef = quizzesCollections.document(quizName);
-        quizRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if(task.isSuccessful()){
-                    Log.d(TAG, "onComplete: succes quiz");
+    // FONCTION POUR LA DATE : FieldValue.serverTimestamp()
 
+    public void getQuestionsFromQuiz(String quizName){
+        CollectionReference questionsRef = quizzesCollections.document(quizName).collection("Questions");
+
+        questionsRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful())
+                {
+                    if(task.getResult() != null){
+                        Log.d(TAG, "onComplete: getQuestionsFromQuiz "+ task.getResult().toString());
+                        for (QueryDocumentSnapshot snapshot : task.getResult()) {
+                            Log.d(TAG, "onComplete: snapshot "+ snapshot.getData());
+                            Question tmp = snapshot.toObject(Question.class);
+                            Log.d(TAG, "onComplete: question "+tmp.getQuestion());
+                            QuizMGR.getInstance().addQuestion(tmp);
+                        }
+
+                    }
+                    else {
+                        Log.d(TAG, "onComplete: ERREUR RECUPERATION QUESTIONS");
+                    }
                 }
-                else{
-                    Log.d(TAG, "onComplete: ERROR ON QUIZ");
+                else
+                {
+
                 }
             }
         });

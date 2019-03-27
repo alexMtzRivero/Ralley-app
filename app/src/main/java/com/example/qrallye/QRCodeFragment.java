@@ -21,7 +21,7 @@ import com.google.zxing.integration.android.IntentResult;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link QRCodeFragment.FragmentCallback} interface
+ * {@link FragmentCallback} interface
  * to handle interaction events.
  * Use the {@link QRCodeFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -127,6 +127,7 @@ public class QRCodeFragment extends Fragment {
                 Toast.makeText(getContext(),"pas de data", Toast.LENGTH_LONG).show();
             }
             else{
+                DatabaseMGR.getInstance().getQuestionsFromQuiz(result.getContents());
                 Toast.makeText(getContext(), result.getContents(),Toast.LENGTH_LONG).show();
             }
         }

@@ -28,9 +28,9 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Connexion"
+            android:text="@string/connection"
             android:textStyle="bold"
-            android:textSize="39dp"
+            android:textSize="39sp"
             />
 
 
@@ -55,17 +55,17 @@
             android:ems="10"
             android:textColor="@color/textColor"
             android:layout_marginTop="30dp"
-            android:textSize="40dp"
+            android:textSize="40sp"
             android:layout_marginBottom="60dp"
             android:inputType="textPersonName"
-            android:text="Name" />
+            android:hint="@string/name" />
 
         <EditText
             android:id="@+id/PasswordEdt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="40dp"
-            android:hint="mot de pass"
+            android:textSize="40sp"
+            android:hint="@string/password"
             android:ems="10"
             android:inputType="textPassword" />
     </LinearLayout>
@@ -75,12 +75,12 @@
         android:layout_height="1dp"
         android:layout_weight="1"
         android:background="@color/backgroundColor"
-        android:textSize="40dp"
+        android:textSize="40sp"
         android:textStyle="bold"
         android:textColor="@color/textColor"
         android:layout_margin="16dp"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
-        android:text="Valider"/>
+        android:text="@string/valid"/>
 
 </LinearLayout>
