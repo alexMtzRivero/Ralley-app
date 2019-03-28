@@ -106,14 +106,6 @@ public class QuestionFragment extends Fragment {
             Chronometer chronometer = getView().findViewById(R.id.quizzTimer);
             chronometer.start();
         }
-
-        @Override
-        protected void onPreExecute() {
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-        }
     }
 
     private void updateQuestion() {

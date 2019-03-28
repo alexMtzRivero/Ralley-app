@@ -1,6 +1,7 @@
 package com.example.qrallye;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,6 +10,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Chronometer;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -34,21 +37,18 @@ public class QuizzFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-
-
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_quizz, container, false);
         recyclerView = view.findViewById(R.id.locationsList);
+        DatabaseMGR.getInstance().getQuizFinishForTeamLogged();
         quizList = QuizMGR.getInstance().getQuizList();
         locationsListAdapter = new LocationsListAdapter(quizList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(locationsListAdapter);
+        new LongOperation().execute();
         return view;
     }
 
@@ -110,8 +110,15 @@ public class QuizzFragment extends Fragment {
             if(position != 0 ) {
                 TextView name = holder.itemView.findViewById(R.id.quizName);
                 TextView place = holder.itemView.findViewById(R.id.lieu);
+                ImageView img = holder.itemView.findViewById(R.id.img);
                 name.setText(mDataset.get(position ).getId());
                 place.setText(mDataset.get(position ).getNomQuiz());
+                for (Quiz quiz : QuizMGR.getInstance().getQuizDoneList()) {
+                    if(mDataset.get(position).getId().equals(quiz.getId()) && quiz.getEndQuiz() != null)
+                    {
+                        img.setBackgroundResource(R.drawable.ic_valide);
+                    }
+                }
             }
         }
 
@@ -126,6 +133,27 @@ public class QuizzFragment extends Fragment {
             if (position == 0) return 1;
             else return 2;
         }
-    }
 
+
+
+    }
+    private class LongOperation extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... strings) {
+            QuizMGR.getInstance().setWaitingForListOfQuiz(true);
+            while(QuizMGR.getInstance().isWaitingForListOfQuiz()){
+                Log.d("Thread", "doInBackground: ");
+            }
+            QuizMGR.getInstance().setWaitingForListOfQuiz(false);
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String result) {
+            quizList = QuizMGR.getInstance().getQuizList();
+            locationsListAdapter = new LocationsListAdapter(quizList);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            recyclerView.setAdapter(locationsListAdapter);
+        }
+    }
 }

@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
         startCrono();
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
+        Log.d(TAG, "onCreate: RECUPERATION DES QUIZ");
         QuizMGR.getInstance().setQuizList(DatabaseMGR.getInstance().getListOfQuiz());
 
 
