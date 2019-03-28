@@ -12,6 +12,7 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Chronometer;
 import android.widget.ImageView;
@@ -153,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
         String stringResult = result.getContents();
         if(stringResult!= null) {
             if (stringResult.contains("Quiz")) {
-                args.putString("key", stringResult);
+                args.putString(getResources().getString(R.string.currentQuiz), stringResult);
                 questionFragment.setArguments(args);
                 changeFragmentDisplayed(questionFragment);
             } else if (stringResult.equals("startRace")) {
