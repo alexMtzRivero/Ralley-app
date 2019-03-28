@@ -179,6 +179,7 @@ public class DatabaseMGR {
                             Map<String,Object> toPush = new HashMap<>();
                             toPush.put("startRallye", FieldValue.serverTimestamp());
                             teamCollections.document(tmpTeam.getName()).update(toPush);
+                            SessionMGR.getInstance().updateCurrentTeam();
                         }
                     }
                 }
@@ -202,6 +203,7 @@ public class DatabaseMGR {
                             Map<String,Object> toPush = new HashMap<>();
                             toPush.put("endRallye", FieldValue.serverTimestamp());
                             teamCollections.document(tmpTeam.getName()).update(toPush);
+                            SessionMGR.getInstance().updateCurrentTeam();
                         }
                     }
                 }
