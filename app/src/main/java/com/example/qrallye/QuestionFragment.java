@@ -79,7 +79,7 @@ public class QuestionFragment extends Fragment {
         @Override
         protected String doInBackground(String... params) {
             while(!QuizMGR.getInstance().complete){
-
+                Log.d("M.B", "doInBackground: ");
             }
             return null;
         }
