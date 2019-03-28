@@ -161,6 +161,15 @@ public class DatabaseMGR {
         teamCollections.document(tmpTeam.getName()).update(pushCurrentQuiz);
     }
 
+    public void setCurrentQuizForTeamLogged(String quizName){
+        Team tmpTeam = SessionMGR.getInstance().getLogedTeam();
+        Map<String,Object> toPush = new HashMap<>();
+        toPush.put("currentQuiz", quizName);
+        teamCollections.document(tmpTeam.getName()).update(toPush);
+    }
+
+
+
 
     public void setStartRallye(){
         final Team tmpTeam = SessionMGR.getInstance().getLogedTeam();
