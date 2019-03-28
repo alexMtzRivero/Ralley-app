@@ -54,6 +54,10 @@ public class QuestionFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_question, container, false);
+
+        view.findViewById(R.id.questionLayout).setVisibility(View.INVISIBLE);
+        view.findViewById(R.id.questionProgressBar).setVisibility(View.VISIBLE);
+
         RecyclerView recyclerView = view.findViewById(R.id.responsesList);
 
         ResponsesListAdapter responsesListAdapter = new ResponsesListAdapter(new ArrayList<String>());
@@ -84,6 +88,15 @@ public class QuestionFragment extends Fragment {
         protected void onPostExecute(String result) {
             Log.d("test", "onPostExecute: ");
             questions = QuizMGR.getInstance().getQuestionList();
+
+            if(questions.size() == 0){
+                mListener.showScan();
+                return;
+            }
+
+            getView().findViewById(R.id.questionProgressBar).setVisibility(View.GONE);
+            getView().findViewById(R.id.questionLayout).setVisibility(View.VISIBLE);
+
             index = 0;
             updateQuestion();
 

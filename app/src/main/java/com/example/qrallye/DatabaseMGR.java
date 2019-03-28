@@ -1,29 +1,23 @@
 package com.example.qrallye;
 
-import android.location.Location;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.type.LatLng;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
@@ -92,13 +86,9 @@ public class DatabaseMGR {
         });
     }
 
-    public void getQuestionsFromQuiz(String quizName){
+    public void getQuestionsFromQuiz(final String quizName){
 
-        Team tmpTeam = SessionMGR.getInstance().getLogedTeam();
         QuizMGR.getInstance().setCurrentQuiz(quizName);
-        Map<String,Object> toPush = new HashMap<>();
-        toPush.put("startQuiz", FieldValue.serverTimestamp());
-        teamCollections.document(tmpTeam.getName()).collection("Answers").document(quizName).set(toPush);
 
         CollectionReference questionsRef = quizzesCollections.document(quizName).collection("Questions");
 
@@ -107,7 +97,7 @@ public class DatabaseMGR {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful())
                 {
-                    if(task.getResult() != null){
+                    if(task.getResult() != null && task.getResult().size() != 0){
                         Log.d(TAG, "onComplete: getQuestionsFromQuiz "+ task.getResult().toString());
                         for (QueryDocumentSnapshot snapshot : task.getResult()) {
                             Log.d(TAG, "onComplete: snapshot "+ snapshot.getData());
@@ -115,12 +105,18 @@ public class DatabaseMGR {
                             Log.d(TAG, "onComplete: question "+tmp.getQuestion());
                             QuizMGR.getInstance().addQuestion(tmp);
                         }
-                        QuizMGR.getInstance().onQuestionListRetrieved();
-
+                        Team tmpTeam = SessionMGR.getInstance().getLogedTeam();
+                        Map<String,Object> toPush = new HashMap<>();
+                        toPush.put("startQuiz", FieldValue.serverTimestamp());
+                        Map<String, Object> pushCurrentQuiz = new HashMap<>();
+                        pushCurrentQuiz.put("currentQuiz", quizName);
+                        teamCollections.document(tmpTeam.getName()).update(pushCurrentQuiz);
+                        teamCollections.document(tmpTeam.getName()).collection("Answers").document(quizName).set(toPush);
                     }
                     else {
                         Log.d(TAG, "onComplete: ERREUR RECUPERATION QUESTIONS");
                     }
+                    QuizMGR.getInstance().onQuestionListRetrieved();
                 }
                 else
                 {
@@ -160,6 +156,9 @@ public class DatabaseMGR {
         toPush.put("choices", choices);
         teamCollections.document(tmpTeam.getName()).collection("Answers").document(quizName).update(toPush);
         QuizMGR.getInstance().setCurrentQuiz("");
+        Map<String, Object> pushCurrentQuiz = new HashMap<>();
+        pushCurrentQuiz.put("currentQuiz", "");
+        teamCollections.document(tmpTeam.getName()).update(pushCurrentQuiz);
     }
 
 

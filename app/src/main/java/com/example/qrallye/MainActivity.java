@@ -128,18 +128,13 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri) {
-
-    }
-
-    @Override
-    public void onLocationClick(int location) {
-        changeFragmentDisplayed(new QuestionFragment());
-    }
-
-    @Override
     public void onQuizzFinish() {
-        changeFragmentDisplayed(new MapFragment());
+        findViewById(R.id.navMap).performClick();
+    }
+
+    @Override
+    public void showScan() {
+        findViewById(R.id.navScan).performClick();
     }
 
     @Override
