@@ -3,9 +3,13 @@ package com.example.qrallye;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.type.LatLng;
 
+import java.util.Date;
+
 public class Quiz {
     private String nomQuiz;
     private GeoPoint position;
+    private Date startQuiz;
+    private Date endQuiz;
 
     public String getId() {
         return id;
@@ -33,10 +37,28 @@ public class Quiz {
         this.position = position;
     }
 
-    public Quiz(String nomQuiz, GeoPoint position, String id) {
+    public Date getStartQuiz() {
+        return startQuiz;
+    }
+
+    public void setStartQuiz(Date startQuiz) {
+        this.startQuiz = startQuiz;
+    }
+
+    public Date getEndQuiz() {
+        return endQuiz;
+    }
+
+    public void setEndQuiz(Date endQuiz) {
+        this.endQuiz = endQuiz;
+    }
+
+    public Quiz(String nomQuiz, GeoPoint position, String id, Date startQuiz, Date endQuiz) {
         this.nomQuiz = nomQuiz;
         this.position = position;
         this.id = id;
+        this.startQuiz = startQuiz;
+        this.endQuiz = endQuiz;
     }
 
     public Quiz() {

@@ -1,16 +1,15 @@
 package com.example.qrallye;
 
 import java.util.ArrayList;
-import android.util.Log;
+
 
 public class QuizMGR {
     private static final QuizMGR ourInstance = new QuizMGR();
-
     private ArrayList<Question> questionList;
-
     private ArrayList<Quiz> quizList;
-
+    private ArrayList<Quiz> quizDoneList;
     public boolean complete = false;
+    private boolean isWaitingForListOfQuiz = false;
     private String currentQuiz = "";
     public static QuizMGR getInstance() {
         return ourInstance;
@@ -27,9 +26,7 @@ public class QuizMGR {
     private QuizMGR() {
         questionList = new ArrayList<>();
         quizList = new ArrayList<>();
-    }
-    public boolean isAtGoodPostion(){
-        return  true;
+        quizDoneList = new ArrayList<>();
     }
 
     public ArrayList<Question> getQuestionList() {
@@ -54,6 +51,21 @@ public class QuizMGR {
 
     public void onQuestionListRetrieved(){
         complete = true;
+    }
+
+    public boolean isWaitingForListOfQuiz() {
+        return isWaitingForListOfQuiz;
+    }
+
+    public void setWaitingForListOfQuiz(boolean waitingForListOfQuiz) {
+        isWaitingForListOfQuiz = waitingForListOfQuiz;
+    }
+    public ArrayList<Quiz> getQuizDoneList() {
+        return quizDoneList;
+    }
+
+    public void setQuizDoneList(ArrayList<Quiz> quizDoneList) {
+        this.quizDoneList = quizDoneList;
     }
 
 }
