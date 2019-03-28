@@ -24,7 +24,7 @@ public class ConnectionActivity extends AppCompatActivity {
         validateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SessionMGR.getInstance().login(userText.getText().toString(), passText.getText().toString(), ConnectionActivity.this);
+                SessionMGR.getInstance().login(userText.getText().toString().trim(), passText.getText().toString(), ConnectionActivity.this);
                 //goToNext();
             }
         });
