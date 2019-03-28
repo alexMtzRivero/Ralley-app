@@ -8,6 +8,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.zxing.integration.android.IntentResult;
+
 public class ConnectionActivity extends AppCompatActivity {
 
     @Override
@@ -43,7 +45,15 @@ public class ConnectionActivity extends AppCompatActivity {
     }
 
     public void goToNext(){
-        startActivity(new Intent(getApplicationContext(), RulesActivity.class));
+        String currentQuiz = SessionMGR.getInstance().getLogedTeam().getCurrentQuiz();
+        if(currentQuiz.length() == 0){
+            startActivity(new Intent(getApplicationContext(), RulesActivity.class));
+        }else {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra(getResources().getString(R.string.currentQuiz), currentQuiz);
+            intent.putExtra("fragmentType", MainActivity.fragmentDisplayed.Question);
+            startActivity(intent);
+        }
     }
     public  void notifyWrongPasword(){
         Toast.makeText(getApplicationContext(),"wrong password",Toast.LENGTH_SHORT).show();

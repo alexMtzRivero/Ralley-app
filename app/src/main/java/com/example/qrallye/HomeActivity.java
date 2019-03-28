@@ -1,6 +1,5 @@
 package com.example.qrallye;
 
-import android.app.IntentService;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
@@ -42,7 +41,7 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(HomeActivity.this, MainActivity.class);
-                intent.putExtra("fragmentType", MainActivity.fragmentDisplayed.Quizz);
+                intent.putExtra("fragmentType", MainActivity.fragmentDisplayed.Quiz);
                 startActivity(intent);
             }
         });

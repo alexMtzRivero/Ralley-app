@@ -26,6 +26,7 @@ public class Team {
     public void setCurrentQuiz(String currentQuiz) {
         this.currentQuiz = currentQuiz;
     }
+
     public String getName() {
         return name;
     }
