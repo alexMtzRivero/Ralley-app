@@ -24,6 +24,7 @@ import com.google.api.LogDescriptor;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.Calendar;
@@ -178,12 +179,11 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
         String startTimeKey = "startTime";
         SharedPreferences sp = getSharedPreferences("myPreferences", MODE_PRIVATE);
         if(!sp.contains(startTimeKey)){
-            //TODO check firebase
-            //TODO insert the time in shared preferences
-            sp.edit().putLong(startTimeKey, Calendar.getInstance().getTimeInMillis()).apply();
+            Date timeStart = SessionMGR.getInstance().getLogedTeam().getStartTimer();
+            // insert the time in shared preferences
+            sp.edit().putLong(startTimeKey, timeStart.getTime()).apply();
         }
 
-        //start crono
 
         long timelaps = Calendar.getInstance().getTimeInMillis()-sp.getLong(startTimeKey, 0);
         Chronometer chrono = findViewById(R.id.timer);
