@@ -17,6 +17,7 @@ public class LaunchScreenActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     startActivity(new Intent(getApplicationContext(), ConnectionActivity.class));
+                    finish();
                 }
             }, 2000);
         }catch (Exception e){
