@@ -115,14 +115,14 @@ public class DatabaseMGR {
                         setCurrentQuizForTeamLogged(quizName);
                     }
                     else {
-                        Log.d(TAG, "onComplete: ERREUR RECUPERATION QUESTIONS");
+                        Log.e(TAG, "onComplete: ERREUR RECUPERATION QUESTIONS");
                     }
-                    QuizMGR.getInstance().onQuestionListRetrieved();
                 }
                 else
                 {
-                    Log.d(TAG, "onComplete: FAILED GET");
+                    Log.e(TAG, "onComplete: FAILED GET");
                 }
+                QuizMGR.getInstance().onQuestionListRetrieved();
             }
         });
     }
