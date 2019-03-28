@@ -149,26 +149,24 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
         QuestionFragment questionFragment = new QuestionFragment();
         Bundle args = new Bundle();
         String stringResult = result.getContents();
-
-        if(stringResult.contains("Quiz")){
-            args.putString("key", stringResult);
-            questionFragment.setArguments(args);
-            changeFragmentDisplayed(questionFragment);
-        }
-        else if(stringResult.equals("startRace")){
-            DatabaseMGR.getInstance().setStartRallye();
-            changeFragmentDisplayed(new MapFragment());
-            Toast.makeText(getApplicationContext(),"start",Toast.LENGTH_SHORT).show();
-            startChrono(true);
-        }
-        else if(stringResult.equals("endRace")){
-            DatabaseMGR.getInstance().setEndtRallye();
-            changeFragmentDisplayed(new MapFragment());
-            stopChrono();
-            Toast.makeText(getApplicationContext(),"end",Toast.LENGTH_SHORT).show();
-        }
-        else{
-            Toast.makeText(getApplicationContext(),"Non valid QR",Toast.LENGTH_SHORT).show();
+        if(stringResult!= null) {
+            if (stringResult.contains("Quiz")) {
+                args.putString("key", stringResult);
+                questionFragment.setArguments(args);
+                changeFragmentDisplayed(questionFragment);
+            } else if (stringResult.equals("startRace")) {
+                DatabaseMGR.getInstance().setStartRallye();
+                changeFragmentDisplayed(new MapFragment());
+                Toast.makeText(getApplicationContext(), "start", Toast.LENGTH_SHORT).show();
+                startChrono(true);
+            } else if (stringResult.equals("endRace")) {
+                DatabaseMGR.getInstance().setEndtRallye();
+                changeFragmentDisplayed(new MapFragment());
+                stopChrono();
+                Toast.makeText(getApplicationContext(), "end", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getApplicationContext(), "Non valid QR", Toast.LENGTH_SHORT).show();
+            }
         }
 
     }
