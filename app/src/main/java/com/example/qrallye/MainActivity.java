@@ -4,10 +4,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.os.PatternMatcher;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -32,6 +34,7 @@ import java.util.Calendar;
 public class MainActivity extends AppCompatActivity implements FragmentCallback {
 
     private final String TAG = "MainActivity";
+    private boolean isChronoRunning = false;
     public enum fragmentDisplayed{
         Map, Scan, Progress, Quizz
     }
@@ -41,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        startCrono();
+        startChrono(false);
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         QuizMGR.getInstance().setQuizList(DatabaseMGR.getInstance().getListOfQuiz());
@@ -156,11 +159,12 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
             DatabaseMGR.getInstance().setStartRallye();
             changeFragmentDisplayed(new MapFragment());
             Toast.makeText(getApplicationContext(),"start",Toast.LENGTH_SHORT).show();
+            startChrono(true);
         }
         else if(stringResult.equals("endRace")){
             DatabaseMGR.getInstance().setEndtRallye();
             changeFragmentDisplayed(new MapFragment());
-
+            stopChrono();
             Toast.makeText(getApplicationContext(),"end",Toast.LENGTH_SHORT).show();
         }
         else{
@@ -168,28 +172,58 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
         }
 
     }
-    public  void startCrono(){
+    public  void stopChrono(){
+        Chronometer chrono = findViewById(R.id.timer);
+        chrono.stop();
+
+    }
+
+    public  void startChrono(boolean scaned){
 
         //check shared references
         String startTimeKey = "startTime";
         SharedPreferences sp = getSharedPreferences("myPreferences", MODE_PRIVATE);
-        if(!sp.contains(startTimeKey)){
-            Date timeStart = SessionMGR.getInstance().getLogedTeam().getStartTimer();
-            // insert the time in shared preferences
-            sp.edit().putLong(startTimeKey, timeStart.getTime()).apply();
-        }
+        Date timeStart = SessionMGR.getInstance().getLogedTeam().getStartTimer();
         Chronometer chrono = findViewById(R.id.timer);
-        Date timeEnd= SessionMGR.getInstance().getLogedTeam().getEndTimer();
-        if(timeEnd==null) {
-            long timelaps = Calendar.getInstance().getTimeInMillis() - sp.getLong(startTimeKey, 0);
+        Date timeEnd = SessionMGR.getInstance().getLogedTeam().getEndTimer();
+
+        // if the chorno is alredy finished
+        if(timeEnd!= null){
+            long timelaps = timeEnd.getTime() - timeStart.getTime();
             chrono.setBase(SystemClock.elapsedRealtime() - timelaps);
-            chrono.start();
+            Log.e("time","cerrando timer");
         }
-        else{
-            long timelaps = timeEnd.getTime() - sp.getLong(startTimeKey, 0);
-            chrono.setBase(SystemClock.elapsedRealtime() - timelaps);
+        else {
+            // if we have shared preferences
+            if (sp.contains(startTimeKey)) {
+                Log.e("time","comenzando de shared preferences");
+                long timelaps = Calendar.getInstance().getTimeInMillis() - sp.getLong(startTimeKey, 0);
+                chrono.setBase(SystemClock.elapsedRealtime() - timelaps);
+                isChronoRunning = true;
+                chrono.start();
+
+            } else {
+                if (timeStart != null) {
+                    Log.e("time","comenzando de firebase");
+                    // insert the time in shared preferences
+                    sp.edit().putLong(startTimeKey, timeStart.getTime()).apply();
+                    long timelaps = Calendar.getInstance().getTimeInMillis() - sp.getLong(startTimeKey, 0);
+                    chrono.setBase(SystemClock.elapsedRealtime() - timelaps);
+                    isChronoRunning = true;
+                    chrono.start();
+                }
+                else{
+                    if(scaned) {
+                        Log.e("time", "comenzando de 0");
+                        long timelaps = 0;
+                        chrono.setBase(SystemClock.elapsedRealtime() - timelaps);
+                        isChronoRunning = true;
+                        chrono.start();
+                    }
+                }
+            }
         }
-        // end chrono
     }
+
 
 }
