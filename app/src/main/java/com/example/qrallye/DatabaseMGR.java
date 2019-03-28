@@ -76,7 +76,7 @@ public class DatabaseMGR {
                                 doc.getString("color"),
                                 (doc.getTimestamp("startRallye") != null) ?doc.getTimestamp("startRallye").toDate():null,
                                 (doc.getTimestamp("endRallye") != null) ?doc.getTimestamp("endRallye").toDate():null,
-                                doc.getString("currentQuiz")
+                                (doc.getString("currentQuiz") != null) ?doc.getString("currentQuiz"):""
                         );
                         Log.d(TAG, "onComplete: team " + team.getStartTimer() );
                         SessionMGR.getInstance().onTeamFound(team);
