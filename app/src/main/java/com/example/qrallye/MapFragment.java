@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -68,9 +69,9 @@ public class MapFragment extends Fragment {
                     // we're on SDK < 23 OR user has already granted permission
                     callback.invoke(origin, true, false);
                 } else {
-                    if (!ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), perm)) {
+                    if (!shouldShowRequestPermissionRationale(perm)) {
                         // ask the user for permission
-                        ActivityCompat.requestPermissions(getActivity(), new String[] {perm}, 1);
+                        requestPermissions(new String[] {perm}, 1);
                     }
                 }
             }

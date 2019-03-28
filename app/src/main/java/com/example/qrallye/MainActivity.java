@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
                     break;
                 case Progress:
                     binding.setSelected((ImageView) findViewById(R.id.navProgress));
-                    changeFragmentDisplayed(new MapFragment());
+                    changeFragmentDisplayed(new ProgressFragment());
                     break;
                 case Question:
                     binding.setSelected((ImageView) findViewById(R.id.navProgress));
