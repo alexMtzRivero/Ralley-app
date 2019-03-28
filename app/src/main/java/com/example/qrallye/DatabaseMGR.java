@@ -178,4 +178,54 @@ public class DatabaseMGR {
         teamCollections.document(tmpTeam.getName()).collection("Answers").document(quizName).update(toPush);
         QuizMGR.getInstance().setCurrentQuiz("");
     }
+
+
+    public void setStartRallye(){
+        final Team tmpTeam = SessionMGR.getInstance().getLogedTeam();
+
+        // we check if the time begin is not seted up allredy
+        final DocumentReference teamRef = teamCollections.document(tmpTeam.getName());
+        teamRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot doc = task.getResult();
+                    if(doc.getData()!=null) {
+                        Log.d(TAG, "onComplete: " + doc.getData());
+                        if(!doc.getData().containsKey("startRallye")){
+                            Map<String,Object> toPush = new HashMap<>();
+                            toPush.put("startRallye", FieldValue.serverTimestamp());
+                            teamCollections.document(tmpTeam.getName()).update(toPush);
+                        }
+                    }
+                }
+            }
+        });
+
+    }
+    public void setEndtRallye(){
+        final Team tmpTeam = SessionMGR.getInstance().getLogedTeam();
+
+        // we check if the time begin is not seted up allredy
+        final DocumentReference teamRef = teamCollections.document(tmpTeam.getName());
+        teamRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot doc = task.getResult();
+                    if(doc.getData()!=null) {
+                        Log.d(TAG, "onComplete: " + doc.getData());
+                        if(doc.getData().containsKey("startRallye") && !doc.getData().containsKey("endRallye") ){
+                            Map<String,Object> toPush = new HashMap<>();
+                            toPush.put("endRallye", FieldValue.serverTimestamp());
+                            teamCollections.document(tmpTeam.getName()).update(toPush);
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+
+
 }
