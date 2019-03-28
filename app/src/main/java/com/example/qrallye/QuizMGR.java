@@ -1,6 +1,7 @@
 package com.example.qrallye;
 
 import java.util.ArrayList;
+import android.util.Log;
 
 public class QuizMGR {
     private static final QuizMGR ourInstance = new QuizMGR();
