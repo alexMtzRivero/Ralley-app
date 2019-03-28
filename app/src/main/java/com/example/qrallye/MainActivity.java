@@ -3,37 +3,29 @@ package com.example.qrallye;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.os.PatternMatcher;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.Choreographer;
 import android.view.View;
 import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.qrallye.databinding.NavigationBarBinding;
-import com.google.api.LogDescriptor;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 import java.util.Date;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements FragmentCallback {
 
     private final String TAG = "MainActivity";
     public enum fragmentDisplayed{
-        Map, Scan, Progress, Quizz
+        Map, Scan, Progress, Quiz, Question
     }
 
 
@@ -59,13 +51,21 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
                     binding.setSelected((ImageView) findViewById(R.id.navScan));
                     changeFragmentDisplayed(new QRCodeFragment(),"TAG_QRCODE");
                     break;
-                case Quizz:
+                case Quiz:
                     binding.setSelected((ImageView) findViewById(R.id.navQuizz));
                     changeFragmentDisplayed(new QuizzFragment());
                     break;
                 case Progress:
                     binding.setSelected((ImageView) findViewById(R.id.navProgress));
                     changeFragmentDisplayed(new MapFragment());
+                    break;
+                case Question:
+                    binding.setSelected((ImageView) findViewById(R.id.navProgress));
+                    QuestionFragment questionFragment = new QuestionFragment();
+                    Bundle args = new Bundle();
+                    args.putString(getResources().getString(R.string.currentQuiz), bundle.getString(getResources().getString(R.string.currentQuiz)));
+                    questionFragment.setArguments(args);
+                    changeFragmentDisplayed(questionFragment);
                     break;
             }
         }else{

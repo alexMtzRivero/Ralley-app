@@ -45,7 +45,7 @@ public class QuestionFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        DatabaseMGR.getInstance().getQuestionsFromQuiz(getArguments().getString("key"));
+        DatabaseMGR.getInstance().getQuestionsFromQuiz(getArguments().getString(getResources().getString(R.string.currentQuiz)));
         responses = new ArrayList<>();
         questions = new ArrayList<>();
     }
