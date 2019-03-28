@@ -27,6 +27,10 @@ public class SessionMGR {
         toSend = connectionActivity;
         DatabaseMGR.getInstance().getTeam(teamName);
     }
+    public void  updateCurrentTeam(){
+        if(team!=null)
+            DatabaseMGR.getInstance().getTeam(team.getName());
+    }
 
     public void onTeamFound(Team teamRetrieve) {
         team = teamRetrieve;
