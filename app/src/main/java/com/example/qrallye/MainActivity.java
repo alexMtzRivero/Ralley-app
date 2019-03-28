@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.Choreographer;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.qrallye.databinding.NavigationBarBinding;
 import com.google.api.LogDescriptor;
@@ -137,21 +138,33 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        Log.d(TAG, "DEBUG M.B onActivityResult Main");
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag("TAG_QRCODE");
-        QuestionFragment questionFragment = new QuestionFragment();
-        if(fragment != null){
-
-            IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-
-            Log.d(TAG, "DEBUG M.B onActivityResult fragment found  ");
-            questionFragment = new QuestionFragment();
-            Bundle args = new Bundle();
-            args.putString("key", result.getContents());
-            questionFragment.setArguments(args);
-        }
         super.onActivityResult(requestCode, resultCode, data);
-        changeFragmentDisplayed(questionFragment);
+
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        QuestionFragment questionFragment = new QuestionFragment();
+        Bundle args = new Bundle();
+        String stringResult = result.getContents();
+
+        if(stringResult.contains("Quiz")){
+            args.putString("key", stringResult);
+            questionFragment.setArguments(args);
+            changeFragmentDisplayed(questionFragment);
+        }
+        else if(stringResult.equals("startRace")){
+            DatabaseMGR.getInstance().setStartRallye();
+            changeFragmentDisplayed(new MapFragment());
+            Toast.makeText(getApplicationContext(),"start",Toast.LENGTH_SHORT).show();
+        }
+        else if(stringResult.equals("endRace")){
+            DatabaseMGR.getInstance().setEndtRallye();
+            changeFragmentDisplayed(new MapFragment());
+
+            Toast.makeText(getApplicationContext(),"end",Toast.LENGTH_SHORT).show();
+        }
+        else{
+            Toast.makeText(getApplicationContext(),"Non valid QR",Toast.LENGTH_SHORT).show();
+        }
+
     }
 
 }
