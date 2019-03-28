@@ -86,7 +86,7 @@ public class QuestionFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String result) {
-            Log.d("test", "onPostExecute: ");
+            Log.d("test", "onPostExecute: question retrieve");
             questions = QuizMGR.getInstance().getQuestionList();
 
             if(questions.size() == 0){
