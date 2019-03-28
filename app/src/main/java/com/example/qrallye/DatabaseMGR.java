@@ -21,6 +21,7 @@ import com.google.type.LatLng;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,17 +69,16 @@ public class DatabaseMGR {
                     DocumentSnapshot doc = task.getResult();
                     if(doc.getData()!=null) {
                         Log.d(TAG, "onComplete: " + doc.getData());
-                        GeoPoint pos = doc.getGeoPoint("pos");
-                        Location position = new Location("");
-                        position.setLongitude(pos.getLongitude());
-                        position.setLatitude(pos.getLatitude());
                         team = new Team(teamName,
                                 (long) doc.get("password"),
-                                position,
+                                doc.getGeoPoint("pos"),
                                 null,
                                 doc.getString("color"),
-                                null, null
+                                (doc.getTimestamp("startRallye") != null) ?doc.getTimestamp("startRallye").toDate():null,
+                                (doc.getTimestamp("endRallye") != null) ?doc.getTimestamp("endRallye").toDate():null,
+                                doc.getString("currentQuiz")
                         );
+                        Log.d(TAG, "onComplete: team " + team.getStartTimer() );
                         SessionMGR.getInstance().onTeamFound(team);
 
                     }

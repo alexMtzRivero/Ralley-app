@@ -10,13 +10,22 @@ import java.util.Date;
 public class Team {
     private String name;
     private long password;
-    private Location position;
+    private GeoPoint position;
     private Color colorB;
     private String color;
     private Date startTimer;
     private Date endTimer;
+    private String currentQuiz;
 
     //<editor-fold desc="Getter and Setter">
+
+    public String getCurrentQuiz() {
+        return currentQuiz;
+    }
+
+    public void setCurrentQuiz(String currentQuiz) {
+        this.currentQuiz = currentQuiz;
+    }
     public String getName() {
         return name;
     }
@@ -33,11 +42,11 @@ public class Team {
         this.password = password;
     }
 
-    public Location getPosition() {
+    public GeoPoint getPosition() {
         return position;
     }
 
-    public void setPosition(Location position) {
+    public void setPosition(GeoPoint position) {
         this.position = position;
     }
 
@@ -77,7 +86,7 @@ public class Team {
     public Team(){
     }
 
-    public Team(String name, long password, Location position, Color colorB, String color, Date startTimer, Date endTimer) {
+    public Team(String name, long password, GeoPoint position, Color colorB, String color, Date startTimer, Date endTimer, String currentQuiz) {
         this.name = name;
         this.password = password;
         this.position = position;
@@ -85,5 +94,6 @@ public class Team {
         this.color = color;
         this.startTimer = startTimer;
         this.endTimer = endTimer;
+        this.currentQuiz = currentQuiz;
     }
 }
