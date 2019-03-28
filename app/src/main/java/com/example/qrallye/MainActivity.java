@@ -141,9 +141,14 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
             changeFragmentDisplayed(questionFragment);
         }
         else if(stringResult.equals("startRace")){
+            DatabaseMGR.getInstance().setStartRallye();
+            changeFragmentDisplayed(new MapFragment());
             Toast.makeText(getApplicationContext(),"start",Toast.LENGTH_SHORT).show();
         }
         else if(stringResult.equals("endRace")){
+            DatabaseMGR.getInstance().setEndtRallye();
+            changeFragmentDisplayed(new MapFragment());
+
             Toast.makeText(getApplicationContext(),"end",Toast.LENGTH_SHORT).show();
         }
         else{
