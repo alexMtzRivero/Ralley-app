@@ -14,7 +14,9 @@ import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 
 /**
@@ -110,13 +112,18 @@ public class QuizzFragment extends Fragment {
             if(position != 0 ) {
                 TextView name = holder.itemView.findViewById(R.id.quizName);
                 TextView place = holder.itemView.findViewById(R.id.lieu);
+                TextView timer = holder.itemView.findViewById(R.id.timer);
                 ImageView img = holder.itemView.findViewById(R.id.img);
                 name.setText(mDataset.get(position ).getId());
                 place.setText(mDataset.get(position ).getNomQuiz());
                 for (Quiz quiz : QuizMGR.getInstance().getQuizDoneList()) {
                     if(mDataset.get(position).getId().equals(quiz.getId()) && quiz.getEndQuiz() != null)
                     {
-                        img.setBackgroundResource(R.drawable.ic_valide);
+                        img.setImageResource(R.drawable.ic_valide);
+                        long time = quiz.getEndQuiz().getTime() - quiz.getStartQuiz().getTime();
+                        long minute = time / (60 *1000);
+                        long sec = (time/1000)%60;
+                        timer.setText(String.valueOf(String.format("%d:%02d",minute,sec)));
                     }
                 }
             }
