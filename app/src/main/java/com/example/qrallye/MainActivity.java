@@ -1,9 +1,11 @@
 package com.example.qrallye;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.os.PatternMatcher;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,6 +15,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Choreographer;
 import android.view.View;
+import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -23,6 +26,7 @@ import com.google.zxing.integration.android.IntentResult;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements FragmentCallback {
 
@@ -36,10 +40,11 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        startCrono();
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         QuizMGR.getInstance().setQuizList(DatabaseMGR.getInstance().getListOfQuiz());
+
 
         final NavigationBarBinding binding = DataBindingUtil.bind((findViewById(R.id.navbar)));
 
@@ -166,6 +171,25 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
             Toast.makeText(getApplicationContext(),"Non valid QR",Toast.LENGTH_SHORT).show();
         }
 
+    }
+    public  void startCrono(){
+
+        //check shared references
+        String startTimeKey = "startTime";
+        SharedPreferences sp = getSharedPreferences("myPreferences", MODE_PRIVATE);
+        if(!sp.contains(startTimeKey)){
+            //TODO check firebase
+            //TODO insert the time in shared preferences
+            sp.edit().putLong(startTimeKey, Calendar.getInstance().getTimeInMillis()).apply();
+        }
+
+        //start crono
+
+        long timelaps = Calendar.getInstance().getTimeInMillis()-sp.getLong(startTimeKey, 0);
+        Chronometer chrono = findViewById(R.id.timer);
+        chrono.setBase(SystemClock.elapsedRealtime()-timelaps);
+        chrono.start();
+        // end chrono
     }
 
 }

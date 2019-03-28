@@ -18,6 +18,7 @@
     <ImageView
         android:id="@+id/navMap"
         android:layout_width="0dp"
+        android:padding="15px"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_carte"
         android:layout_weight="1"
@@ -26,6 +27,7 @@
     <ImageView
         android:id="@+id/navScan"
         android:layout_width="0dp"
+        android:padding="15px"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_scan"
         android:layout_weight="1"
@@ -34,6 +36,7 @@
     <ImageView
         android:id="@+id/navQuizz"
         android:layout_width="0dp"
+        android:padding="15px"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_question"
         android:layout_weight="1"
@@ -42,6 +45,7 @@
     <ImageView
         android:id="@+id/navProgress"
         android:layout_width="0dp"
+        android:padding="15px"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_coureur"
         android:layout_weight="1"
@@ -50,6 +54,7 @@
     <ImageView
         android:id="@+id/navHome"
         android:layout_width="0dp"
+        android:padding="15px"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_accueil"
         android:layout_weight="1"/>

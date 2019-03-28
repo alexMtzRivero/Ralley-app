@@ -55,7 +55,7 @@ Nunc et tincidunt lacus, a euismod leo. Praesent libero enim, dictum eu posuere 
         android:background="@color/backgroundColor"
         android:autoSizeTextType="uniform"
         android:autoSizeMinTextSize="12dp"
-        android:autoSizeMaxTextSize="39dp"
+        android:autoSizeMaxTextSize="25dp"
         android:autoSizeStepGranularity="2dp"
         android:textStyle="bold"
         android:textColor="@color/textColor"
