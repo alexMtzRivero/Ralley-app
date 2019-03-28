@@ -183,12 +183,17 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
             // insert the time in shared preferences
             sp.edit().putLong(startTimeKey, timeStart.getTime()).apply();
         }
-
-
-        long timelaps = Calendar.getInstance().getTimeInMillis()-sp.getLong(startTimeKey, 0);
         Chronometer chrono = findViewById(R.id.timer);
-        chrono.setBase(SystemClock.elapsedRealtime()-timelaps);
-        chrono.start();
+        Date timeEnd= SessionMGR.getInstance().getLogedTeam().getEndTimer();
+        if(timeEnd==null) {
+            long timelaps = Calendar.getInstance().getTimeInMillis() - sp.getLong(startTimeKey, 0);
+            chrono.setBase(SystemClock.elapsedRealtime() - timelaps);
+            chrono.start();
+        }
+        else{
+            long timelaps = timeEnd.getTime() - sp.getLong(startTimeKey, 0);
+            chrono.setBase(SystemClock.elapsedRealtime() - timelaps);
+        }
         // end chrono
     }
 
