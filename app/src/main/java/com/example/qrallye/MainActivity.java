@@ -38,7 +38,6 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        startChrono(false);
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         Log.d(TAG, "onCreate: RECUPERATION DES QUIZ");
@@ -120,6 +119,16 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
         findViewById(R.id.navHome).setOnClickListener(navItemClickListener);
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+        try{
+            startChrono(false);
+        }catch(Exception e){
+            Log.e(TAG, "onResume: ", e);
+        }
+    }
+
     private void changeFragmentDisplayed(Fragment f) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
@@ -176,10 +185,11 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
     public  void stopChrono(){
         Chronometer chrono = findViewById(R.id.timer);
         chrono.stop();
-
+        SharedPreferences sp = getSharedPreferences("myPreferences", MODE_PRIVATE);
+        sp.edit().putLong("endDate", Calendar.getInstance().getTimeInMillis()).apply();
     }
 
-    public  void startChrono(boolean scaned){
+    public void startChrono(boolean scaned){
 
         //check shared references
         String startTimeKey = "startTime";
@@ -189,8 +199,14 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
         Date timeEnd = SessionMGR.getInstance().getLogedTeam().getEndTimer();
 
         // if the chorno is alredy finished
-        if(timeEnd!= null){
-            long timelaps = timeEnd.getTime() - timeStart.getTime();
+        if(timeEnd!= null || sp.getLong("endDate", 0) != 0){
+            long timelaps;
+            if (timeEnd != null){
+                timelaps = timeEnd.getTime() - timeStart.getTime();
+
+            }else{
+                timelaps = sp.getLong("endDate", 0) - timeStart.getTime();
+            }
             chrono.setBase(SystemClock.elapsedRealtime() - timelaps);
             Log.e("time","cerrando timer");
         }
@@ -220,6 +236,7 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
                         chrono.setBase(SystemClock.elapsedRealtime() - timelaps);
                         isChronoRunning = true;
                         chrono.start();
+                        SessionMGR.getInstance().getLogedTeam().setStartTimer(Calendar.getInstance().getTime());
                     }
                 }
             }
