@@ -16,8 +16,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.type.LatLng;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -127,39 +130,20 @@ public class DatabaseMGR {
         });
     }
 
-    public ArrayList<String> getListOfQuiz(){
-        final ArrayList<String> quizList = new ArrayList<>();
+    public ArrayList<Quiz> getListOfQuiz(final QuizzFragment quizzFragment){
+        final ArrayList<Quiz> quizList = new ArrayList<>();
         quizzesCollections.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful()){
                     if(task.getResult() != null){
                         for (QueryDocumentSnapshot snapshot : task.getResult()) {
-                            quizList.add(snapshot.getId());
+                            Quiz quiz = new Quiz(snapshot.get("nomQuiz").toString(),snapshot.getGeoPoint("position"),snapshot.getId());
+                            quizList.add(quiz);
                         }
-                        Log.d(TAG, "onComplete: list "+ quizList);
-                    }
-                    else{
-                        Log.d(TAG, "onComplete: getListOfQuiz = ERROR");
-                    }
-                }
-            }
-        });
-
-        return quizList;
-    }
-    public ArrayList<String> getListOfQuiz(final QuizzFragment quizzFragment){
-        final ArrayList<String> quizList = new ArrayList<>();
-        quizzesCollections.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()){
-                    if(task.getResult() != null){
-                        for (QueryDocumentSnapshot snapshot : task.getResult()) {
-                            quizList.add(snapshot.getId());
-                        }
+                        sortList(quizList);
                         quizzFragment.onListRecived(quizList);
-                        Log.d(TAG, "onComplete: list "+ quizList);
+                        Log.d(TAG, "onComplete: quizList "+ quizList);
                     }
                     else{
                         Log.d(TAG, "onComplete: getListOfQuiz = ERROR");
@@ -178,4 +162,19 @@ public class DatabaseMGR {
         teamCollections.document(tmpTeam.getName()).collection("Answers").document(quizName).update(toPush);
         QuizMGR.getInstance().setCurrentQuiz("");
     }
+
+    private void sortList(ArrayList<Quiz> list) {
+        Collections.sort(list, new Comparator<Quiz>() {
+            public int compare(Quiz o1, Quiz o2) {
+                return extractInt(o1.getId()) - extractInt(o2.getId());
+            }
+
+            int extractInt(String s) {
+                String num = s.replaceAll("Quiz", "");
+                // return 0 if no digits found
+                return num.isEmpty() ? 0 : Integer.parseInt(num);
+            }
+        });
+    }
+
 }

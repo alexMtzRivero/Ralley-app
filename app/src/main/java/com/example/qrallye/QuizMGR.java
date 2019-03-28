@@ -1,14 +1,13 @@
 package com.example.qrallye;
 
 import java.util.ArrayList;
-import android.util.Log;
 
 public class QuizMGR {
     private static final QuizMGR ourInstance = new QuizMGR();
 
     private ArrayList<Question> questionList;
+    private ArrayList<Quiz> quizList;
     public boolean complete = false;
-
     private String currentQuiz = "";
 
     public static QuizMGR getInstance() {
@@ -17,6 +16,7 @@ public class QuizMGR {
 
     private QuizMGR() {
         questionList = new ArrayList<>();
+        quizList = new ArrayList<>();
     }
     public boolean isAtGoodPostion(){
         return  true;
@@ -45,4 +45,5 @@ public class QuizMGR {
     public void onQuestionListRetrieved(){
         complete = true;
     }
+
 }
