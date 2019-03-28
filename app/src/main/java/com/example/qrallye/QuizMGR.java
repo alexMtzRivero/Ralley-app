@@ -7,16 +7,26 @@ public class QuizMGR {
     private static final QuizMGR ourInstance = new QuizMGR();
 
     private ArrayList<Question> questionList;
+
+    private ArrayList<Quiz> quizList;
+
     public boolean complete = false;
-
     private String currentQuiz = "";
-
     public static QuizMGR getInstance() {
         return ourInstance;
     }
 
+    public ArrayList<Quiz> getQuizList() {
+        return quizList;
+    }
+
+    public void setQuizList(ArrayList<Quiz> quizList) {
+        this.quizList = quizList;
+    }
+
     private QuizMGR() {
         questionList = new ArrayList<>();
+        quizList = new ArrayList<>();
     }
     public boolean isAtGoodPostion(){
         return  true;
@@ -45,4 +55,5 @@ public class QuizMGR {
     public void onQuestionListRetrieved(){
         complete = true;
     }
+
 }

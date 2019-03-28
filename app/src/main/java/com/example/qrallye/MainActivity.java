@@ -6,6 +6,7 @@ import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.os.PatternMatcher;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -19,9 +20,12 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.qrallye.databinding.NavigationBarBinding;
+import com.google.api.LogDescriptor;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements FragmentCallback {
@@ -39,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
         startCrono();
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
+        QuizMGR.getInstance().setQuizList(DatabaseMGR.getInstance().getListOfQuiz());
 
 
         final NavigationBarBinding binding = DataBindingUtil.bind((findViewById(R.id.navbar)));
