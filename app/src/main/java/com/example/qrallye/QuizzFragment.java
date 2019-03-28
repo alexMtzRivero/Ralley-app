@@ -34,6 +34,10 @@ public class QuizzFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+
+
     }
 
     @Override
@@ -41,8 +45,7 @@ public class QuizzFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_quizz, container, false);
         recyclerView = view.findViewById(R.id.locationsList);
-
-        DatabaseMGR.getInstance().getListOfQuiz(this);
+        quizList = QuizMGR.getInstance().getQuizList();
         locationsListAdapter = new LocationsListAdapter(quizList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(locationsListAdapter);
@@ -58,17 +61,6 @@ public class QuizzFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
-    }
-    public void  onListRecived(ArrayList<Quiz> list){
-        Log.e("desde quizz",""+list);
-
-        for (Quiz item: list) {
-            this.quizList.add(item);
-        }
-
-        locationsListAdapter = new LocationsListAdapter(quizList);
-        recyclerView = getView().findViewById(R.id.locationsList);
-        recyclerView.setAdapter(locationsListAdapter);
     }
 
     @Override

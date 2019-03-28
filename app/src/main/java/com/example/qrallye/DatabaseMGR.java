@@ -130,7 +130,7 @@ public class DatabaseMGR {
         });
     }
 
-    public ArrayList<Quiz> getListOfQuiz(final QuizzFragment quizzFragment){
+    public ArrayList<Quiz> getListOfQuiz(){
         final ArrayList<Quiz> quizList = new ArrayList<>();
         quizzesCollections.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -142,7 +142,6 @@ public class DatabaseMGR {
                             quizList.add(quiz);
                         }
                         sortList(quizList);
-                        quizzFragment.onListRecived(quizList);
                         Log.d(TAG, "onComplete: quizList "+ quizList);
                     }
                     else{

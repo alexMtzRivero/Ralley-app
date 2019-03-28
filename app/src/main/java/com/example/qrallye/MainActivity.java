@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
+        QuizMGR.getInstance().setQuizList(DatabaseMGR.getInstance().getListOfQuiz());
 
         final NavigationBarBinding binding = DataBindingUtil.bind((findViewById(R.id.navbar)));
 
