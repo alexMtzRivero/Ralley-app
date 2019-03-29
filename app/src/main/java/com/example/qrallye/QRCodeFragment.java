@@ -83,7 +83,6 @@ public class QRCodeFragment extends Fragment {
             public void onClick(View v) {
                 IntentIntegrator integrator = new IntentIntegrator(getActivity());
                 integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES);
-
                 integrator.setPrompt("Scan");
                 integrator.setCameraId(0);
                 integrator.setBeepEnabled(false);

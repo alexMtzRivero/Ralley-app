@@ -1,5 +1,7 @@
 package com.example.qrallye;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 
@@ -9,7 +11,7 @@ public class QuizMGR {
     private ArrayList<Quiz> quizList;
     private ArrayList<Quiz> quizDoneList;
     public boolean complete = false;
-    private boolean isWaitingForListOfQuiz = false;
+    private boolean isWaitingForListOfQuiz = true;
     private String currentQuiz = "";
     public static QuizMGR getInstance() {
         return ourInstance;
@@ -43,13 +45,14 @@ public class QuizMGR {
     }
 
     public void setCurrentQuiz(String currentQuiz) {
-
+        Log.d("M.B", "setCurrentQuiz: ");
         this.currentQuiz = currentQuiz;
         this.questionList = new ArrayList<>();
         this.complete = false;
     }
 
     public void onQuestionListRetrieved(){
+        Log.d("M.B", "onQuestionListRetrieved: ");
         complete = true;
     }
 
@@ -57,8 +60,8 @@ public class QuizMGR {
         return isWaitingForListOfQuiz;
     }
 
-    public void setWaitingForListOfQuiz(boolean waitingForListOfQuiz) {
-        isWaitingForListOfQuiz = waitingForListOfQuiz;
+    public void setWaitingForListOfQuiz() {
+        isWaitingForListOfQuiz = false;
     }
     public ArrayList<Quiz> getQuizDoneList() {
         return quizDoneList;

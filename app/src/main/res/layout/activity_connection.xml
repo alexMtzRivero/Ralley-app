@@ -64,7 +64,7 @@
             android:layout_width="match_parent"
             android:layout_weight="5"
             android:autoSizeTextType="uniform"
-            android:hint="mot de pass"
+            android:hint="@string/password"
             android:inputType="numberPassword"
             android:layout_height="1dp" />
     </LinearLayout>
@@ -80,8 +80,6 @@
         android:textStyle="bold"
         android:textColor="@color/textColor"
         android:layout_margin="16dp"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        android:text="Valider"/>
+        android:text="@string/valid"/>
 
 </LinearLayout>

@@ -117,8 +117,11 @@ public class QuizzFragment extends Fragment {
                 name.setText(mDataset.get(position ).getId());
                 place.setText(mDataset.get(position ).getNomQuiz());
                 for (Quiz quiz : QuizMGR.getInstance().getQuizDoneList()) {
-                    if(mDataset.get(position).getId().equals(quiz.getId()) && quiz.getEndQuiz() != null)
+                    Log.d("DEBUG M.B", ":mDataset " + mDataset.get(position).getId());
+                    Log.d("DEBUG M.B", ":quiz " +quiz.getId());
+                    if(mDataset.get(position).getId().compareTo(quiz.getId()) == 0 && quiz.getEndQuiz() != null)
                     {
+                        Log.d("DEBUG M.B", "onBindViewHolder: ");
                         img.setImageResource(R.drawable.ic_valide);
                         long time = quiz.getEndQuiz().getTime() - quiz.getStartQuiz().getTime();
                         long minute = time / (60 *1000);
@@ -148,11 +151,14 @@ public class QuizzFragment extends Fragment {
 
         @Override
         protected String doInBackground(String... strings) {
-            QuizMGR.getInstance().setWaitingForListOfQuiz(true);
             while(QuizMGR.getInstance().isWaitingForListOfQuiz()){
                 Log.d("Thread", "doInBackground: ");
+                try {
+                    Thread.sleep(200);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
-            QuizMGR.getInstance().setWaitingForListOfQuiz(false);
             return null;
         }
         @Override

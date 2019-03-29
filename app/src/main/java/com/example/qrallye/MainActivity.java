@@ -43,6 +43,8 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
         Log.d(TAG, "onCreate: RECUPERATION DES QUIZ");
         QuizMGR.getInstance().setQuizList(DatabaseMGR.getInstance().getListOfQuiz());
 
+        findViewById(R.id.navbar).setVisibility(View.VISIBLE);
+
 
         final NavigationBarBinding binding = DataBindingUtil.bind((findViewById(R.id.navbar)));
 
@@ -65,12 +67,13 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
                     changeFragmentDisplayed(new ProgressFragment());
                     break;
                 case Question:
-                    binding.setSelected((ImageView) findViewById(R.id.navProgress));
+                    binding.setSelected((ImageView) findViewById(R.id.navQuizz));
                     QuestionFragment questionFragment = new QuestionFragment();
                     Bundle args = new Bundle();
                     args.putString(getResources().getString(R.string.currentQuiz), bundle.getString(getResources().getString(R.string.currentQuiz)));
                     questionFragment.setArguments(args);
                     changeFragmentDisplayed(questionFragment);
+                    findViewById(R.id.navbar).setVisibility(View.GONE);
                     break;
             }
         }else{
@@ -145,6 +148,7 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
 
     @Override
     public void onQuizzFinish() {
+        findViewById(R.id.navbar).setVisibility(View.VISIBLE);
         findViewById(R.id.navMap).performClick();
     }
 
@@ -166,6 +170,7 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
                 args.putString(getResources().getString(R.string.currentQuiz), stringResult);
                 questionFragment.setArguments(args);
                 changeFragmentDisplayed(questionFragment);
+                findViewById(R.id.navbar).setVisibility(View.GONE);
             } else if (stringResult.equals("startRace")) {
                 DatabaseMGR.getInstance().setStartRallye();
                 changeFragmentDisplayed(new MapFragment());
