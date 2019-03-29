@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:layout_marginTop="32dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:gravity="center"
+        android:background="#ffffff"
+        android:weightSum="10"
+        android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:weightSum="30"
+            android:layout_weight="7">
+            <View
+                android:layout_width="100dp"
+                android:layout_height="1dp"
+                android:layout_weight="2"
+                android:background="@color/appYellow"></View>
+            <TextView
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_weight="20"
+                android:textStyle="bold"
+                android:text="Sites du challenge"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="20dp"
+                android:autoSizeMaxTextSize="40dp"
+                android:autoSizeStepGranularity="1dp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

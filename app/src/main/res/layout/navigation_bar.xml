@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="selected"
+            type="android.widget.ImageView" />
+    </data>
+
+
+
+    <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    android:layout_alignParentBottom="true">
+
+    <ImageView
+        android:id="@+id/navMap"
+        android:layout_width="0dp"
+        android:padding="15px"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_carte"
+        android:layout_weight="1"
+        android:background="@{selected == navMap ? @color/navItemSelected : @android:color/transparent}"/>
+
+    <ImageView
+        android:id="@+id/navScan"
+        android:layout_width="0dp"
+        android:padding="15px"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_scan"
+        android:layout_weight="1"
+        android:background="@{selected == navScan ? @color/navItemSelected : @android:color/transparent}"/>
+
+    <ImageView
+        android:id="@+id/navQuizz"
+        android:layout_width="0dp"
+        android:padding="15px"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_question"
+        android:layout_weight="1"
+        android:background="@{selected == navQuizz ? @color/navItemSelected : @android:color/transparent}"/>
+
+    <ImageView
+        android:id="@+id/navProgress"
+        android:layout_width="0dp"
+        android:padding="15px"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_coureur"
+        android:layout_weight="1"
+        android:background="@{selected == navProgress ? @color/navItemSelected : @android:color/transparent}"/>
+
+    <ImageView
+        android:id="@+id/navHome"
+        android:layout_width="0dp"
+        android:padding="15px"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_accueil"
+        android:layout_weight="1"/>
+
+
+</LinearLayout>
+
+</layout>

@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "781965245298",
+    "firebase_url": "https://q-rallye.firebaseio.com",
+    "project_id": "q-rallye",
+    "storage_bucket": "q-rallye.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:781965245298:android:ca5c489020f31280",
+        "android_client_info": {
+          "package_name": "com.example.qrallye"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "781965245298-vlk3b26dl5sff057svlosuhbb9uonndr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.qrallye",
+            "certificate_hash": "8a7f80ba2eb957ea553e7827e3f434cc3d891ddc"
+          }
+        },
+        {
+          "client_id": "781965245298-gmpl9detdb30d33ppahnsot41edp9dbj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHk5nMtzpTCDzkc2f0-NxnHmiPxvzekiE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "781965245298-gmpl9detdb30d33ppahnsot41edp9dbj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

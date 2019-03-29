@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="9"
+    android:layout_margin="32dp"
+    android:orientation="vertical"
+    android:layout_gravity="center">
+
+    <ImageView
+        android:src="@drawable/full_logo"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_weight="3"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+
+        android:layout_height="1dp">
+        <View
+            android:layout_width="200dp"
+            android:layout_height="15px"
+            android:background="@color/appYellow">
+        </View>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sécurité"
+            android:textStyle="bold"
+            android:textSize="39dp"
+            />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/rules"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:layout_weight="4"
+        android:textAlignment="center"
+        android:layout_margin="16dp"
+        android:layout_below="@+id/title"
+        android:text=" Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis mattis faucibus libero vitae ultricies. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer auctor malesuada dapibus. Maecenas lobortis consequat nibh eget mattis. Quisque ut tincidunt enim. Maecenas cursus diam sit amet ligula egestas, at aliquam turpis consectetur. Sed vel neque at massa dapibus pharetra id eget ligula. Integer auctor tincidunt accumsan.
+
+Nunc et tincidunt lacus, a euismod leo. Praesent libero enim, dictum eu posuere nec, semper ut purus. Quisque id nulla ut ipsum laoreet sagittis. Suspendisse auctor mi lectus, sit amet euismod dui dapibus vulputate. Quisque viverra, ante vitae viverra condimentum, enim elit dictum mauris, ut ultricies enim libero eget metus. Fusce purus mi, mattis porta molestie at, facilisis nec massa. Fusce justo lectus, accumsan at augue eget, dictum venenatis sem. Proin id pulvinar lacus. In varius, justo placerat aliquet finibus, sem ex sagittis velit, eget ullamcorper sapien sem et arcu. Maecenas suscipit ligula eleifend dui laoreet, vitae pulvinar ex pretium. Donec dictum a ligula in efficitur. Suspendisse id volutpat dolor. Vestibulum vel leo quis odio sagittis tempus sit amet et ante. Sed auctor dui non dapibus sodales."/>
+    <Button
+        android:id="@+id/acceptRulesBtn"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_weight="1"
+        android:background="@color/backgroundColor"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="12dp"
+        android:autoSizeMaxTextSize="25dp"
+        android:autoSizeStepGranularity="2dp"
+        android:textStyle="bold"
+        android:textColor="@color/textColor"
+        android:layout_margin="16dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:text="Accepter"/>
+
+</LinearLayout>

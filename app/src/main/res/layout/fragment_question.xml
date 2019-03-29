@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ProgressBar
+        android:id="@+id/questionProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        android:layout_centerInParent="true"/>
+
+    <LinearLayout
+        android:id="@+id/questionLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible"
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:background="@color/backgroundColor"
+        android:weightSum="20">
+        <LinearLayout
+            android:layout_marginVertical="32dp"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_weight="3"
+            android:gravity="center"
+            android:background="#ffffff"
+            android:weightSum="10"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:weightSum="30"
+                android:layout_weight="7">
+                <View
+                    android:layout_width="100dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="2"
+                    android:background="@color/appYellow"/>
+                <TextView
+                    android:id="@+id/quizzName"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_weight="20"
+                    android:textStyle="bold"
+                    android:text="lieu 1"
+                    android:autoSizeTextType="uniform"
+                    android:autoSizeMinTextSize="20dp"
+                    android:autoSizeMaxTextSize="40dp"
+                    android:autoSizeStepGranularity="1dp"/>
+            </LinearLayout>
+            <Chronometer
+                android:id="@+id/quizzTimer"
+                android:layout_alignParentRight="true"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textSize="20sp"
+                />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/questionText"
+            android:layout_margin="32dp"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:paddingLeft="16dp"
+            android:textStyle="bold"
+            android:gravity="center_vertical"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="20dp"
+            android:autoSizeMaxTextSize="40dp"
+            android:autoSizeStepGranularity="1dp"
+            android:background="@drawable/gradient"
+            android:textColor="#ffffff"
+            android:text="Question here" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/responsesList"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="15"
+            tools:listitem="@layout/response_list_item"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            />
+
+    </LinearLayout>
+
+</RelativeLayout>
