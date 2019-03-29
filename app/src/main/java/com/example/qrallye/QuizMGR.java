@@ -1,5 +1,7 @@
 package com.example.qrallye;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 
@@ -43,13 +45,14 @@ public class QuizMGR {
     }
 
     public void setCurrentQuiz(String currentQuiz) {
-
+        Log.d("M.B", "setCurrentQuiz: ");
         this.currentQuiz = currentQuiz;
         this.questionList = new ArrayList<>();
         this.complete = false;
     }
 
     public void onQuestionListRetrieved(){
+        Log.d("M.B", "onQuestionListRetrieved: ");
         complete = true;
     }
 
