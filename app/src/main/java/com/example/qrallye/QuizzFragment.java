@@ -151,11 +151,14 @@ public class QuizzFragment extends Fragment {
 
         @Override
         protected String doInBackground(String... strings) {
-            QuizMGR.getInstance().setWaitingForListOfQuiz(true);
             while(QuizMGR.getInstance().isWaitingForListOfQuiz()){
                 Log.d("Thread", "doInBackground: ");
+                try {
+                    Thread.sleep(200);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
-            QuizMGR.getInstance().setWaitingForListOfQuiz(false);
             return null;
         }
         @Override

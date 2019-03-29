@@ -95,8 +95,10 @@ public class DatabaseMGR {
         questionsRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                Log.e(TAG, "onComplete: starting : ZRSQBGWFBHDTEHBWTDEFHBDGEWTSNBGDWSTENB");
                 if(task.isSuccessful())
                 {
+                    Log.e(TAG, "onComplete: task.successful : ZRSQBGWFBHDTEHBWTDEFHBDGEWTSNBGDWSTENB");
                     if(task.getResult() != null && task.getResult().size() != 0){
                         Log.d(TAG, "onComplete: getQuestionsFromQuiz "+ task.getResult().toString());
                         for (QueryDocumentSnapshot snapshot : task.getResult()) {
@@ -145,12 +147,12 @@ public class DatabaseMGR {
                         sortList(quizList);
                         //QuizMGR.getInstance().setQuizList(quizList);
                         Log.d(TAG, "onComplete: quizList "+ quizList);
-                        QuizMGR.getInstance().setWaitingForListOfQuiz(false);
                     }
                     else{
                         Log.d(TAG, "onComplete: getListOfQuiz = ERROR");
                     }
                 }
+                QuizMGR.getInstance().setWaitingForListOfQuiz();
             }
         });
 

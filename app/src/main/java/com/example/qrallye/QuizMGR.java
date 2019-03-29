@@ -11,7 +11,7 @@ public class QuizMGR {
     private ArrayList<Quiz> quizList;
     private ArrayList<Quiz> quizDoneList;
     public boolean complete = false;
-    private boolean isWaitingForListOfQuiz = false;
+    private boolean isWaitingForListOfQuiz = true;
     private String currentQuiz = "";
     public static QuizMGR getInstance() {
         return ourInstance;
@@ -60,8 +60,8 @@ public class QuizMGR {
         return isWaitingForListOfQuiz;
     }
 
-    public void setWaitingForListOfQuiz(boolean waitingForListOfQuiz) {
-        isWaitingForListOfQuiz = waitingForListOfQuiz;
+    public void setWaitingForListOfQuiz() {
+        isWaitingForListOfQuiz = false;
     }
     public ArrayList<Quiz> getQuizDoneList() {
         return quizDoneList;
