@@ -6,4 +6,6 @@
     <string name="connection">Connexion</string>
     <string name="valid">Valider</string>
     <string name="hello_blank_fragment">Fragment</string>
+    <string name="wrong_password">mauvais mot de passe</string>
+    <string name="wrong_username">mauvais pseudo</string>
 </resources>
