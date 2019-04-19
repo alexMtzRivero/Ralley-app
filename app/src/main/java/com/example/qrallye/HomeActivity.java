@@ -53,7 +53,8 @@ public class HomeActivity extends AppCompatActivity {
         findViewById(R.id.homeCallBtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent(HomeActivity.this, AdminActivity.class);
+                startActivity(intent);
             }
         });
         findViewById(R.id.homeWebBtn).setOnClickListener(new View.OnClickListener() {

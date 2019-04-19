@@ -3,13 +3,18 @@ package com.example.qrallye;
 import android.util.Log;
 import com.example.qrallye.Team;
 
+import java.util.ArrayList;
+
 import static com.example.qrallye.SessionMGR.*;
 
 public class SessionMGR {
     private final String TAG = "SessionMGR";
     private Team team;
     private ConnectionActivity toSend;
+    private AdminActivity adminActivity;
     private String waitingPassword;
+    private ArrayList<Administrators> adminList;
+    private boolean isWaitingForAdminList;
     private static final SessionMGR ourInstance = new SessionMGR();
     public static SessionMGR getInstance() {
         return ourInstance;
@@ -47,6 +52,18 @@ public class SessionMGR {
             toSend = null;
         }
     }
+
+    public void waitAdminList(AdminActivity adminActivity){
+        this.adminActivity = adminActivity;
+        DatabaseMGR.getInstance().getAdmin();
+    }
+
+    public void setAdminList (ArrayList<Administrators> adminList){
+        this.adminList = adminList;
+        adminActivity.refreshList(adminList);
+    }
+
+
 
 
 }

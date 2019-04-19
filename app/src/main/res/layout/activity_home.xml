@@ -140,10 +140,6 @@
                 android:layout_margin="16dp"
                 android:layout_height="match_parent" />
         </LinearLayout>
-
-
-
-
     </LinearLayout>
     <LinearLayout
         android:id="@+id/data"

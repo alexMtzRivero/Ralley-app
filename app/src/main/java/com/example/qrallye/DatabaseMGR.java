@@ -37,6 +37,7 @@ public class DatabaseMGR {
     }
 
     public void getAdmin(){
+        final ArrayList<Administrators> adminList = new ArrayList<>();
         Log.d(TAG, "getAdmin: Création");
         DocumentReference adminDocument = adminCollections.document();
         Log.d(TAG, "getAdmin: admin =" +adminDocument.toString());
@@ -47,9 +48,12 @@ public class DatabaseMGR {
                 for (QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots) {
                     Administrators administrators = queryDocumentSnapshot.toObject(Administrators.class);
                     Log.d(TAG, "onSuccess: " + administrators.getUsername());
+                    adminList.add(administrators);
                 }
+                SessionMGR.getInstance().setAdminList(adminList);
             }
         });
+
     }
 
     public void getTeam(final String teamName){
