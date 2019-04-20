@@ -37,6 +37,7 @@ public class HomeActivity extends AppCompatActivity {
                 Intent intent = new Intent(HomeActivity.this, MainActivity.class);
                 intent.putExtra("fragmentType", MainActivity.fragmentDisplayed.Map);
                 startActivity(intent);
+                finish();
             }
         });
         findViewById(R.id.homeScanBtn).setOnClickListener(new View.OnClickListener() {
@@ -45,6 +46,7 @@ public class HomeActivity extends AppCompatActivity {
                 Intent intent = new Intent(HomeActivity.this, MainActivity.class);
                 intent.putExtra("fragmentType", MainActivity.fragmentDisplayed.Scan);
                 startActivity(intent);
+                finish();
             }
         });
         findViewById(R.id.homeProgressBtn).setOnClickListener(new View.OnClickListener() {
@@ -53,6 +55,7 @@ public class HomeActivity extends AppCompatActivity {
                 Intent intent = new Intent(HomeActivity.this, MainActivity.class);
                 intent.putExtra("fragmentType", MainActivity.fragmentDisplayed.Progress);
                 startActivity(intent);
+                finish();
             }
         });
         findViewById(R.id.homeQuizzBtn).setOnClickListener(new View.OnClickListener() {
@@ -61,12 +64,14 @@ public class HomeActivity extends AppCompatActivity {
                 Intent intent = new Intent(HomeActivity.this, MainActivity.class);
                 intent.putExtra("fragmentType", MainActivity.fragmentDisplayed.Quiz);
                 startActivity(intent);
+                finish();
             }
         });
         findViewById(R.id.homeCallBtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent(HomeActivity.this, AdminActivity.class);
+                startActivity(intent);
             }
         });
         findViewById(R.id.homeWebBtn).setOnClickListener(new View.OnClickListener() {
@@ -82,5 +87,10 @@ public class HomeActivity extends AppCompatActivity {
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     1);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 }

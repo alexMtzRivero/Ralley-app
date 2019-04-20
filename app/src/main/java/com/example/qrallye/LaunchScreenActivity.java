@@ -26,7 +26,7 @@ public class LaunchScreenActivity extends AppCompatActivity {
                         startActivity(new Intent(getApplicationContext(), ConnectionActivity.class));
                         finish();
                     }
-                }, 2000);
+                }, 1500);
             }catch (Exception e){
 
             }
@@ -46,11 +46,13 @@ public class LaunchScreenActivity extends AppCompatActivity {
         String currentQuiz = SessionMGR.getInstance().getLogedTeam().getCurrentQuiz();
         if(currentQuiz.length() == 0){
             startActivity(new Intent(getApplicationContext(), RulesActivity.class));
+            finish();
         }else {
             Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra(getResources().getString(R.string.currentQuiz), currentQuiz);
             intent.putExtra("fragmentType", MainActivity.fragmentDisplayed.Question);
             startActivity(intent);
+            finish();
         }
     }
 }

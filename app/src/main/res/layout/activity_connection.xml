@@ -68,18 +68,34 @@
             android:inputType="numberPassword"
             android:layout_height="1dp" />
     </LinearLayout>
-    <Button
-        android:id="@+id/validateBtn"
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_weight="1"
-        android:background="@color/backgroundColor"
-        android:autoSizeTextType="uniform"
-        android:autoSizeMaxTextSize="39dp"
-        android:autoSizeStepGranularity="2dp"
-        android:textStyle="bold"
-        android:textColor="@color/textColor"
         android:layout_margin="16dp"
-        android:text="@string/valid"/>
+        android:gravity="center">
+
+        <ProgressBar
+            android:id="@+id/connectionProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/validateBtn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/backgroundColor"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMaxTextSize="39dp"
+            android:autoSizeStepGranularity="2dp"
+            android:textStyle="bold"
+            android:textColor="@color/textColor"
+            android:text="@string/valid"
+            android:visibility="visible"/>
+    </LinearLayout>
+
+
 
 </LinearLayout>

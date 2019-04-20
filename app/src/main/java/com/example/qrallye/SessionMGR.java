@@ -2,14 +2,20 @@ package com.example.qrallye;
 
 import android.content.SharedPreferences;
 
+import java.util.ArrayList;
+
+import static com.example.qrallye.SessionMGR.*;
 import static android.content.Context.MODE_PRIVATE;
 
 public class SessionMGR {
     private final String TAG = "SessionMGR";
     private Team team;
     private ConnectionActivity toSend;
+    private AdminActivity adminActivity;
     private LaunchScreenActivity launchScreenActivity;
     private String waitingPassword;
+    private ArrayList<Administrators> adminList;
+    private boolean isWaitingForAdminList;
     private static final SessionMGR ourInstance = new SessionMGR();
     private ConnectionType connectionType;
     public static SessionMGR getInstance() {
@@ -78,6 +84,18 @@ public class SessionMGR {
                 else launchScreenActivity.goToConnectionActivity();
             }
     }
+
+    public void requestAdminList(AdminActivity adminActivity){
+        this.adminActivity = adminActivity;
+        DatabaseMGR.getInstance().getAdmin();
+    }
+
+    public void onAdminListFound(ArrayList<Administrators> adminList){
+        this.adminList = adminList;
+        adminActivity.refreshList(adminList);
+    }
+
+
 
 
 }
