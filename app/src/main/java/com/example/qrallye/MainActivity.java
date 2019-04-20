@@ -190,7 +190,7 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
     public  void stopChrono(){
         Chronometer chrono = findViewById(R.id.timer);
         chrono.stop();
-        SharedPreferences sp = getSharedPreferences("myPreferences", MODE_PRIVATE);
+        SharedPreferences sp = getSharedPreferences(getString(R.string.sharedPreferencesFile), MODE_PRIVATE);
         sp.edit().putLong("endDate", Calendar.getInstance().getTimeInMillis()).apply();
     }
 
@@ -198,7 +198,7 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
 
         //check shared references
         String startTimeKey = "startTime";
-        SharedPreferences sp = getSharedPreferences("myPreferences", MODE_PRIVATE);
+        SharedPreferences sp = getSharedPreferences(getString(R.string.sharedPreferencesFile), MODE_PRIVATE);
         Date timeStart = SessionMGR.getInstance().getLogedTeam().getStartTimer();
         Chronometer chrono = findViewById(R.id.timer);
         Date timeEnd = SessionMGR.getInstance().getLogedTeam().getEndTimer();
