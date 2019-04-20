@@ -1,7 +1,6 @@
 package com.example.qrallye;
 
 import android.graphics.Color;
-import android.location.Location;
 
 import com.google.firebase.firestore.GeoPoint;
 
@@ -16,6 +15,7 @@ public class Team {
     private Date startTimer;
     private Date endTimer;
     private String currentQuiz;
+    private String token;
 
     //<editor-fold desc="Getter and Setter">
 
@@ -87,7 +87,7 @@ public class Team {
     public Team(){
     }
 
-    public Team(String name, long password, GeoPoint position, Color colorB, String color, Date startTimer, Date endTimer, String currentQuiz) {
+    public Team(String name, long password, GeoPoint position, Color colorB, String color, Date startTimer, Date endTimer, String currentQuiz, String token) {
         this.name = name;
         this.password = password;
         this.position = position;
@@ -96,5 +96,10 @@ public class Team {
         this.startTimer = startTimer;
         this.endTimer = endTimer;
         this.currentQuiz = currentQuiz;
+        this.token = token;
+    }
+
+    public String getToken() {
+        return token;
     }
 }
