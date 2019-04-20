@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
                     Bundle args = new Bundle();
                     args.putString(getResources().getString(R.string.currentQuiz), bundle.getString(getResources().getString(R.string.currentQuiz)));
                     questionFragment.setArguments(args);
-                    changeFragmentDisplayed(questionFragment);
+                    changeFragmentDisplayed(questionFragment, fragmentDisplayed.Question.toString());
                     findViewById(R.id.navbar).setVisibility(View.GONE);
                     break;
             }
@@ -108,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
                         break;
                     case R.id.navHome:
                         startActivity(new Intent(MainActivity.this, HomeActivity.class));
+                        finish();
                         break;
                     default:
                         break;
@@ -136,6 +137,7 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, f)
+                .addToBackStack(null)
                 .commit();
     }
 
@@ -169,7 +171,7 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
             if (stringResult.contains("Quiz")) {
                 args.putString(getResources().getString(R.string.currentQuiz), stringResult);
                 questionFragment.setArguments(args);
-                changeFragmentDisplayed(questionFragment);
+                changeFragmentDisplayed(questionFragment, fragmentDisplayed.Question.toString());
                 findViewById(R.id.navbar).setVisibility(View.GONE);
             } else if (stringResult.equals("startRace")) {
                 DatabaseMGR.getInstance().setStartRallye();
@@ -248,5 +250,12 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
         }
     }
 
-
+    @Override
+    public void onBackPressed() {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(fragmentDisplayed.Question.toString());
+        if(fragment == null){
+            startActivity(new Intent(this, HomeActivity.class));
+            finish();
+        }
+    }
 }

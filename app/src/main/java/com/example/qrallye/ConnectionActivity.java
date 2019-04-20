@@ -30,11 +30,13 @@ public class ConnectionActivity extends AppCompatActivity {
         String currentQuiz = SessionMGR.getInstance().getLogedTeam().getCurrentQuiz();
         if(currentQuiz.length() == 0){
             startActivity(new Intent(getApplicationContext(), RulesActivity.class));
+            finish();
         }else {
             Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra(getResources().getString(R.string.currentQuiz), currentQuiz);
             intent.putExtra("fragmentType", MainActivity.fragmentDisplayed.Question);
             startActivity(intent);
+            finish();
         }
     }
     public  void notifyWrongPasword(){

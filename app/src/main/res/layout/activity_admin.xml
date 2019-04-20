@@ -10,14 +10,23 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize">
-        <ImageView
-            android:layout_marginLeft="10dp"
+
+        <LinearLayout
             android:id="@+id/back_arrow"
-            android:clickable="true"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            app:srcCompat="@drawable/ic_fleches_left" />
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:padding="5dp">
+
+            <ImageView
+                android:layout_marginLeft="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_fleches_left"
+                android:layout_marginStart="10dp" />
+        </LinearLayout>
+
+
         <TextView
             android:layout_marginLeft="20dp"
             android:layout_width="match_parent"
