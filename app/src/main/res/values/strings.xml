@@ -1,11 +1,14 @@
 <resources>
     <string name="app_name">QRallye</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="name">Name</string>
     <string name="password">Password</string>
     <string name="connection">Connection</string>
     <string name="valid">Valid</string>
     <string name="currentQuiz" translatable="false">currentQuiz</string>
+    <string name="sharedPreferencesFile" translatable="false">myPreferences</string>
+    <string name="wrong_password">wrong password</string>
+    <string name="wrong_username">wrong username</string>
+    <string name="teamNamePref" translatable="false">loggedTeam</string>
+
 </resources>

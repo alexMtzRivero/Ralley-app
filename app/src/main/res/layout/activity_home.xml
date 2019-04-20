@@ -140,26 +140,52 @@
                 android:layout_margin="16dp"
                 android:layout_height="match_parent" />
         </LinearLayout>
+
+
     </LinearLayout>
+
     <LinearLayout
-        android:id="@+id/data"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:weightSum="5"
+        android:layout_height="50dp"
         android:gravity="center"
         android:layout_weight="10">
-        <ImageView
-            android:src="@drawable/ic_regles"
-            android:layout_width="64dp"
-            android:layout_height="match_parent" />
-        <TextView
-            android:layout_marginLeft="32dp"
-            android:autoSizeTextType="uniform"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
 
-            android:text="Télécharger les règles"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            android:gravity="center">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <ImageView
+                    android:src="@drawable/ic_regles"
+                    android:layout_width="64dp"
+                    android:layout_height="match_parent" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/logoutBtn"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_logout"
+                android:scaleType="fitCenter"
+                android:scaleX="0.75"
+                android:scaleY="0.75"/>
+        </LinearLayout>
+
+
+
+
     </LinearLayout>
 
 </LinearLayout>

@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 
 public class DatabaseMGR {
@@ -71,7 +72,8 @@ public class DatabaseMGR {
                                 doc.getString("color"),
                                 (doc.getTimestamp("startRallye") != null) ?doc.getTimestamp("startRallye").toDate():null,
                                 (doc.getTimestamp("endRallye") != null) ?doc.getTimestamp("endRallye").toDate():null,
-                                (doc.getString("currentQuiz") != null) ?doc.getString("currentQuiz"):""
+                                (doc.getString("currentQuiz") != null) ?doc.getString("currentQuiz"):"",
+                                (doc.getString("token") != null) ?doc.getString("token"):""
                         );
                         Log.d(TAG, "onComplete: team " + team.getStartTimer() );
                         SessionMGR.getInstance().onTeamFound(team);
@@ -267,4 +269,12 @@ public class DatabaseMGR {
         });
     }
 
+    public String newToken() {
+        String token = UUID.randomUUID().toString();
+        Team tmpTeam = SessionMGR.getInstance().getLogedTeam();
+        Map<String,Object> toPush = new HashMap<>();
+        toPush.put("token", token);
+        teamCollections.document(tmpTeam.getName()).update(toPush);
+        return token;
+    }
 }
