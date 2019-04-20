@@ -53,12 +53,12 @@ public class SessionMGR {
         }
     }
 
-    public void waitAdminList(AdminActivity adminActivity){
+    public void requestAdminList(AdminActivity adminActivity){
         this.adminActivity = adminActivity;
         DatabaseMGR.getInstance().getAdmin();
     }
 
-    public void setAdminList (ArrayList<Administrators> adminList){
+    public void onAdminListFound(ArrayList<Administrators> adminList){
         this.adminList = adminList;
         adminActivity.refreshList(adminList);
     }

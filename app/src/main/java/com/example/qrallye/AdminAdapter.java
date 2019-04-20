@@ -1,7 +1,13 @@
 package com.example.qrallye;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,12 +51,21 @@ public class AdminAdapter extends ArrayAdapter<Administrators> {
         }
 
         //<editor-fold desc="Affichage des données">
-        Administrators administrators = adminList.get(position);
+        final Administrators administrators = adminList.get(position);
         holder.tv_name.setText(administrators.getUsername());
         holder.tv_number.setText(administrators.getNumber());
         holder.phone.setImageResource(R.drawable.ic_contact);
         //</editor-fold>
 
+        holder.phone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent phoneIntent = new Intent(Intent.ACTION_DIAL);
+                phoneIntent.setData(Uri.parse("tel:"+administrators.getNumber()));
+                phoneIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(phoneIntent);
+            }
+        });
         return convertView;
     }
 

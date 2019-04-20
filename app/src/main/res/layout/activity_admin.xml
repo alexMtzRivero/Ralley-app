@@ -30,7 +30,7 @@
 
     <ListView
         android:layout_below="@id/toolbar"
-        android:id="@+id/admiList"
+        android:id="@+id/adminList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone">
