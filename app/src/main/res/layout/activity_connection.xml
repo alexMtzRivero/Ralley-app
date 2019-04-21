@@ -5,7 +5,8 @@
     android:weightSum="9"
     android:layout_margin="32dp"
     android:orientation="vertical"
-    android:layout_gravity="center">
+    android:layout_gravity="center"
+    android:descendantFocusability="beforeDescendants">
 
     <ImageView
         android:src="@drawable/full_logo"
@@ -27,7 +28,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Connexion"
+            android:text="@string/connection"
             android:textStyle="bold"
             android:textSize="39dp"
             />
@@ -57,7 +58,7 @@
             android:textColor="@color/textColor"
             android:autoSizeTextType="uniform"
             android:inputType="textPersonName"
-            android:hint="Name" />
+            android:hint="@string/name" />
 
         <EditText
             android:id="@+id/PasswordEdt"
