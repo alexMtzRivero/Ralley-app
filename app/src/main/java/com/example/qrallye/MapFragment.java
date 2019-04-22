@@ -3,12 +3,9 @@ package com.example.qrallye;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -20,8 +17,7 @@ import android.webkit.GeolocationPermissions;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-
-import com.google.type.LatLng;
+import android.webkit.WebViewClient;
 
 
 /**
@@ -76,6 +72,12 @@ public class MapFragment extends Fragment {
                 }
             }
         });
+        mWebView.setWebViewClient(new WebViewClient(){
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                new showQuizPositionsTask().execute();
+            }
+        });
 
         WebSettings webSettings = mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
@@ -87,20 +89,43 @@ public class MapFragment extends Fragment {
 
 
         mWebView.loadUrl("file:///android_asset/index.html");
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                for (Quiz quiz : QuizMGR.getInstance().getQuizList()) {
-                    Log.d("MapFragment", "onCreateView: création de marker");
-                    String pos ="["+quiz.getPosition().getLatitude()+","+quiz.getPosition().getLongitude()+"]";
-                    String add = "mymap.addLayer( new L.Marker("+pos+"));";
-                    mWebView.loadUrl("javascript:"+add);
-                }
-            }
-        }, 1000);
-
 
         return view;
+    }
+
+    private class showQuizPositionsTask extends AsyncTask<String, Void, String> {
+
+        /*
+        @Override
+        protected void onPreExecute() {
+            try {
+                Thread.sleep(1700);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        */
+
+        @Override
+        protected String doInBackground(String... strings) {
+            while(QuizMGR.getInstance().isWaitingForListOfQuiz()){
+                try {
+                    Thread.sleep(200);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String result) {
+            for (Quiz quiz : QuizMGR.getInstance().getQuizList()) {
+                Log.d("MapFragment", "onCreateView: création de marker");
+                String pos ="["+quiz.getPosition().getLatitude()+","+quiz.getPosition().getLongitude()+"]";
+                String add = "mymap.addLayer( new L.Marker("+pos+"));";
+                mWebView.loadUrl("javascript:"+add);
+            }
+        }
     }
 
     @Override

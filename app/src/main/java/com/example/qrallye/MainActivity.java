@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -12,6 +13,7 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Chronometer;
@@ -41,7 +43,8 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         Log.d(TAG, "onCreate: RECUPERATION DES QUIZ");
-        QuizMGR.getInstance().setQuizList(DatabaseMGR.getInstance().getListOfQuiz());
+
+        new retrieveQuizListFromDBTask().execute();
 
         findViewById(R.id.navbar).setVisibility(View.VISIBLE);
 
@@ -256,6 +259,21 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
         if(fragment == null){
             startActivity(new Intent(this, HomeActivity.class));
             finish();
+        }
+    }
+
+    private class retrieveQuizListFromDBTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... strings) {
+            while(QuizMGR.getInstance().isWaitingForListOfQuiz()){
+                QuizMGR.getInstance().retrieveQuizList();
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
         }
     }
 }

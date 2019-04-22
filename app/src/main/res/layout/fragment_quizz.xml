@@ -4,8 +4,15 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:layout_gravity="center"
+    android:gravity="center"
     android:background="@color/backgroundColor">
+
+    <ProgressBar
+        android:id="@+id/quizzesProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="visible"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/locationsList"
@@ -13,5 +20,5 @@
         android:layout_height="match_parent"
         tools:listitem="@layout/question_list_item"
         tools:itemCount="5"
-        />
+        android:visibility="gone"/>
 </LinearLayout>

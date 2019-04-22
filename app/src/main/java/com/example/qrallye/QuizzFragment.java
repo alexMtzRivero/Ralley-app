@@ -10,13 +10,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Chronometer;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+
+import static android.support.constraint.Constraints.TAG;
 
 
 /**
@@ -33,6 +33,12 @@ public class QuizzFragment extends Fragment {
     ArrayList<Quiz> quizList = new ArrayList<>();
     LocationsListAdapter locationsListAdapter;
     RecyclerView recyclerView;
+    ArrayList<Quiz> finishedQuizList;
+
+    private enum DisplayState{
+        LOADING, LIST
+    }
+
     public QuizzFragment() {
     }
 
@@ -47,10 +53,18 @@ public class QuizzFragment extends Fragment {
         recyclerView = view.findViewById(R.id.locationsList);
         DatabaseMGR.getInstance().getQuizFinishForTeamLogged();
         quizList = QuizMGR.getInstance().getQuizList();
-        locationsListAdapter = new LocationsListAdapter(quizList);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(locationsListAdapter);
-        new LongOperation().execute();
+        finishedQuizList = QuizMGR.getInstance().getFinishedQuizList();
+
+        if(quizList.size() == 0){
+            changeDisplay(DisplayState.LOADING, view);
+            new getQuizListTask().execute();
+        }else{
+            locationsListAdapter = new LocationsListAdapter(quizList);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            recyclerView.setAdapter(locationsListAdapter);
+            changeDisplay(DisplayState.LIST, view);
+        }
+
         return view;
     }
 
@@ -69,6 +83,21 @@ public class QuizzFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    private void changeDisplay(DisplayState d, View view){
+        ProgressBar progressBar = view.findViewById(R.id.quizzesProgressBar);
+        RecyclerView recyclerView = view.findViewById(R.id.locationsList);
+        switch (d){
+            case LOADING:
+                progressBar.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
+                break;
+            case LIST:
+                progressBar.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
+                break;
+        }
     }
 
     class LocationsListAdapter extends RecyclerView.Adapter<LocationsListAdapter.MyViewHolder> {
@@ -116,7 +145,7 @@ public class QuizzFragment extends Fragment {
                 ImageView img = holder.itemView.findViewById(R.id.img);
                 name.setText(mDataset.get(position ).getId());
                 place.setText(mDataset.get(position ).getNomQuiz());
-                for (Quiz quiz : QuizMGR.getInstance().getQuizDoneList()) {
+                for (Quiz quiz : finishedQuizList) {
                     Log.d("DEBUG M.B", ":mDataset " + mDataset.get(position).getId());
                     Log.d("DEBUG M.B", ":quiz " +quiz.getId());
                     if(mDataset.get(position).getId().compareTo(quiz.getId()) == 0 && quiz.getEndQuiz() != null)
@@ -147,12 +176,12 @@ public class QuizzFragment extends Fragment {
 
 
     }
-    private class LongOperation extends AsyncTask<String, Void, String> {
+
+    private class getQuizListTask extends AsyncTask<String, Void, String> {
 
         @Override
         protected String doInBackground(String... strings) {
-            while(QuizMGR.getInstance().isWaitingForListOfQuiz()){
-                Log.d("Thread", "doInBackground: ");
+            while(QuizMGR.getInstance().isWaitingForListOfQuiz() && QuizMGR.getInstance().isWaitingForListOfFinishedQuiz()){
                 try {
                     Thread.sleep(200);
                 } catch (InterruptedException e) {
@@ -164,9 +193,15 @@ public class QuizzFragment extends Fragment {
         @Override
         protected void onPostExecute(String result) {
             quizList = QuizMGR.getInstance().getQuizList();
+            finishedQuizList = QuizMGR.getInstance().getFinishedQuizList();
             locationsListAdapter = new LocationsListAdapter(quizList);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             recyclerView.setAdapter(locationsListAdapter);
+            try{
+                changeDisplay(DisplayState.LIST, getView());
+            }catch(Exception e){
+                Log.e(TAG, "onPostExecute: ", e);
+            }
         }
     }
 }
