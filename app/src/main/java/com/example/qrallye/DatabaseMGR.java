@@ -150,15 +150,14 @@ public class DatabaseMGR {
                         sortList(quizList);
                         //QuizMGR.getInstance().setQuizList(quizList);
                         Log.d(TAG, "onComplete: quizList "+ quizList);
+                        QuizMGR.getInstance().setWaitingForListOfQuizDone();
                     }
                     else{
                         Log.d(TAG, "onComplete: getListOfQuiz = ERROR");
                     }
                 }
-                QuizMGR.getInstance().setWaitingForListOfQuiz();
             }
         });
-
         return quizList;
     }
     public void pushAnswersForQuiz(String quizName, ArrayList choices ){
@@ -246,8 +245,8 @@ public class DatabaseMGR {
                             quizList.add(quiz);
                         }
                         sortList(quizList);
-                        Log.d(TAG, "onComplete: list "+ quizList);
-                        QuizMGR.getInstance().setQuizDoneList(quizList);
+                        QuizMGR.getInstance().setFinishedQuizList(quizList);
+                        QuizMGR.getInstance().setWaitingForListOfFinishedQuizDone();
                     }
                 }
             }

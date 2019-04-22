@@ -9,9 +9,10 @@ public class QuizMGR {
     private static final QuizMGR ourInstance = new QuizMGR();
     private ArrayList<Question> questionList;
     private ArrayList<Quiz> quizList;
-    private ArrayList<Quiz> quizDoneList;
+    private ArrayList<Quiz> FinishedQuizList;
     public boolean complete = false;
     private boolean isWaitingForListOfQuiz = true;
+    private boolean isWaitingForListOfFinishedQuiz = true;
     private String currentQuiz = "";
     public static QuizMGR getInstance() {
         return ourInstance;
@@ -21,14 +22,17 @@ public class QuizMGR {
         return quizList;
     }
 
-    public void setQuizList(ArrayList<Quiz> quizList) {
-        this.quizList = quizList;
+    public boolean retrieveQuizList(){
+        ArrayList<Quiz> res = DatabaseMGR.getInstance().getListOfQuiz();
+        if(this.quizList.size() == 0)
+            this.quizList = res;
+        return true;
     }
 
     private QuizMGR() {
         questionList = new ArrayList<>();
         quizList = new ArrayList<>();
-        quizDoneList = new ArrayList<>();
+        FinishedQuizList = new ArrayList<>();
     }
 
     public ArrayList<Question> getQuestionList() {
@@ -60,15 +64,22 @@ public class QuizMGR {
         return isWaitingForListOfQuiz;
     }
 
-    public void setWaitingForListOfQuiz() {
+    public void setWaitingForListOfQuizDone() {
         isWaitingForListOfQuiz = false;
     }
-    public ArrayList<Quiz> getQuizDoneList() {
-        return quizDoneList;
+    public ArrayList<Quiz> getFinishedQuizList() {
+        return FinishedQuizList;
     }
 
-    public void setQuizDoneList(ArrayList<Quiz> quizDoneList) {
-        this.quizDoneList = quizDoneList;
+    public void setFinishedQuizList(ArrayList<Quiz> finishedQuizList) {
+        this.FinishedQuizList = finishedQuizList;
     }
 
+    public boolean isWaitingForListOfFinishedQuiz() {
+        return isWaitingForListOfQuiz;
+    }
+
+    public void setWaitingForListOfFinishedQuizDone() {
+        isWaitingForListOfQuiz = false;
+    }
 }
