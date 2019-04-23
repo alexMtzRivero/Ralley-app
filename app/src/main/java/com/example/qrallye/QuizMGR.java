@@ -14,35 +14,18 @@ public class QuizMGR {
     private boolean isWaitingForListOfQuiz = true;
     private boolean isWaitingForListOfFinishedQuiz = true;
     private String currentQuiz = "";
+
     public static QuizMGR getInstance() {
         return ourInstance;
-    }
-
-    public ArrayList<Quiz> getQuizList() {
-        return quizList;
-    }
-
-    public boolean retrieveQuizList(){
-        ArrayList<Quiz> res = DatabaseMGR.getInstance().getListOfQuiz();
-        if(this.quizList.size() == 0)
-            this.quizList = res;
-        return true;
     }
 
     private QuizMGR() {
         questionList = new ArrayList<>();
         quizList = new ArrayList<>();
-        FinishedQuizList = new ArrayList<>();
+        FinishedQuizList = null;
     }
 
-    public ArrayList<Question> getQuestionList() {
-        return questionList;
-    }
-
-
-    public void addQuestion(Question question){
-        questionList.add(question);
-    }
+    //-------------------------- Current Quiz ----------------
 
     public String getCurrentQuiz() {
         return currentQuiz;
@@ -55,18 +38,45 @@ public class QuizMGR {
         this.complete = false;
     }
 
+    //-------------------------- Question List ----------------
+
+    public ArrayList<Question> getQuestionList() {
+        return questionList;
+    }
+
+    public void addQuestion(Question question){
+        questionList.add(question);
+    }
+
     public void onQuestionListRetrieved(){
         Log.d("M.B", "onQuestionListRetrieved: ");
         complete = true;
+    }
+
+    //-------------------------- Quiz List ----------------
+
+    public ArrayList<Quiz> getQuizList() {
+        return quizList;
+    }
+    public void setQuizList(ArrayList<Quiz> quizList) {
+        this.quizList = quizList;
+    }
+
+    public void retrieveQuizList(){
+        DatabaseMGR.getInstance().getListOfQuiz();
     }
 
     public boolean isWaitingForListOfQuiz() {
         return isWaitingForListOfQuiz;
     }
 
-    public void setWaitingForListOfQuizDone() {
-        isWaitingForListOfQuiz = false;
+    public void setWaitingForListOfQuizDone(boolean bool) {
+        isWaitingForListOfQuiz = bool;
     }
+
+
+    //--------------------------Finished Quizzes List ----------------
+
     public ArrayList<Quiz> getFinishedQuizList() {
         return FinishedQuizList;
     }
@@ -76,10 +86,10 @@ public class QuizMGR {
     }
 
     public boolean isWaitingForListOfFinishedQuiz() {
-        return isWaitingForListOfQuiz;
+        return isWaitingForListOfFinishedQuiz;
     }
 
-    public void setWaitingForListOfFinishedQuizDone() {
-        isWaitingForListOfQuiz = false;
+    public void setWaitingForListOfFinishedQuizDone(boolean bool) {
+        isWaitingForListOfFinishedQuiz = bool;
     }
 }

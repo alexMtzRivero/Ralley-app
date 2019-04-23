@@ -16,8 +16,6 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import static android.support.constraint.Constraints.TAG;
-
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,6 +27,7 @@ import static android.support.constraint.Constraints.TAG;
  */
 public class QuizzFragment extends Fragment {
 
+    private static final String TAG = "Quizzfragment";
     private FragmentCallback mListener;
     ArrayList<Quiz> quizList = new ArrayList<>();
     LocationsListAdapter locationsListAdapter;
@@ -51,19 +50,10 @@ public class QuizzFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_quizz, container, false);
         recyclerView = view.findViewById(R.id.locationsList);
-        DatabaseMGR.getInstance().getQuizFinishForTeamLogged();
-        quizList = QuizMGR.getInstance().getQuizList();
-        finishedQuizList = QuizMGR.getInstance().getFinishedQuizList();
 
-        if(quizList.size() == 0){
-            changeDisplay(DisplayState.LOADING, view);
-            new getQuizListTask().execute();
-        }else{
-            locationsListAdapter = new LocationsListAdapter(quizList);
-            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            recyclerView.setAdapter(locationsListAdapter);
-            changeDisplay(DisplayState.LIST, view);
-        }
+        changeDisplay(DisplayState.LOADING, view);
+        new getQuizListTask().execute();
+
 
         return view;
     }
@@ -117,9 +107,7 @@ public class QuizzFragment extends Fragment {
         public LocationsListAdapter(ArrayList<Quiz> myDataset) {
             mDataset= new ArrayList<>();
             mDataset.add(new Quiz());
-            Log.d("QuizzFragment", "LocationsListAdapter: list 1 "+ mDataset.toString());
             mDataset.addAll(myDataset);
-            Log.d("QuizzFragment", "LocationsListAdapter: list 2 "+ mDataset.toString());
         }
 
         // Create new views (invoked by the layout manager)
@@ -146,11 +134,8 @@ public class QuizzFragment extends Fragment {
                 name.setText(mDataset.get(position ).getId());
                 place.setText(mDataset.get(position ).getNomQuiz());
                 for (Quiz quiz : finishedQuizList) {
-                    Log.d("DEBUG M.B", ":mDataset " + mDataset.get(position).getId());
-                    Log.d("DEBUG M.B", ":quiz " +quiz.getId());
                     if(mDataset.get(position).getId().compareTo(quiz.getId()) == 0 && quiz.getEndQuiz() != null)
                     {
-                        Log.d("DEBUG M.B", "onBindViewHolder: ");
                         img.setImageResource(R.drawable.ic_valide);
                         long time = quiz.getEndQuiz().getTime() - quiz.getStartQuiz().getTime();
                         long minute = time / (60 *1000);
@@ -180,6 +165,12 @@ public class QuizzFragment extends Fragment {
     private class getQuizListTask extends AsyncTask<String, Void, String> {
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            DatabaseMGR.getInstance().getFinishedQuizzesForTeamLogged();
+        }
+
+        @Override
         protected String doInBackground(String... strings) {
             while(QuizMGR.getInstance().isWaitingForListOfQuiz() && QuizMGR.getInstance().isWaitingForListOfFinishedQuiz()){
                 try {
@@ -192,12 +183,21 @@ public class QuizzFragment extends Fragment {
         }
         @Override
         protected void onPostExecute(String result) {
-            quizList = QuizMGR.getInstance().getQuizList();
-            finishedQuizList = QuizMGR.getInstance().getFinishedQuizList();
-            locationsListAdapter = new LocationsListAdapter(quizList);
-            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            recyclerView.setAdapter(locationsListAdapter);
+            if(QuizMGR.getInstance().getFinishedQuizList() == null){
+                QuizMGR.getInstance().setWaitingForListOfFinishedQuizDone(true);
+                new getQuizListTask().execute();
+                return;
+            }
+            if(QuizMGR.getInstance().getQuizList() == null){
+                new getQuizListTask().execute();
+                return;
+            }
             try{
+                quizList = QuizMGR.getInstance().getQuizList();
+                finishedQuizList = QuizMGR.getInstance().getFinishedQuizList();
+                locationsListAdapter = new LocationsListAdapter(quizList);
+                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                recyclerView.setAdapter(locationsListAdapter);
                 changeDisplay(DisplayState.LIST, getView());
             }catch(Exception e){
                 Log.e(TAG, "onPostExecute: ", e);
