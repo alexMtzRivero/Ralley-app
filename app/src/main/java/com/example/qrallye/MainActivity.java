@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
         setContentView(R.layout.activity_main);
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
-        Log.d(TAG, "onCreate: RECUPERATION DES QUIZ");
 
         new retrieveQuizListFromDBTask().execute();
 
@@ -223,7 +222,6 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
         else {
             // if we have shared preferences
             if (sp.contains(startTimeKey)) {
-                Log.e("time","comenzando de shared preferences");
                 long timelaps = Calendar.getInstance().getTimeInMillis() - sp.getLong(startTimeKey, 0);
                 chrono.setBase(SystemClock.elapsedRealtime() - timelaps);
                 isChronoRunning = true;
@@ -231,7 +229,6 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
 
             } else {
                 if (timeStart != null) {
-                    Log.e("time","comenzando de firebase");
                     // insert the time in shared preferences
                     sp.edit().putLong(startTimeKey, timeStart.getTime()).apply();
                     long timelaps = Calendar.getInstance().getTimeInMillis() - sp.getLong(startTimeKey, 0);
@@ -241,7 +238,6 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
                 }
                 else{
                     if(scaned) {
-                        Log.e("time", "comenzando de 0");
                         long timelaps = 0;
                         chrono.setBase(SystemClock.elapsedRealtime() - timelaps);
                         isChronoRunning = true;
@@ -263,10 +259,16 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
     }
 
     private class retrieveQuizListFromDBTask extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            QuizMGR.getInstance().retrieveQuizList();
+        }
+
         @Override
         protected String doInBackground(String... strings) {
             while(QuizMGR.getInstance().isWaitingForListOfQuiz()){
-                QuizMGR.getInstance().retrieveQuizList();
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
@@ -274,6 +276,14 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
                 }
             }
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            if(QuizMGR.getInstance().getQuizList() == null){
+                QuizMGR.getInstance().setWaitingForListOfQuizDone(true);
+                new retrieveQuizListFromDBTask().execute();
+            }
         }
     }
 }

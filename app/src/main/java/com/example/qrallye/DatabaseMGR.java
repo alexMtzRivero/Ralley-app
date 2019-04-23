@@ -38,16 +38,15 @@ public class DatabaseMGR {
     }
 
     public void getAdmin(){
-        Log.d(TAG, "getAdmin: Création");
         adminCollections.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 ArrayList<Administrators> adminList = new ArrayList<>();
                 for (QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots) {
                     Administrators administrators = queryDocumentSnapshot.toObject(Administrators.class);
-                    Log.d(TAG, "onSuccess: " + administrators.getUsername());
                     adminList.add(administrators);
                 }
+                Log.i(TAG, "Admins list retrieved");
                 SessionMGR.getInstance().onAdminListFound(adminList);
             }
         });
@@ -56,7 +55,7 @@ public class DatabaseMGR {
 
     public void getTeam(final String teamName){
         team = null;
-        Log.d(TAG, "getTeam: Recherche de la team");
+        Log.i(TAG, "getTeam: Recherche de la team");
         DocumentReference teamRef = teamCollections.document(teamName);
         teamRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -80,10 +79,11 @@ public class DatabaseMGR {
 
                     }
                     else SessionMGR.getInstance().onTeamFound(null);
+                    Log.e(TAG, "team could not be retrieved");
                 }
                 else{
                     SessionMGR.getInstance().onTeamFound(null);
-                    Log.d(TAG, "onComplete: ERROR");
+                    Log.e(TAG, "team could not be retrieved");
                 }
             }
         });
@@ -98,16 +98,11 @@ public class DatabaseMGR {
         questionsRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                Log.e(TAG, "onComplete: starting : ZRSQBGWFBHDTEHBWTDEFHBDGEWTSNBGDWSTENB");
                 if(task.isSuccessful())
                 {
-                    Log.e(TAG, "onComplete: task.successful : ZRSQBGWFBHDTEHBWTDEFHBDGEWTSNBGDWSTENB");
                     if(task.getResult() != null && task.getResult().size() != 0){
-                        Log.d(TAG, "onComplete: getQuestionsFromQuiz "+ task.getResult().toString());
                         for (QueryDocumentSnapshot snapshot : task.getResult()) {
-                            Log.d(TAG, "onComplete: snapshot "+ snapshot.getData());
                             Question tmp = snapshot.toObject(Question.class);
-                            Log.d(TAG, "onComplete: question "+tmp.getQuestion());
                             QuizMGR.getInstance().addQuestion(tmp);
                         }
                         Team tmpTeam = SessionMGR.getInstance().getLogedTeam();
@@ -118,14 +113,15 @@ public class DatabaseMGR {
                         teamCollections.document(tmpTeam.getName()).update(pushCurrentQuiz);
                         teamCollections.document(tmpTeam.getName()).collection("Answers").document(quizName).set(toPush);
                         setCurrentQuizForTeamLogged(quizName);
+                        Log.i(TAG, "questions retrieved");
                     }
                     else {
-                        Log.e(TAG, "onComplete: ERREUR RECUPERATION QUESTIONS");
+                        Log.e(TAG, "questions could not be retrieved");
                     }
                 }
                 else
                 {
-                    Log.e(TAG, "onComplete: FAILED GET");
+                    Log.e(TAG, "questions could not be retrieved");
                 }
                 QuizMGR.getInstance().onQuestionListRetrieved();
             }
@@ -148,14 +144,14 @@ public class DatabaseMGR {
                             quizList.add(quiz);
                         }
                         sortList(quizList);
-                        //QuizMGR.getInstance().setQuizList(quizList);
-                        Log.d(TAG, "onComplete: quizList "+ quizList);
-                        QuizMGR.getInstance().setWaitingForListOfQuizDone();
+                        QuizMGR.getInstance().setQuizList(quizList);
+                        Log.i(TAG, "quizList retrieved");
                     }
                     else{
-                        Log.d(TAG, "onComplete: getListOfQuiz = ERROR");
+                        Log.e(TAG, "quizList could not be retrieved");
                     }
                 }
+                QuizMGR.getInstance().setWaitingForListOfQuizDone(false);
             }
         });
         return quizList;
@@ -191,7 +187,7 @@ public class DatabaseMGR {
                 if(task.isSuccessful()){
                     DocumentSnapshot doc = task.getResult();
                     if(doc.getData()!=null) {
-                        Log.d(TAG, "onComplete: " + doc.getData());
+                        Log.d(TAG, "onComplete: StartRallye" + doc.getData());
                         if(!doc.getData().containsKey("startRallye")){
                             Map<String,Object> toPush = new HashMap<>();
                             toPush.put("startRallye", FieldValue.serverTimestamp());
@@ -215,7 +211,7 @@ public class DatabaseMGR {
                 if(task.isSuccessful()){
                     DocumentSnapshot doc = task.getResult();
                     if(doc.getData()!=null) {
-                        Log.d(TAG, "onComplete: " + doc.getData());
+                        Log.i(TAG, "onComplete: EndRallye");
                         if(doc.getData().containsKey("startRallye") && !doc.getData().containsKey("endRallye") ){
                             Map<String,Object> toPush = new HashMap<>();
                             toPush.put("endRallye", FieldValue.serverTimestamp());
@@ -228,9 +224,9 @@ public class DatabaseMGR {
         });
     }
 
-    public void getQuizFinishForTeamLogged(){
+    public void getFinishedQuizzesForTeamLogged(){
         final Team team = SessionMGR.getInstance().getLogedTeam();
-        final ArrayList<Quiz> quizList = new ArrayList<>();
+        final ArrayList<Quiz> finishedQuizList = new ArrayList<>();
         teamCollections.document(team.getName()).collection("Answers").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -242,13 +238,13 @@ public class DatabaseMGR {
                                     snapshot.getId(),
                                     (snapshot.getTimestamp("startQuiz") != null) ?snapshot.getTimestamp("startQuiz").toDate():null,
                                     (snapshot.getTimestamp("endQuiz") != null) ?snapshot.getTimestamp("endQuiz").toDate():null);
-                            quizList.add(quiz);
+                            finishedQuizList.add(quiz);
                         }
-                        sortList(quizList);
-                        QuizMGR.getInstance().setFinishedQuizList(quizList);
-                        QuizMGR.getInstance().setWaitingForListOfFinishedQuizDone();
+                        sortList(finishedQuizList);
+                        QuizMGR.getInstance().setFinishedQuizList(finishedQuizList);
                     }
                 }
+                QuizMGR.getInstance().setWaitingForListOfFinishedQuizDone(false);
             }
         });
     }

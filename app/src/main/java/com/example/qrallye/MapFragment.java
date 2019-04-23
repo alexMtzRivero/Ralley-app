@@ -30,6 +30,7 @@ import android.webkit.WebViewClient;
  */
 public class MapFragment extends Fragment {
 
+    private static final String TAG = "MapFragment";
     private WebView mWebView;
 
     private FragmentCallback mListener;
@@ -95,17 +96,6 @@ public class MapFragment extends Fragment {
 
     private class showQuizPositionsTask extends AsyncTask<String, Void, String> {
 
-        /*
-        @Override
-        protected void onPreExecute() {
-            try {
-                Thread.sleep(1700);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        */
-
         @Override
         protected String doInBackground(String... strings) {
             while(QuizMGR.getInstance().isWaitingForListOfQuiz()){
@@ -119,12 +109,20 @@ public class MapFragment extends Fragment {
         }
         @Override
         protected void onPostExecute(String result) {
-            for (Quiz quiz : QuizMGR.getInstance().getQuizList()) {
-                Log.d("MapFragment", "onCreateView: création de marker");
-                String pos ="["+quiz.getPosition().getLatitude()+","+quiz.getPosition().getLongitude()+"]";
-                String add = "mymap.addLayer( new L.Marker("+pos+"));";
-                mWebView.loadUrl("javascript:"+add);
+            if(QuizMGR.getInstance().getQuizList() == null){
+                new showQuizPositionsTask().execute();
+                return;
             }
+            try{
+                for (Quiz quiz : QuizMGR.getInstance().getQuizList()) {
+                    String pos ="["+quiz.getPosition().getLatitude()+","+quiz.getPosition().getLongitude()+"]";
+                    String add = "mymap.addLayer( new L.Marker("+pos+"));";
+                    mWebView.loadUrl("javascript:"+add);
+                }
+            }catch(Exception e){
+                Log.e(TAG, "onPostExecute: ", e);
+            }
+
         }
     }
 
