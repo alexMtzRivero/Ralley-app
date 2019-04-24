@@ -19,6 +19,8 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import java.util.ArrayList;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -77,6 +79,7 @@ public class MapFragment extends Fragment {
             @Override
             public void onPageFinished(WebView view, String url) {
                 new showQuizPositionsTask().execute();
+                new getFinishedQuizListTask().execute();
             }
         });
 
@@ -114,16 +117,44 @@ public class MapFragment extends Fragment {
                 return;
             }
             try{
-                for (Quiz quiz : QuizMGR.getInstance().getQuizList()) {
-                    String pos ="["+quiz.getPosition().getLatitude()+","+quiz.getPosition().getLongitude()+"]";
-                    String add = "mymap.addLayer( new L.Marker("+pos+"));";
-                    mWebView.loadUrl("javascript:"+add);
-                }
+                addQuizzMarkersToMap();
             }catch(Exception e){
                 Log.e(TAG, "onPostExecute: ", e);
             }
 
         }
+    }
+
+    private void addQuizzMarkersToMap(){
+        mWebView.loadUrl("javascript:quizzesGroup.clearLayers();");
+        if(QuizMGR.getInstance().getFinishedQuizList() == null){
+            mWebView.loadUrl("javascript:quizzesGroup.clearLayers();");
+            for (Quiz quiz : QuizMGR.getInstance().getQuizList()) {
+                String pos ="["+quiz.getPosition().getLatitude()+","+quiz.getPosition().getLongitude()+"]";
+                String add = "quizzesGroup.addLayer( new L.Marker("+pos+", {icon: todoIcon}));";
+                mWebView.loadUrl("javascript:"+add);
+            }
+        }
+        else{
+            ArrayList<Quiz> quizList = QuizMGR.getInstance().getQuizList();
+            String script;
+            for(Quiz quiz : quizList){
+                String pos ="["+quiz.getPosition().getLatitude()+","+quiz.getPosition().getLongitude()+"]";
+                if(finishedQuizListContainsGivenId(quiz.getId())){
+                    script = "quizzesGroup.addLayer( new L.Marker("+pos+", {icon: doneIcon}));";
+                }else{
+                    script = "quizzesGroup.addLayer( new L.Marker("+pos+", {icon: todoIcon}));";
+                }
+                mWebView.loadUrl("javascript:"+script);
+            }
+        }
+    }
+
+    private boolean finishedQuizListContainsGivenId(String id){
+        for (Quiz quiz : QuizMGR.getInstance().getFinishedQuizList()){
+            if(quiz.getId().equals(id)) return true;
+        }
+        return false;
     }
 
     @Override
@@ -140,6 +171,41 @@ public class MapFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    private class getFinishedQuizListTask extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            QuizMGR.getInstance().retrieveFinishedQuizListFromDB();
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            while(QuizMGR.getInstance().isWaitingForListOfFinishedQuiz()){
+                try {
+                    Thread.sleep(200);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String result) {
+            if(QuizMGR.getInstance().getFinishedQuizList() == null){
+                QuizMGR.getInstance().setWaitingForListOfFinishedQuizDone(true);
+                new getFinishedQuizListTask().execute();
+                return;
+            }
+            try{
+                if(QuizMGR.getInstance().getQuizList() != null)
+                    addQuizzMarkersToMap();
+            }catch(Exception e){
+                Log.e(TAG, "onPostExecute: ", e);
+            }
+        }
     }
 
 }
