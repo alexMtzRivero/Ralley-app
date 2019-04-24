@@ -168,7 +168,7 @@ public class QuizzFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            DatabaseMGR.getInstance().getFinishedQuizzesForTeamLogged();
+            QuizMGR.getInstance().retrieveFinishedQuizListFromDB();
         }
 
         @Override

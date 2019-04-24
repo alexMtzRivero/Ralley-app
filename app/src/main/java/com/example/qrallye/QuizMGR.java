@@ -21,7 +21,7 @@ public class QuizMGR {
 
     private QuizMGR() {
         questionList = new ArrayList<>();
-        quizList = new ArrayList<>();
+        quizList = null;
         FinishedQuizList = null;
     }
 
@@ -76,6 +76,11 @@ public class QuizMGR {
 
 
     //--------------------------Finished Quizzes List ----------------
+
+    public void retrieveFinishedQuizListFromDB(){
+        this.setFinishedQuizList(null);
+        DatabaseMGR.getInstance().getFinishedQuizzesForTeamLogged();
+    }
 
     public ArrayList<Quiz> getFinishedQuizList() {
         return FinishedQuizList;
