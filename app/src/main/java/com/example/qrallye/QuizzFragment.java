@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -13,8 +14,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import java.util.ArrayList;
+import static android.support.v7.widget.RecyclerView.VERTICAL;
 
 
 /**
@@ -115,9 +116,9 @@ public class QuizzFragment extends Fragment {
         public LocationsListAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View v;
             if(viewType == 1){
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.question_list_header, parent, false);
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.quiz_list_header, parent, false);
             }else{
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.question_list_item, parent, false);
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.quiz_list_item, parent, false);
             }
             MyViewHolder vh = new MyViewHolder(v);
             return vh;
@@ -197,6 +198,8 @@ public class QuizzFragment extends Fragment {
                 finishedQuizList = QuizMGR.getInstance().getFinishedQuizList();
                 locationsListAdapter = new LocationsListAdapter(quizList);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                DividerItemDecoration itemDecor = new DividerItemDecoration(getContext(), VERTICAL);
+                recyclerView.addItemDecoration(itemDecor);
                 recyclerView.setAdapter(locationsListAdapter);
                 changeDisplay(DisplayState.LIST, getView());
             }catch(Exception e){

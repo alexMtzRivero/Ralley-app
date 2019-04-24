@@ -18,7 +18,7 @@
         android:id="@+id/locationsList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/question_list_item"
+        tools:listitem="@layout/quiz_list_item"
         tools:itemCount="5"
         android:visibility="gone"/>
 </LinearLayout>
