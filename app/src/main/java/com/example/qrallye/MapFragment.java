@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -18,6 +19,8 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
+import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
 
@@ -80,6 +83,7 @@ public class MapFragment extends Fragment {
             public void onPageFinished(WebView view, String url) {
                 new showQuizPositionsTask().execute();
                 new getFinishedQuizListTask().execute();
+                new getOpponentTeamsPositionTask().execute();
             }
         });
 
@@ -141,12 +145,21 @@ public class MapFragment extends Fragment {
             for(Quiz quiz : quizList){
                 String pos ="["+quiz.getPosition().getLatitude()+","+quiz.getPosition().getLongitude()+"]";
                 if(finishedQuizListContainsGivenId(quiz.getId())){
-                    script = "quizzesGroup.addLayer( new L.Marker("+pos+", {icon: doneIcon}));";
+                    script = "quizzesGroup.addLayer( new L.Marker("+pos+", {icon: doneIcon}).bindPopup(\""+quiz.getNomQuiz()+"\"));";
                 }else{
-                    script = "quizzesGroup.addLayer( new L.Marker("+pos+", {icon: todoIcon}));";
+                    script = "quizzesGroup.addLayer( new L.Marker("+pos+", {icon: todoIcon}).bindPopup(\""+quiz.getNomQuiz()+"\"));";
                 }
                 mWebView.loadUrl("javascript:"+script);
             }
+        }
+    }
+
+    private void addOpponentMarkersToMap() {
+        mWebView.loadUrl("javascript:opponentsGroup.clearLayers();");
+        for (Team team : QuizMGR.getInstance().getListOfOpponentPosition()) {
+            String pos ="["+team.getPosition().getLatitude()+","+team.getPosition().getLongitude()+"]";
+            String add = "opponentsGroup.addLayer( new L.Marker("+pos+", {icon: opponentIcon}).bindPopup(\""+team.getName()+"\"));";
+            mWebView.loadUrl("javascript:"+add);
         }
     }
 
@@ -204,6 +217,47 @@ public class MapFragment extends Fragment {
                     addQuizzMarkersToMap();
             }catch(Exception e){
                 Log.e(TAG, "onPostExecute: ", e);
+            }
+        }
+    }
+
+    private class getOpponentTeamsPositionTask extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            QuizMGR.getInstance().retrieveOpponentTeamPositionListFromDB();
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            while(QuizMGR.getInstance().isWaitingForListOfOpponentPosition()){
+                try {
+                    Thread.sleep(200);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String result) {
+            if(QuizMGR.getInstance().getListOfOpponentPosition() != null){
+                try{
+                    addOpponentMarkersToMap();
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            try{
+                                new getOpponentTeamsPositionTask().execute();
+                            }catch(Exception e){
+                                Log.e(TAG, "asynchronous retrieve of opponent position: ", e);
+                            }
+                        }
+                    }, 10000);
+                }catch(Exception e){
+                    Log.e(TAG, "onPostExecute: ", e);
+                }
             }
         }
     }

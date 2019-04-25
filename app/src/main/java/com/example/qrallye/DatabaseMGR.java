@@ -1,5 +1,6 @@
 package com.example.qrallye;
 
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -11,6 +12,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -66,7 +68,7 @@ public class DatabaseMGR {
                         Log.d(TAG, "onComplete: " + doc.getData());
                         team = new Team(teamName,
                                 (long) doc.get("password"),
-                                doc.getGeoPoint("pos"),
+                                doc.getGeoPoint("position"),
                                 null,
                                 doc.getString("color"),
                                 (doc.getTimestamp("startRallye") != null) ?doc.getTimestamp("startRallye").toDate():null,
@@ -271,5 +273,33 @@ public class DatabaseMGR {
         toPush.put("token", token);
         teamCollections.document(tmpTeam.getName()).update(toPush);
         return token;
+    }
+
+    public void getListOfOpponentPosition() {
+        teamCollections.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()) {
+                    if(task.getResult() != null) {
+                        ArrayList<Team> opponentTeamList = new ArrayList<>();
+                        for (QueryDocumentSnapshot doc : task.getResult()) {
+                            if (doc.getGeoPoint("position") != null && !doc.getId().equals(SessionMGR.getInstance().getLogedTeam().getName())) {
+                                Team team = new Team(doc.getId(), 0, doc.getGeoPoint("position"), new Color(), "", null, null, "", "");
+                                opponentTeamList.add(team);
+                            }
+                        }
+                        QuizMGR.getInstance().setListOfOpponentPosition(opponentTeamList);
+                    }
+                }
+                QuizMGR.getInstance().setWaitingForListOfOpponentPosition(false);
+            }
+        });
+    }
+
+    public void pushTeamPosition(){
+        Map<String,Object> toPush = new HashMap<>();
+        Team tmpTeam = SessionMGR.getInstance().getLogedTeam();
+        toPush.put("position", tmpTeam.getPosition());
+        teamCollections.document(tmpTeam.getName()).update(toPush);
     }
 }

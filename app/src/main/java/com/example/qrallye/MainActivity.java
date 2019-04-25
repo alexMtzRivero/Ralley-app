@@ -1,8 +1,13 @@
 package com.example.qrallye;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
+import android.hardware.SensorManager;
+import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -10,17 +15,27 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Chronometer;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.qrallye.databinding.NavigationBarBinding;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -31,9 +46,14 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
 
     private final String TAG = "MainActivity";
     private boolean isChronoRunning = false;
-    public enum fragmentDisplayed{
+
+    public enum fragmentDisplayed {
         Map, Scan, Progress, Quiz, Question
     }
+
+    private FusedLocationProviderClient mFusedLocationClient;
+    private LocationRequest mLocationRequest;
+    private LocationCallback mLocationCallback;
 
 
     @Override
@@ -50,15 +70,15 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
 
         final NavigationBarBinding binding = DataBindingUtil.bind((findViewById(R.id.navbar)));
 
-        if (bundle != null && bundle.get("fragmentType") != null){
-            switch ((fragmentDisplayed)bundle.get("fragmentType")){
+        if (bundle != null && bundle.get("fragmentType") != null) {
+            switch ((fragmentDisplayed) bundle.get("fragmentType")) {
                 case Map:
                     binding.setSelected((ImageView) findViewById(R.id.navMap));
                     changeFragmentDisplayed(new MapFragment());
                     break;
                 case Scan:
                     binding.setSelected((ImageView) findViewById(R.id.navScan));
-                    changeFragmentDisplayed(new QRCodeFragment(),"TAG_QRCODE");
+                    changeFragmentDisplayed(new QRCodeFragment(), "TAG_QRCODE");
                     break;
                 case Quiz:
                     binding.setSelected((ImageView) findViewById(R.id.navQuizz));
@@ -78,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
                     findViewById(R.id.navbar).setVisibility(View.GONE);
                     break;
             }
-        }else{
+        } else {
             binding.setSelected((ImageView) findViewById(R.id.navMap));
             changeFragmentDisplayed(new MapFragment());
         }
@@ -94,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
                         binding.setSelected((ImageView) view);
                         break;
                     case R.id.navScan:
-                        changeFragmentDisplayed(new QRCodeFragment(),"TAG_QRCODE");
+                        changeFragmentDisplayed(new QRCodeFragment(), "TAG_QRCODE");
                         view.setBackgroundColor(getResources().getColor(R.color.navItemSelected));
                         binding.setSelected((ImageView) view);
                         break;
@@ -123,6 +143,65 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
         findViewById(R.id.navQuizz).setOnClickListener(navItemClickListener);
         findViewById(R.id.navProgress).setOnClickListener(navItemClickListener);
         findViewById(R.id.navHome).setOnClickListener(navItemClickListener);
+
+
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    5);
+
+        } else {
+            initializeGeoLocalisation();
+            Intent serviceIntent = new Intent(this, GeolocalisationService.class);
+            startService(serviceIntent);
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private void initializeGeoLocalisation() {
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        mFusedLocationClient.getLastLocation()
+                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        if (location != null) {
+                            SessionMGR.getInstance().updatePosition(new GeoPoint(location.getLatitude(), location.getLongitude()));
+                        }
+                    }
+                });
+        mLocationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                Location location = locationResult.getLastLocation();
+                GeoPoint position = new GeoPoint(location.getLatitude(), location.getLongitude());
+                SessionMGR.getInstance().updatePosition(position);
+            }
+        };
+
+        mLocationRequest = LocationRequest.create();
+        mLocationRequest.setInterval(15000);
+        mLocationRequest.setFastestInterval(15000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mFusedLocationClient.requestLocationUpdates(mLocationRequest,
+                mLocationCallback,
+                null);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions, int[] grantResults) {
+        if (requestCode == 5) {
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                initializeGeoLocalisation();
+                Intent serviceIntent = new Intent(this, GeolocalisationService.class);
+                startService(serviceIntent);
+            }
+            return;
+        }
     }
 
     @Override
