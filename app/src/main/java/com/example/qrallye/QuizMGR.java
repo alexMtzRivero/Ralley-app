@@ -14,6 +14,8 @@ public class QuizMGR {
     private boolean isWaitingForListOfQuiz = true;
     private boolean isWaitingForListOfFinishedQuiz = true;
     private String currentQuiz = "";
+    private ArrayList<Team> opponentTeamPositionList;
+    private boolean isWaitingForListOfOpponentPosition = true;
 
     public static QuizMGR getInstance() {
         return ourInstance;
@@ -23,6 +25,7 @@ public class QuizMGR {
         questionList = new ArrayList<>();
         quizList = null;
         FinishedQuizList = null;
+        opponentTeamPositionList = null;
     }
 
     //-------------------------- Current Quiz ----------------
@@ -96,5 +99,29 @@ public class QuizMGR {
 
     public void setWaitingForListOfFinishedQuizDone(boolean bool) {
         isWaitingForListOfFinishedQuiz = bool;
+    }
+
+    //-------------------------Opponent Teams Position List-------------
+
+    public void retrieveOpponentTeamPositionListFromDB() {
+        opponentTeamPositionList = null;
+        isWaitingForListOfOpponentPosition = true;
+        DatabaseMGR.getInstance().getListOfOpponentPosition();
+    }
+
+    public ArrayList<Team> getListOfOpponentPosition() {
+        return this.opponentTeamPositionList;
+    }
+
+    public void setListOfOpponentPosition(ArrayList<Team> opponentTeamPositionList) {
+        this.opponentTeamPositionList = opponentTeamPositionList;
+    }
+
+    public boolean isWaitingForListOfOpponentPosition() {
+        return isWaitingForListOfOpponentPosition;
+    }
+
+    public void setWaitingForListOfOpponentPosition(boolean bool) {
+        isWaitingForListOfOpponentPosition = bool;
     }
 }

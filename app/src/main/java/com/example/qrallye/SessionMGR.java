@@ -2,6 +2,8 @@ package com.example.qrallye;
 
 import android.content.SharedPreferences;
 
+import com.google.firebase.firestore.GeoPoint;
+
 import java.util.ArrayList;
 
 import static com.example.qrallye.SessionMGR.*;
@@ -95,7 +97,16 @@ public class SessionMGR {
         adminActivity.refreshList(adminList);
     }
 
+    //------------------Team Position MGR---------------------
 
+    public void updatePosition(GeoPoint geoPoint){
+        this.team.setPosition(geoPoint);
+    }
+
+    public void sendGeopoint(){
+        if(SessionMGR.getInstance().team.getPosition() != null)
+            DatabaseMGR.getInstance().pushTeamPosition();
+    }
 
 
 }
