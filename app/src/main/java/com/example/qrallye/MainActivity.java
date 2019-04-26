@@ -2,30 +2,28 @@ package com.example.qrallye;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
-import android.hardware.SensorManager;
 import android.location.Location;
-import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Chronometer;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.qrallye.databinding.NavigationBarBinding;
@@ -39,13 +37,14 @@ import com.google.firebase.firestore.GeoPoint;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
-import java.util.Date;
 import java.util.Calendar;
+import java.util.Date;
 
-public class MainActivity extends AppCompatActivity implements FragmentCallback {
+public class MainActivity extends AppCompatActivity implements FragmentCallback, ServiceCallbacks {
 
     private final String TAG = "MainActivity";
     private boolean isChronoRunning = false;
+    private DBInteractionsService dbInteractionsService;
 
     public enum fragmentDisplayed {
         Map, Scan, Progress, Quiz, Question
@@ -54,22 +53,28 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationRequest mLocationRequest;
     private LocationCallback mLocationCallback;
+    private Handler serviceCallsHandler;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Intent intent = getIntent();
-        Bundle bundle = intent.getExtras();
-
-        new retrieveQuizListFromDBTask().execute();
 
         findViewById(R.id.navbar).setVisibility(View.VISIBLE);
 
+        serviceCallsHandler = new Handler();
+        Intent dbInteractionsServiceIntent = new Intent(this, DBInteractionsService.class);
+        dbInteractionsServiceIntent.setAction(DBInteractionsService.ACTION_getQuizzes);
+        startService(dbInteractionsServiceIntent);
+        bindService(dbInteractionsServiceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
+        dbInteractionsServiceIntent.setAction(DBInteractionsService.ACTION_getOpponentsPosition);
+        startService(dbInteractionsServiceIntent);
 
         final NavigationBarBinding binding = DataBindingUtil.bind((findViewById(R.id.navbar)));
 
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
         if (bundle != null && bundle.get("fragmentType") != null) {
             switch ((fragmentDisplayed) bundle.get("fragmentType")) {
                 case Map:
@@ -155,9 +160,77 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
 
         } else {
             initializeGeoLocalisation();
-            Intent serviceIntent = new Intent(this, GeolocalisationService.class);
-            startService(serviceIntent);
+            Intent geoServiceIntent = new Intent(this, GeolocalisationService.class);
+            startService(geoServiceIntent);
         }
+    }
+
+    /**
+     * On service connection with activity
+     */
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            DBInteractionsService.LocalBinder binder = (DBInteractionsService.LocalBinder) service;
+            dbInteractionsService = binder.getService();
+            dbInteractionsService.setCallbacks(MainActivity.this);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+        }
+    };
+
+    @Override
+    public void opponentsPositionsRetrieved() {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if (fragment != null && fragment.getClass().equals(MapFragment.class)) {
+            MapFragment mapFragment = (MapFragment) fragment;
+            mapFragment.opponentsPositionRetrieved();
+            serviceCallsHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Intent dbInteractionsServiceIntent = new Intent(MainActivity.this, DBInteractionsService.class);
+                        dbInteractionsServiceIntent.setAction(DBInteractionsService.ACTION_getOpponentsPosition);
+                        startService(dbInteractionsServiceIntent);
+                    } catch (Exception e) {
+                        Log.e(TAG, "asynchronous retrieve of opponent position: ", e);
+                    }
+                }
+            }, 10000);
+        }
+    }
+
+    @Override
+    public void quizzesRetrieved() {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if(fragment != null){
+            if (fragment.getClass().equals(MapFragment.class)){
+                MapFragment mapFragment = (MapFragment) fragment;
+                mapFragment.quizzesRetrieved();
+            }else if(fragment.getClass().equals(QuizzFragment.class)){
+                QuizzFragment quizzFragment = (QuizzFragment) fragment;
+                quizzFragment.quizzesRetrieved();
+            }
+        }
+    }
+
+    @Override
+    public void finishedQuizzesRetrieved() {
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        try{
+            serviceCallsHandler.removeCallbacksAndMessages(null);
+            unbindService(serviceConnection);
+        }catch(Exception e){
+            Log.e(TAG, "onDestroy: ", e);
+        }
+        super.onDestroy();
     }
 
     @SuppressLint("MissingPermission")
@@ -334,35 +407,6 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
         if(fragment == null){
             startActivity(new Intent(this, HomeActivity.class));
             finish();
-        }
-    }
-
-    private class retrieveQuizListFromDBTask extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            QuizMGR.getInstance().retrieveQuizList();
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
-            while(QuizMGR.getInstance().isWaitingForListOfQuiz()){
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            if(QuizMGR.getInstance().getQuizList() == null){
-                QuizMGR.getInstance().setWaitingForListOfQuizDone(true);
-                new retrieveQuizListFromDBTask().execute();
-            }
         }
     }
 }

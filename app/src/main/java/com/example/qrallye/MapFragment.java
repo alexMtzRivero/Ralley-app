@@ -83,7 +83,9 @@ public class MapFragment extends Fragment {
             public void onPageFinished(WebView view, String url) {
                 new showQuizPositionsTask().execute();
                 new getFinishedQuizListTask().execute();
-                new getOpponentTeamsPositionTask().execute();
+                if(QuizMGR.getInstance().getListOfOpponentPosition() != null){
+                    addOpponentMarkersToMap();
+                }
             }
         });
 
@@ -221,44 +223,15 @@ public class MapFragment extends Fragment {
         }
     }
 
-    private class getOpponentTeamsPositionTask extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            QuizMGR.getInstance().retrieveOpponentTeamPositionListFromDB();
+    public void opponentsPositionRetrieved() {
+        if(QuizMGR.getInstance().getListOfOpponentPosition() != null){
+            addOpponentMarkersToMap();
         }
+    }
 
-        @Override
-        protected String doInBackground(String... strings) {
-            while(QuizMGR.getInstance().isWaitingForListOfOpponentPosition()){
-                try {
-                    Thread.sleep(200);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            return null;
-        }
-        @Override
-        protected void onPostExecute(String result) {
-            if(QuizMGR.getInstance().getListOfOpponentPosition() != null){
-                try{
-                    addOpponentMarkersToMap();
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            try{
-                                new getOpponentTeamsPositionTask().execute();
-                            }catch(Exception e){
-                                Log.e(TAG, "asynchronous retrieve of opponent position: ", e);
-                            }
-                        }
-                    }, 10000);
-                }catch(Exception e){
-                    Log.e(TAG, "onPostExecute: ", e);
-                }
-            }
+    public void quizzesRetrieved(){
+        if(QuizMGR.getInstance().getQuizList() != null){
+            addQuizzMarkersToMap();
         }
     }
 

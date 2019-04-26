@@ -15,8 +15,11 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <service
-            android:name=".GeolocalisationService"
+            android:name=".DBInteractionsService"
             android:exported="false"></service>
+        <service
+            android:name=".GeolocalisationService"
+            android:exported="false" />
 
         <activity
             android:name=".AdminActivity"

@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -291,6 +292,11 @@ public class DatabaseMGR {
                         QuizMGR.getInstance().setListOfOpponentPosition(opponentTeamList);
                     }
                 }
+                QuizMGR.getInstance().setWaitingForListOfOpponentPosition(false);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
                 QuizMGR.getInstance().setWaitingForListOfOpponentPosition(false);
             }
         });

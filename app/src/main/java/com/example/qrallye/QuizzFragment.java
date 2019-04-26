@@ -53,8 +53,6 @@ public class QuizzFragment extends Fragment {
         recyclerView = view.findViewById(R.id.locationsList);
 
         changeDisplay(DisplayState.LOADING, view);
-        new getQuizListTask().execute();
-
 
         return view;
     }
@@ -163,48 +161,25 @@ public class QuizzFragment extends Fragment {
 
     }
 
-    private class getQuizListTask extends AsyncTask<String, Void, String> {
+    public void quizzesRetrieved() {
+        refreshAdapter();
+    }
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            QuizMGR.getInstance().retrieveFinishedQuizListFromDB();
-        }
+    public void finishedQuizzesRetrieved(){
 
-        @Override
-        protected String doInBackground(String... strings) {
-            while(QuizMGR.getInstance().isWaitingForListOfQuiz() && QuizMGR.getInstance().isWaitingForListOfFinishedQuiz()){
-                try {
-                    Thread.sleep(200);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            return null;
-        }
-        @Override
-        protected void onPostExecute(String result) {
-            if(QuizMGR.getInstance().getFinishedQuizList() == null){
-                QuizMGR.getInstance().setWaitingForListOfFinishedQuizDone(true);
-                new getQuizListTask().execute();
-                return;
-            }
-            if(QuizMGR.getInstance().getQuizList() == null){
-                new getQuizListTask().execute();
-                return;
-            }
-            try{
-                quizList = QuizMGR.getInstance().getQuizList();
-                finishedQuizList = QuizMGR.getInstance().getFinishedQuizList();
-                locationsListAdapter = new LocationsListAdapter(quizList);
-                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                DividerItemDecoration itemDecor = new DividerItemDecoration(getContext(), VERTICAL);
-                recyclerView.addItemDecoration(itemDecor);
-                recyclerView.setAdapter(locationsListAdapter);
-                changeDisplay(DisplayState.LIST, getView());
-            }catch(Exception e){
-                Log.e(TAG, "onPostExecute: ", e);
-            }
+    }
+
+    private void refreshAdapter(){
+        quizList = QuizMGR.getInstance().getQuizList();
+        finishedQuizList = QuizMGR.getInstance().getFinishedQuizList();
+
+        if(quizList != null && finishedQuizList != null){
+            locationsListAdapter = new LocationsListAdapter(quizList);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            DividerItemDecoration itemDecor = new DividerItemDecoration(getContext(), VERTICAL);
+            recyclerView.addItemDecoration(itemDecor);
+            recyclerView.setAdapter(locationsListAdapter);
+            changeDisplay(DisplayState.LIST, getView());
         }
     }
 }
