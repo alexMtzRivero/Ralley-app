@@ -1,20 +1,20 @@
 package com.example.qrallye;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
 import java.util.ArrayList;
+
 import static android.support.v7.widget.RecyclerView.VERTICAL;
 
 
@@ -45,6 +45,7 @@ public class QuizzFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mListener.quizFragmentInitialisation();
     }
 
     @Override
@@ -166,20 +167,19 @@ public class QuizzFragment extends Fragment {
     }
 
     public void finishedQuizzesRetrieved(){
-
+        refreshAdapter();
     }
 
     private void refreshAdapter(){
         quizList = QuizMGR.getInstance().getQuizList();
         finishedQuizList = QuizMGR.getInstance().getFinishedQuizList();
 
-        if(quizList != null && finishedQuizList != null){
-            locationsListAdapter = new LocationsListAdapter(quizList);
-            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            DividerItemDecoration itemDecor = new DividerItemDecoration(getContext(), VERTICAL);
-            recyclerView.addItemDecoration(itemDecor);
-            recyclerView.setAdapter(locationsListAdapter);
-            changeDisplay(DisplayState.LIST, getView());
+        locationsListAdapter = new LocationsListAdapter(quizList);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        DividerItemDecoration itemDecor = new DividerItemDecoration(getContext(), VERTICAL);
+        recyclerView.addItemDecoration(itemDecor);
+        recyclerView.setAdapter(locationsListAdapter);
+        changeDisplay(DisplayState.LIST, getView());
         }
-    }
+
 }

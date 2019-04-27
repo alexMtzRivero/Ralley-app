@@ -1,15 +1,14 @@
 package com.example.qrallye;
 
 import android.util.Log;
-
 import java.util.ArrayList;
 
 
 public class QuizMGR {
-    private static final QuizMGR ourInstance = new QuizMGR();
+    private static QuizMGR ourInstance;
     private ArrayList<Question> questionList;
     private ArrayList<Quiz> quizList;
-    private ArrayList<Quiz> FinishedQuizList;
+    private ArrayList<Quiz> finishedQuizList;
     public boolean complete = false;
     private boolean isWaitingForListOfQuiz = true;
     private boolean isWaitingForListOfFinishedQuiz = true;
@@ -18,14 +17,22 @@ public class QuizMGR {
     private boolean isWaitingForListOfOpponentPosition = true;
 
     public static QuizMGR getInstance() {
+        if  (ourInstance == null) {
+            synchronized (QuizMGR.class) {
+                if (ourInstance == null) {
+                    ourInstance = new QuizMGR();
+                }
+            }
+        }
+
         return ourInstance;
     }
 
     private QuizMGR() {
         questionList = new ArrayList<>();
         quizList = null;
-        FinishedQuizList = null;
-        opponentTeamPositionList = null;
+        finishedQuizList = new ArrayList<>();
+        opponentTeamPositionList = new ArrayList<>();
     }
 
     //-------------------------- Current Quiz ----------------
@@ -66,6 +73,7 @@ public class QuizMGR {
     }
 
     public void retrieveQuizList(){
+        this.isWaitingForListOfQuiz = true;
         DatabaseMGR.getInstance().getListOfQuiz();
     }
 
@@ -81,16 +89,16 @@ public class QuizMGR {
     //--------------------------Finished Quizzes List ----------------
 
     public void retrieveFinishedQuizListFromDB(){
-        this.setFinishedQuizList(null);
+        this.isWaitingForListOfFinishedQuiz = true;
         DatabaseMGR.getInstance().getFinishedQuizzesForTeamLogged();
     }
 
     public ArrayList<Quiz> getFinishedQuizList() {
-        return FinishedQuizList;
+        return finishedQuizList;
     }
 
     public void setFinishedQuizList(ArrayList<Quiz> finishedQuizList) {
-        this.FinishedQuizList = finishedQuizList;
+        this.finishedQuizList = finishedQuizList;
     }
 
     public boolean isWaitingForListOfFinishedQuiz() {
@@ -104,7 +112,6 @@ public class QuizMGR {
     //-------------------------Opponent Teams Position List-------------
 
     public void retrieveOpponentTeamPositionListFromDB() {
-        opponentTeamPositionList = null;
         isWaitingForListOfOpponentPosition = true;
         DatabaseMGR.getInstance().getListOfOpponentPosition();
     }

@@ -22,10 +22,10 @@ public class DBInteractionsService extends IntentService {
     private static final String TAG = "DBInteractionsService";
     private ServiceCallbacks callbacks;
     private final IBinder mBinder = new LocalBinder();
-    Handler handler = new Handler();
-    Runnable getOpponentsPositionRunnable;
-    Runnable getQuizzesRunnable;
-    Runnable getFinishedQuizzesRunnable;
+    private final Handler handler = new Handler();
+    private Runnable getOpponentsPositionRunnable;
+    private Runnable getQuizzesRunnable;
+    private Runnable getFinishedQuizzesRunnable;
 
     public DBInteractionsService() {
         super("DBInteractionsService");
@@ -43,7 +43,6 @@ public class DBInteractionsService extends IntentService {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(TAG, "onStartCommand: ");
         if (intent != null) {
             final String action = intent.getAction();
             if (action != null) {
@@ -65,7 +64,7 @@ public class DBInteractionsService extends IntentService {
 
     @Override
     public void onDestroy() {
-        handler.removeCallbacksAndMessages(getOpponentsPositionRunnable);
+        handler.removeCallbacksAndMessages(null);
         super.onDestroy();
     }
 
@@ -84,26 +83,29 @@ public class DBInteractionsService extends IntentService {
     }
 
     private void handleActionGetOpponentsPosition() {
-        Log.d(TAG, "handleActionGetOpponentsPosition: startRetrieveFromDB");
         QuizMGR.getInstance().retrieveOpponentTeamPositionListFromDB();
+
+        // Obligatoire pour la requete au bout de 10 secondes
+        final Runnable dbRequestRunnable = new Runnable() {
+            @Override
+            public void run() {
+                handleActionGetOpponentsPosition();
+            }
+        };
 
         getOpponentsPositionRunnable = new Runnable() {
             @Override
             public void run() {
                 if(QuizMGR.getInstance().isWaitingForListOfOpponentPosition()){
-                    handler.postDelayed(this, 200);
+                    handler.postDelayed(getOpponentsPositionRunnable, 100);
                 }else{
                     try{
-                        if(QuizMGR.getInstance().getListOfOpponentPosition() == null){
-                            handleActionGetOpponentsPosition();
-                        }else{
-                            Log.d(TAG, "handleActionGetOpponentsPosition: retrieved");
-                            callbacks.opponentsPositionsRetrieved();
-                        }
+                        Log.d(TAG, "handleActionGetOpponentsPosition: retrieved");
+                        callbacks.opponentsPositionsRetrieved();
                     }catch(Exception e){
                         Log.e(TAG, "getOpponentsPositionRunnable: ", e);
                     }
-
+                    handler.postDelayed(dbRequestRunnable, 10000);
                 }
 
             }
@@ -112,51 +114,38 @@ public class DBInteractionsService extends IntentService {
     }
 
     private void handleActionGetQuizzes() {
-        Log.d(TAG, "handleActionGetOpponentsPosition: startRetrieveFromDB");
         QuizMGR.getInstance().retrieveQuizList();
 
         getQuizzesRunnable = new Runnable() {
             @Override
             public void run() {
                 if(QuizMGR.getInstance().isWaitingForListOfQuiz()){
-                    handler.postDelayed(this, 200);
+                    handler.postDelayed(getQuizzesRunnable, 100);
                 }else{
                     try{
-                        if(QuizMGR.getInstance().getQuizList() == null){
-                            handleActionGetQuizzes();
-                        }else{
-                            Log.d(TAG, "handleActionGetOpponentsPosition: retrieved");
-                            callbacks.quizzesRetrieved();
-                        }
+                        callbacks.quizzesRetrieved();
                     }catch(Exception e){
                         Log.e(TAG, "getQuizzesRunnable: ", e);
                     }
-
                 }
 
             }
         };
-        handler.post(getOpponentsPositionRunnable);
+        handler.post(getQuizzesRunnable);
     }
 
 
     private void handleActionGetFinishedQuizzes() {
-        Log.d(TAG, "handleActionGetOpponentsPosition: startRetrieveFromDB");
         QuizMGR.getInstance().retrieveFinishedQuizListFromDB();
 
-        getQuizzesRunnable = new Runnable() {
+        getFinishedQuizzesRunnable = new Runnable() {
             @Override
             public void run() {
                 if(QuizMGR.getInstance().isWaitingForListOfFinishedQuiz()){
-                    handler.postDelayed(this, 200);
+                    handler.postDelayed(getFinishedQuizzesRunnable, 100);
                 }else{
                     try{
-                        if(QuizMGR.getInstance().getFinishedQuizList() == null){
-                            handleActionGetFinishedQuizzes();
-                        }else{
-                            Log.d(TAG, "handleActionGetFinishedQuizzes: retrieved");
-                            callbacks.finishedQuizzesRetrieved();
-                        }
+                        callbacks.finishedQuizzesRetrieved();
                     }catch(Exception e){
                         Log.e(TAG, "getFinishedQuizzesRunnable: ", e);
                     }

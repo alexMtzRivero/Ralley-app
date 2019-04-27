@@ -3,10 +3,8 @@ package com.example.qrallye;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -19,8 +17,6 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-
-import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
 
@@ -47,6 +43,7 @@ public class MapFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mListener.mapFragmentInitialisation();
     }
 
     @Override
@@ -63,29 +60,30 @@ public class MapFragment extends Fragment {
 
             @Override
             public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
-                // Geolocation permissions coming from this app's Manifest will only be valid for devices with
-                // API_VERSION < 23. On API 23 and above, we must check for permissions, and possibly
-                // ask for them.
-                String perm = Manifest.permission.ACCESS_FINE_LOCATION;
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || ContextCompat.checkSelfPermission(getContext(), perm) == PackageManager.PERMISSION_GRANTED) {
-                    // we're on SDK < 23 OR user has already granted permission
-                    callback.invoke(origin, true, false);
-                } else {
-                    if (!shouldShowRequestPermissionRationale(perm)) {
-                        // ask the user for permission
-                        requestPermissions(new String[] {perm}, 1);
+                try{
+                    String perm = Manifest.permission.ACCESS_FINE_LOCATION;
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || ContextCompat.checkSelfPermission(getContext(), perm) == PackageManager.PERMISSION_GRANTED) {
+                        callback.invoke(origin, true, false);
+                    } else {
+                        if (!shouldShowRequestPermissionRationale(perm)) {
+                            requestPermissions(new String[] {perm}, 1);
+                        }
                     }
+                }catch(Exception e){
+                    Log.e(TAG, "onGeolocationPermissionsShowPrompt: ", e);
                 }
+
             }
         });
         mWebView.setWebViewClient(new WebViewClient(){
             @Override
             public void onPageFinished(WebView view, String url) {
-                new showQuizPositionsTask().execute();
-                new getFinishedQuizListTask().execute();
-                if(QuizMGR.getInstance().getListOfOpponentPosition() != null){
-                    addOpponentMarkersToMap();
+                if(QuizMGR.getInstance().getQuizList() != null){
+                    addQuizzMarkersToMap();
                 }
+
+                if(QuizMGR.getInstance().getListOfOpponentPosition() != null)
+                    addOpponentMarkersToMap();
             }
         });
 
@@ -103,57 +101,20 @@ public class MapFragment extends Fragment {
         return view;
     }
 
-    private class showQuizPositionsTask extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected String doInBackground(String... strings) {
-            while(QuizMGR.getInstance().isWaitingForListOfQuiz()){
-                try {
-                    Thread.sleep(200);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            return null;
-        }
-        @Override
-        protected void onPostExecute(String result) {
-            if(QuizMGR.getInstance().getQuizList() == null){
-                new showQuizPositionsTask().execute();
-                return;
-            }
-            try{
-                addQuizzMarkersToMap();
-            }catch(Exception e){
-                Log.e(TAG, "onPostExecute: ", e);
-            }
-
-        }
-    }
-
     private void addQuizzMarkersToMap(){
         mWebView.loadUrl("javascript:quizzesGroup.clearLayers();");
-        if(QuizMGR.getInstance().getFinishedQuizList() == null){
-            mWebView.loadUrl("javascript:quizzesGroup.clearLayers();");
-            for (Quiz quiz : QuizMGR.getInstance().getQuizList()) {
-                String pos ="["+quiz.getPosition().getLatitude()+","+quiz.getPosition().getLongitude()+"]";
-                String add = "quizzesGroup.addLayer( new L.Marker("+pos+", {icon: todoIcon}));";
-                mWebView.loadUrl("javascript:"+add);
+        ArrayList<Quiz> quizList = QuizMGR.getInstance().getQuizList();
+        String script;
+        for(Quiz quiz : quizList){
+            String pos ="["+quiz.getPosition().getLatitude()+","+quiz.getPosition().getLongitude()+"]";
+            if(finishedQuizListContainsGivenId(quiz.getId())){
+                script = "quizzesGroup.addLayer( new L.Marker("+pos+", {icon: doneIcon}).bindPopup(\""+quiz.getNomQuiz()+"\"));";
+            }else{
+                script = "quizzesGroup.addLayer( new L.Marker("+pos+", {icon: todoIcon}).bindPopup(\""+quiz.getNomQuiz()+"\"));";
             }
+            mWebView.loadUrl("javascript:"+script);
         }
-        else{
-            ArrayList<Quiz> quizList = QuizMGR.getInstance().getQuizList();
-            String script;
-            for(Quiz quiz : quizList){
-                String pos ="["+quiz.getPosition().getLatitude()+","+quiz.getPosition().getLongitude()+"]";
-                if(finishedQuizListContainsGivenId(quiz.getId())){
-                    script = "quizzesGroup.addLayer( new L.Marker("+pos+", {icon: doneIcon}).bindPopup(\""+quiz.getNomQuiz()+"\"));";
-                }else{
-                    script = "quizzesGroup.addLayer( new L.Marker("+pos+", {icon: todoIcon}).bindPopup(\""+quiz.getNomQuiz()+"\"));";
-                }
-                mWebView.loadUrl("javascript:"+script);
-            }
-        }
+
     }
 
     private void addOpponentMarkersToMap() {
@@ -188,41 +149,6 @@ public class MapFragment extends Fragment {
         mListener = null;
     }
 
-    private class getFinishedQuizListTask extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            QuizMGR.getInstance().retrieveFinishedQuizListFromDB();
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
-            while(QuizMGR.getInstance().isWaitingForListOfFinishedQuiz()){
-                try {
-                    Thread.sleep(200);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            return null;
-        }
-        @Override
-        protected void onPostExecute(String result) {
-            if(QuizMGR.getInstance().getFinishedQuizList() == null){
-                QuizMGR.getInstance().setWaitingForListOfFinishedQuizDone(true);
-                new getFinishedQuizListTask().execute();
-                return;
-            }
-            try{
-                if(QuizMGR.getInstance().getQuizList() != null)
-                    addQuizzMarkersToMap();
-            }catch(Exception e){
-                Log.e(TAG, "onPostExecute: ", e);
-            }
-        }
-    }
-
     public void opponentsPositionRetrieved() {
         if(QuizMGR.getInstance().getListOfOpponentPosition() != null){
             addOpponentMarkersToMap();
@@ -233,6 +159,10 @@ public class MapFragment extends Fragment {
         if(QuizMGR.getInstance().getQuizList() != null){
             addQuizzMarkersToMap();
         }
+    }
+
+    public void finishedQuizzesRetrieved(){
+        addQuizzMarkersToMap();
     }
 
 }
