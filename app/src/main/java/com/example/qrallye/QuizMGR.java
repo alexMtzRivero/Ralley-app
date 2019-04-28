@@ -2,6 +2,7 @@ package com.example.qrallye;
 
 import android.util.Log;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class QuizMGR {
@@ -15,6 +16,8 @@ public class QuizMGR {
     private String currentQuiz = "";
     private ArrayList<Team> opponentTeamPositionList;
     private boolean isWaitingForListOfOpponentPosition = true;
+    private boolean isWaitingForListOfProgress = true;
+    private HashMap<String, ProgressItem> progressList;
 
     public static QuizMGR getInstance() {
         if  (ourInstance == null) {
@@ -33,6 +36,7 @@ public class QuizMGR {
         quizList = null;
         finishedQuizList = new ArrayList<>();
         opponentTeamPositionList = new ArrayList<>();
+        progressList = new HashMap<>();
     }
 
     //-------------------------- Current Quiz ----------------
@@ -130,5 +134,37 @@ public class QuizMGR {
 
     public void setWaitingForListOfOpponentPosition(boolean bool) {
         isWaitingForListOfOpponentPosition = bool;
+    }
+
+    //----------------------Progress List-------------------------------
+
+    public void retrieveProgressListFromDB() {
+        isWaitingForListOfProgress = true;
+        DatabaseMGR.getInstance().getProgressList();
+    }
+
+    public ArrayList<ProgressItem> getProgressList() {
+        return new ArrayList<>(this.progressList.values());
+    }
+
+    public void setProgressList(HashMap<String, ProgressItem> progressList) {
+        this.progressList = progressList;
+    }
+
+    public void addProgressListItem(ProgressItem progressList) {
+        this.progressList.put(progressList.getTeam(), progressList);
+    }
+
+    public boolean isWaitingForListOfProgress() {
+        return isWaitingForListOfProgress;
+    }
+
+    public void setWaitingForListOfProgress(boolean bool) {
+        isWaitingForListOfProgress = bool;
+    }
+
+    public void setProgressItemQuizzesCount(String key, int count) {
+        if(this.progressList.get(key) != null)
+            this.progressList.get(key).setQuizzesCount(count);
     }
 }

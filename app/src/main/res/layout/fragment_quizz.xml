@@ -1,24 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    android:gravity="center"
     android:background="@color/backgroundColor">
+
+    <include
+        android:id="@+id/title"
+        layout="@layout/quiz_list_header"/>
 
     <ProgressBar
         android:id="@+id/quizzesProgressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_centerInParent="true"
         android:visibility="visible"/>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/locationsList"
+        android:id="@+id/quizList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:listitem="@layout/quiz_list_item"
         tools:itemCount="5"
         android:visibility="gone"/>
-</LinearLayout>
+</RelativeLayout>

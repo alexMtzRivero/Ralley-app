@@ -7,4 +7,6 @@ public interface ServiceCallbacks {
     void quizzesRetrieved();
 
     void finishedQuizzesRetrieved();
+
+    void progressListRetrieved();
 }

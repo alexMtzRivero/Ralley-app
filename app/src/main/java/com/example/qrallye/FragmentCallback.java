@@ -9,4 +9,6 @@ public interface FragmentCallback {
     void mapFragmentInitialisation();
 
     void quizFragmentInitialisation();
+
+    void progressFragmentInitialisation();
 }

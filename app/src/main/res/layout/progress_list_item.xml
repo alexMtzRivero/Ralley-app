@@ -8,6 +8,7 @@
     android:background="@color/white">
 
     <TextView
+        android:id="@+id/team"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Equipe 1"
@@ -16,12 +17,14 @@
         android:textAlignment="center"/>
 
     <TextView
+        android:id="@+id/chrono"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="00:00"
         android:textSize="20sp"
         android:layout_weight="1"
         android:textAlignment="center"/>
+
     <ImageView
         android:layout_width="0dp"
         android:layout_height="match_parent"
@@ -29,6 +32,7 @@
         android:src="@drawable/vector_qrcode"/>
 
     <TextView
+        android:id="@+id/quizzesCount"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="x5"
