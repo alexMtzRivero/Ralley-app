@@ -229,6 +229,17 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback,
     }
 
     @Override
+    public void progressListRetrieved() {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if (fragment != null) {
+            if (fragment.getClass().equals(ProgressFragment.class)) {
+                ProgressFragment progressFragment = (ProgressFragment) fragment;
+                progressFragment.progressListRetrieved();
+            }
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         try{
             unbindService(serviceConnection);
@@ -323,6 +334,13 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback,
     public void quizFragmentInitialisation() {
         Intent intent = new Intent(this, DBInteractionsService.class);
         intent.setAction(DBInteractionsService.ACTION_getFinishedQuizzes);
+        startService(intent);
+    }
+
+    @Override
+    public void progressFragmentInitialisation() {
+        Intent intent = new Intent(this, DBInteractionsService.class);
+        intent.setAction(DBInteractionsService.ACTION_getProgressList);
         startService(intent);
     }
 

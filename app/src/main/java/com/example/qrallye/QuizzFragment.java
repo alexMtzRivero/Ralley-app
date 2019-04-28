@@ -51,7 +51,7 @@ public class QuizzFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_quizz, container, false);
-        recyclerView = view.findViewById(R.id.locationsList);
+        recyclerView = view.findViewById(R.id.quizList);
 
         changeDisplay(DisplayState.LOADING, view);
 
@@ -77,13 +77,16 @@ public class QuizzFragment extends Fragment {
 
     private void changeDisplay(DisplayState d, View view){
         ProgressBar progressBar = view.findViewById(R.id.quizzesProgressBar);
-        RecyclerView recyclerView = view.findViewById(R.id.locationsList);
+        RecyclerView recyclerView = view.findViewById(R.id.quizList);
+        View titleView = view.findViewById(R.id.title);
         switch (d){
             case LOADING:
+                titleView.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.VISIBLE);
                 recyclerView.setVisibility(View.GONE);
                 break;
             case LIST:
+                titleView.setVisibility(View.GONE);
                 progressBar.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.VISIBLE);
                 break;
@@ -103,7 +106,7 @@ public class QuizzFragment extends Fragment {
             }
         }
 
-        // Provide a suitable constructor (depends on the kind of dataset)
+
         public LocationsListAdapter(ArrayList<Quiz> myDataset) {
             mDataset= new ArrayList<>();
             mDataset.add(new Quiz());

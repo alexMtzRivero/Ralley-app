@@ -19,6 +19,7 @@ public class DBInteractionsService extends IntentService {
     public static final String ACTION_getOpponentsPosition = "com.example.qrallye.action.getOpponentsPosition";
     public static final String ACTION_getQuizzes = "com.example.qrallye.action.getQuizzes";
     public static final String ACTION_getFinishedQuizzes = "com.example.qrallye.action.getFinishedQuizzes";
+    public static final String ACTION_getProgressList = "com.example.qrallye.action.getProgressList";
     private static final String TAG = "DBInteractionsService";
     private ServiceCallbacks callbacks;
     private final IBinder mBinder = new LocalBinder();
@@ -26,6 +27,7 @@ public class DBInteractionsService extends IntentService {
     private Runnable getOpponentsPositionRunnable;
     private Runnable getQuizzesRunnable;
     private Runnable getFinishedQuizzesRunnable;
+    private Runnable getProgressListRunnable;
 
     public DBInteractionsService() {
         super("DBInteractionsService");
@@ -55,6 +57,9 @@ public class DBInteractionsService extends IntentService {
                         break;
                     case ACTION_getFinishedQuizzes:
                         handleActionGetFinishedQuizzes();
+                        break;
+                    case ACTION_getProgressList:
+                        handleActionGetProgressList();
                         break;
                 }
             }
@@ -97,7 +102,7 @@ public class DBInteractionsService extends IntentService {
             @Override
             public void run() {
                 if(QuizMGR.getInstance().isWaitingForListOfOpponentPosition()){
-                    handler.postDelayed(getOpponentsPositionRunnable, 100);
+                    handler.postDelayed(getOpponentsPositionRunnable, 200);
                 }else{
                     try{
                         Log.d(TAG, "handleActionGetOpponentsPosition: retrieved");
@@ -120,7 +125,7 @@ public class DBInteractionsService extends IntentService {
             @Override
             public void run() {
                 if(QuizMGR.getInstance().isWaitingForListOfQuiz()){
-                    handler.postDelayed(getQuizzesRunnable, 100);
+                    handler.postDelayed(getQuizzesRunnable, 200);
                 }else{
                     try{
                         callbacks.quizzesRetrieved();
@@ -142,7 +147,7 @@ public class DBInteractionsService extends IntentService {
             @Override
             public void run() {
                 if(QuizMGR.getInstance().isWaitingForListOfFinishedQuiz()){
-                    handler.postDelayed(getFinishedQuizzesRunnable, 100);
+                    handler.postDelayed(getFinishedQuizzesRunnable, 200);
                 }else{
                     try{
                         callbacks.finishedQuizzesRetrieved();
@@ -155,5 +160,26 @@ public class DBInteractionsService extends IntentService {
             }
         };
         handler.post(getFinishedQuizzesRunnable);
+    }
+
+    private void handleActionGetProgressList() {
+        QuizMGR.getInstance().retrieveProgressListFromDB();
+
+        getProgressListRunnable = new Runnable() {
+            @Override
+            public void run() {
+                if(QuizMGR.getInstance().isWaitingForListOfProgress()){
+                    handler.postDelayed(getProgressListRunnable, 200);
+                }else{
+                    try{
+                        callbacks.progressListRetrieved();
+                    }catch(Exception e){
+                        Log.e(TAG, "getProgressListRunnable: ", e);
+                    }
+                }
+
+            }
+        };
+        handler.post(getProgressListRunnable);
     }
 }

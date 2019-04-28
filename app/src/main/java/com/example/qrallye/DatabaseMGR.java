@@ -16,8 +16,10 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -300,5 +302,61 @@ public class DatabaseMGR {
         Team tmpTeam = SessionMGR.getInstance().getLogedTeam();
         toPush.put("position", tmpTeam.getPosition());
         teamCollections.document(tmpTeam.getName()).update(toPush);
+    }
+
+    public void getProgressList() {
+        teamCollections.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful() && task.getResult() != null) {
+                    if(task.getResult().size() > 0){
+                        for (int i = 0; i < task.getResult().size(); i++) {
+                            DocumentSnapshot doc = task.getResult().getDocuments().get(i);
+                            Date startRallye;
+                            Date endRallye;
+                            if (doc.getTimestamp("startRallye") != null) {
+                                startRallye = doc.getTimestamp("startRallye").toDate();
+                            } else
+                                startRallye = null;
+                            if (doc.getTimestamp("endRallye") != null) {
+                                endRallye = doc.getTimestamp("endRallye").toDate();
+                            } else {
+                                endRallye = Calendar.getInstance().getTime();
+                            }
+
+                            long timelaps;
+                            if (startRallye == null)
+                                timelaps = 0;
+                            else {
+                                timelaps = endRallye.getTime() - startRallye.getTime();
+                            }
+
+                            ProgressItem team = new ProgressItem(doc.getId(), timelaps, 0);
+                            QuizMGR.getInstance().addProgressListItem(team);
+
+                            getProgressItemQuizzesCount(doc.getId(), i == (task.getResult().size() - 1));
+                        }
+                    }else{
+                        QuizMGR.getInstance().setWaitingForListOfProgress(false);
+                    }
+                }else{
+                    QuizMGR.getInstance().setWaitingForListOfProgress(false);
+                }
+            }
+        });
+    }
+
+    private void getProgressItemQuizzesCount(final String id, final boolean isLast){
+        teamCollections.document(id).collection("Answers").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                int count = 0;
+                if(task.getResult() != null)
+                    count = task.getResult().size();
+                QuizMGR.getInstance().setProgressItemQuizzesCount(id, count);
+                if(isLast)
+                    QuizMGR.getInstance().setWaitingForListOfProgress(false);
+            }
+        });
     }
 }
