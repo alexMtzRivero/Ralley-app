@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback,
         startService(dbInteractionsServiceIntent);
         bindService(dbInteractionsServiceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
 
-        if(QuizMGR.getInstance().getQuizList() == null){
+        if(QuizMGR.getInstance().getQuizList().size() == 0){
             dbInteractionsServiceIntent.setAction(DBInteractionsService.ACTION_getQuizzes);
             startService(dbInteractionsServiceIntent);
         }
@@ -194,7 +194,7 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback,
 
     @Override
     public void quizzesRetrieved() {
-        if(QuizMGR.getInstance().getQuizList() == null){
+        if(QuizMGR.getInstance().getQuizList().size() == 0){
             Intent intent = new Intent(this, DBInteractionsService.class);
             intent.setAction(DBInteractionsService.ACTION_getQuizzes);
             startService(intent);

@@ -7,4 +7,5 @@
     <string name="valid">Valider</string>
     <string name="wrong_password">mauvais mot de passe</string>
     <string name="wrong_username">mauvais pseudo</string>
+    <string name="no_admin_list">Aucun administrateur n\'a été trouvé</string>
 </resources>

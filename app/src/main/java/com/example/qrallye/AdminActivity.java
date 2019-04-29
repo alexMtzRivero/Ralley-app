@@ -7,21 +7,23 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
 public class AdminActivity extends AppCompatActivity {
     private final static String TAG = "AdminActivity";
-    private ListView list;
-    private ProgressBar progressBar;
+
+    private enum DisplayStatus{
+        LOADING, LIST, EMPTY_LIST
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin);
         LinearLayout iv_back = findViewById(R.id.back_arrow);
-        list = findViewById(R.id.adminList);
-        progressBar = findViewById(R.id.progressBar);
+        changeDisplay(DisplayStatus.LOADING);
         SessionMGR.getInstance().requestAdminList(this);
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -33,9 +35,37 @@ public class AdminActivity extends AppCompatActivity {
     }
 
     public void refreshList(ArrayList<Administrators> adminList){
-        progressBar.setVisibility(View.GONE);
-        list.setVisibility(View.VISIBLE);
-        AdminAdapter adapter = new AdminAdapter(getApplicationContext(),adminList);
-        list.setAdapter(adapter);
+        if(adminList.size() != 0){
+            AdminAdapter adapter = new AdminAdapter(getApplicationContext(),adminList);
+            ListView list = findViewById(R.id.adminList);
+            list.setAdapter(adapter);
+            changeDisplay(DisplayStatus.LIST);
+        }else{
+            changeDisplay(DisplayStatus.EMPTY_LIST);
+        }
+
+    }
+
+    private void changeDisplay(DisplayStatus s){
+        ListView list = findViewById(R.id.adminList);
+        ProgressBar progressBar = findViewById(R.id.progressBar);
+        TextView emptyListMessage = findViewById(R.id.empty_list_message);
+        switch(s){
+            case LOADING:
+                list.setVisibility(View.GONE);
+                progressBar.setVisibility(View.VISIBLE);
+                emptyListMessage.setVisibility(View.GONE);
+                break;
+            case LIST:
+                list.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.GONE);
+                emptyListMessage.setVisibility(View.GONE);
+                break;
+            case EMPTY_LIST:
+                list.setVisibility(View.GONE);
+                progressBar.setVisibility(View.GONE);
+                emptyListMessage.setVisibility(View.VISIBLE);
+                break;
+        }
     }
 }

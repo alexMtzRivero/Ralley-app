@@ -78,7 +78,7 @@ public class MapFragment extends Fragment {
         mWebView.setWebViewClient(new WebViewClient(){
             @Override
             public void onPageFinished(WebView view, String url) {
-                if(QuizMGR.getInstance().getQuizList() != null){
+                if(QuizMGR.getInstance().getQuizList().size() != 0){
                     addQuizzMarkersToMap();
                 }
 
@@ -150,13 +150,13 @@ public class MapFragment extends Fragment {
     }
 
     public void opponentsPositionRetrieved() {
-        if(QuizMGR.getInstance().getListOfOpponentPosition() != null){
+        if(QuizMGR.getInstance().getListOfOpponentPosition().size() != 0){
             addOpponentMarkersToMap();
         }
     }
 
     public void quizzesRetrieved(){
-        if(QuizMGR.getInstance().getQuizList() != null){
+        if(QuizMGR.getInstance().getQuizList().size() != 0){
             addQuizzMarkersToMap();
         }
     }

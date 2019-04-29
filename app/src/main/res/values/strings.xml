@@ -10,5 +10,6 @@
     <string name="wrong_password">wrong password</string>
     <string name="wrong_username">wrong username</string>
     <string name="teamNamePref" translatable="false">loggedTeam</string>
+    <string name="no_admin_list">no administrator found</string>
 
 </resources>

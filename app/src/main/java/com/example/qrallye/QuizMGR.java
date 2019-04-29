@@ -33,7 +33,7 @@ public class QuizMGR {
 
     private QuizMGR() {
         questionList = new ArrayList<>();
-        quizList = null;
+        quizList = new ArrayList<>();
         finishedQuizList = new ArrayList<>();
         opponentTeamPositionList = new ArrayList<>();
         progressList = new HashMap<>();
