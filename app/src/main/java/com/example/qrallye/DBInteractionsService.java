@@ -20,6 +20,7 @@ public class DBInteractionsService extends IntentService {
     public static final String ACTION_getQuizzes = "com.example.qrallye.action.getQuizzes";
     public static final String ACTION_getFinishedQuizzes = "com.example.qrallye.action.getFinishedQuizzes";
     public static final String ACTION_getProgressList = "com.example.qrallye.action.getProgressList";
+    public static final String ACTION_getAnswersList = "com.example.qrallye.action.getAnswersList";
     private static final String TAG = "DBInteractionsService";
     private ServiceCallbacks callbacks;
     private final IBinder mBinder = new LocalBinder();
@@ -28,6 +29,7 @@ public class DBInteractionsService extends IntentService {
     private Runnable getQuizzesRunnable;
     private Runnable getFinishedQuizzesRunnable;
     private Runnable getProgressListRunnable;
+    private Runnable getAnswersListRunnable;
 
     public DBInteractionsService() {
         super("DBInteractionsService");
@@ -61,6 +63,10 @@ public class DBInteractionsService extends IntentService {
                     case ACTION_getProgressList:
                         handleActionGetProgressList();
                         break;
+                    case ACTION_getAnswersList:
+                        handleActionGetAnswersList();
+                        break;
+
                 }
             }
         }
@@ -181,5 +187,26 @@ public class DBInteractionsService extends IntentService {
             }
         };
         handler.post(getProgressListRunnable);
+    }
+
+    private void handleActionGetAnswersList() {
+        QuizMGR.getInstance().retrieveAnswersListFromDB();
+
+        getAnswersListRunnable = new Runnable() {
+            @Override
+            public void run() {
+                if(QuizMGR.getInstance().isWaitingForListOfAnswers()){
+                    handler.postDelayed(getAnswersListRunnable, 200);
+                }else{
+                    try{
+                        callbacks.AnswersListRetrieved();
+                    }catch(Exception e){
+                        Log.e(TAG, "getAnswersListRunnable: ", e);
+                    }
+                }
+
+            }
+        };
+        handler.post(getAnswersListRunnable);
     }
 }

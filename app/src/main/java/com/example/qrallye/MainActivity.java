@@ -38,6 +38,7 @@ import com.google.zxing.integration.android.IntentResult;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 
 public class MainActivity extends AppCompatActivity implements FragmentCallback, ServiceCallbacks {
 
@@ -52,6 +53,8 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback,
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationRequest mLocationRequest;
     private LocationCallback mLocationCallback;
+
+    private String QrResult;
 
 
     @Override
@@ -240,6 +243,22 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback,
     }
 
     @Override
+    public void AnswersListRetrieved() {
+        HashSet answers = QuizMGR.getInstance().getAnswersList();
+        if(answers != null && !answers.contains(QrResult) && QrResult.length() != 0){
+            Bundle args = new Bundle();
+            args.putString(getResources().getString(R.string.currentQuiz), QrResult);
+            QuestionFragment questionFragment = new QuestionFragment();
+            questionFragment.setArguments(args);
+            changeFragmentDisplayed(questionFragment, fragmentDisplayed.Question.toString());
+            QrResult = "";
+            findViewById(R.id.navbar).setVisibility(View.GONE);
+        }else{
+            Toast.makeText(this, "Vous avez déjà complété ce Quiz", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         try{
             unbindService(serviceConnection);
@@ -349,15 +368,13 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback,
         super.onActivityResult(requestCode, resultCode, data);
 
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        QuestionFragment questionFragment = new QuestionFragment();
-        Bundle args = new Bundle();
         String stringResult = result.getContents();
         if(stringResult!= null) {
             if (stringResult.contains("Quiz")) {
-                args.putString(getResources().getString(R.string.currentQuiz), stringResult);
-                questionFragment.setArguments(args);
-                changeFragmentDisplayed(questionFragment, fragmentDisplayed.Question.toString());
-                findViewById(R.id.navbar).setVisibility(View.GONE);
+                this.QrResult = stringResult;
+                Intent intent = new Intent(this, DBInteractionsService.class);
+                intent.setAction(DBInteractionsService.ACTION_getAnswersList);
+                startService(intent);
             } else if (stringResult.equals("startRace")) {
                 DatabaseMGR.getInstance().setStartRallye();
                 changeFragmentDisplayed(new MapFragment(), fragmentDisplayed.Map.toString());

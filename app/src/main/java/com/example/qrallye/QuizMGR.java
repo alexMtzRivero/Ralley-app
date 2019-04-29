@@ -1,8 +1,10 @@
 package com.example.qrallye;
 
+import android.provider.ContactsContract;
 import android.util.Log;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 
 public class QuizMGR {
@@ -18,6 +20,8 @@ public class QuizMGR {
     private boolean isWaitingForListOfOpponentPosition = true;
     private boolean isWaitingForListOfProgress = true;
     private HashMap<String, ProgressItem> progressList;
+    private boolean isWaitingForListOfAnswers = true;
+    private HashSet<String> answersList;
 
     public static QuizMGR getInstance() {
         if  (ourInstance == null) {
@@ -37,6 +41,7 @@ public class QuizMGR {
         finishedQuizList = new ArrayList<>();
         opponentTeamPositionList = new ArrayList<>();
         progressList = new HashMap<>();
+        answersList = null;
     }
 
     //-------------------------- Current Quiz ----------------
@@ -159,12 +164,36 @@ public class QuizMGR {
         return isWaitingForListOfProgress;
     }
 
-    public void setWaitingForListOfProgress(boolean bool) {
-        isWaitingForListOfProgress = bool;
+    public void setWaitingForListOfProgress() {
+        isWaitingForListOfProgress = false;
     }
 
     public void setProgressItemQuizzesCount(String key, int count) {
         if(this.progressList.get(key) != null)
             this.progressList.get(key).setQuizzesCount(count);
+    }
+
+    //----------------------Answers List-------------------------------
+
+    public void retrieveAnswersListFromDB() {
+        this.answersList = null;
+        this.isWaitingForListOfAnswers = true;
+        DatabaseMGR.getInstance().getAnswersList();
+    }
+
+    public HashSet<String> getAnswersList() {
+        return this.answersList;
+    }
+
+    public boolean isWaitingForListOfAnswers() {
+        return isWaitingForListOfAnswers;
+    }
+
+    public void setWaitingForListOfAnswersDone() {
+        isWaitingForListOfAnswers = false;
+    }
+
+    public void setAnswersList(HashSet<String> res) {
+        this.answersList = res;
     }
 }

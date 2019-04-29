@@ -9,4 +9,6 @@ public interface ServiceCallbacks {
     void finishedQuizzesRetrieved();
 
     void progressListRetrieved();
+
+    void AnswersListRetrieved();
 }

@@ -14,6 +14,7 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Source;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -21,6 +22,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.UUID;
 
@@ -60,7 +62,7 @@ public class DatabaseMGR {
         team = null;
         Log.i(TAG, "getTeam: Recherche de la team");
         DocumentReference teamRef = teamCollections.document(teamName);
-        teamRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        teamRef.get(Source.SERVER).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if(task.isSuccessful()){
@@ -96,39 +98,45 @@ public class DatabaseMGR {
 
         QuizMGR.getInstance().setCurrentQuiz(quizName);
 
-        CollectionReference questionsRef = quizzesCollections.document(quizName).collection("Questions");
-
-        questionsRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful())
-                {
-                    if(task.getResult() != null && task.getResult().size() != 0){
-                        for (QueryDocumentSnapshot snapshot : task.getResult()) {
-                            Question tmp = snapshot.toObject(Question.class);
-                            QuizMGR.getInstance().addQuestion(tmp);
+        try{
+            CollectionReference questionsRef = quizzesCollections.document(quizName).collection("Questions");
+            questionsRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if(task.isSuccessful())
+                    {
+                        if(task.getResult() != null && task.getResult().size() != 0){
+                            for (QueryDocumentSnapshot snapshot : task.getResult()) {
+                                Question tmp = snapshot.toObject(Question.class);
+                                QuizMGR.getInstance().addQuestion(tmp);
+                            }
+                            Team tmpTeam = SessionMGR.getInstance().getLogedTeam();
+                            Map<String,Object> toPush = new HashMap<>();
+                            toPush.put("startQuiz", FieldValue.serverTimestamp());
+                            Map<String, Object> pushCurrentQuiz = new HashMap<>();
+                            pushCurrentQuiz.put("currentQuiz", quizName);
+                            teamCollections.document(tmpTeam.getName()).update(pushCurrentQuiz);
+                            teamCollections.document(tmpTeam.getName()).collection("Answers").document(quizName).set(toPush);
+                            setCurrentQuizForTeamLogged(quizName);
+                            Log.i(TAG, "questions retrieved");
                         }
-                        Team tmpTeam = SessionMGR.getInstance().getLogedTeam();
-                        Map<String,Object> toPush = new HashMap<>();
-                        toPush.put("startQuiz", FieldValue.serverTimestamp());
-                        Map<String, Object> pushCurrentQuiz = new HashMap<>();
-                        pushCurrentQuiz.put("currentQuiz", quizName);
-                        teamCollections.document(tmpTeam.getName()).update(pushCurrentQuiz);
-                        teamCollections.document(tmpTeam.getName()).collection("Answers").document(quizName).set(toPush);
-                        setCurrentQuizForTeamLogged(quizName);
-                        Log.i(TAG, "questions retrieved");
+                        else {
+                            Log.e(TAG, "questions could not be retrieved");
+                        }
                     }
-                    else {
+                    else
+                    {
                         Log.e(TAG, "questions could not be retrieved");
                     }
+                    QuizMGR.getInstance().onQuestionListRetrieved();
                 }
-                else
-                {
-                    Log.e(TAG, "questions could not be retrieved");
-                }
-                QuizMGR.getInstance().onQuestionListRetrieved();
-            }
-        });
+            });
+        }catch(Exception e){
+            Log.e(TAG, "getQuestionsFromQuiz: ", e);
+            QuizMGR.getInstance().onQuestionListRetrieved();
+        }
+
+
     }
 
     public ArrayList<Quiz> getListOfQuiz(){
@@ -337,10 +345,10 @@ public class DatabaseMGR {
                             getProgressItemQuizzesCount(doc.getId(), i == (task.getResult().size() - 1));
                         }
                     }else{
-                        QuizMGR.getInstance().setWaitingForListOfProgress(false);
+                        QuizMGR.getInstance().setWaitingForListOfProgress();
                     }
                 }else{
-                    QuizMGR.getInstance().setWaitingForListOfProgress(false);
+                    QuizMGR.getInstance().setWaitingForListOfProgress();
                 }
             }
         });
@@ -355,7 +363,25 @@ public class DatabaseMGR {
                     count = task.getResult().size();
                 QuizMGR.getInstance().setProgressItemQuizzesCount(id, count);
                 if(isLast)
-                    QuizMGR.getInstance().setWaitingForListOfProgress(false);
+                    QuizMGR.getInstance().setWaitingForListOfProgress();
+            }
+        });
+    }
+
+    public void getAnswersList() {
+        teamCollections.document(SessionMGR.getInstance().getLogedTeam().getName()).collection("Answers").get(Source.SERVER).addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()) {
+                    if (task.getResult() != null) {
+                        HashSet<String> res = new HashSet<>();
+                        for (QueryDocumentSnapshot snapshot : task.getResult()) {
+                            res.add(snapshot.getId());
+                        }
+                        QuizMGR.getInstance().setAnswersList(res);
+                    }
+                }
+                QuizMGR.getInstance().setWaitingForListOfAnswersDone();
             }
         });
     }
