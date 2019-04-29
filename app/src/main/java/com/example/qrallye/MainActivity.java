@@ -434,10 +434,15 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback,
 
     @Override
     public void onBackPressed() {
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(fragmentDisplayed.Question.toString());
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         if(fragment == null){
             startActivity(new Intent(this, HomeActivity.class));
             finish();
+        }else{
+            if (!fragment.getClass().equals(QuestionFragment.class)) {
+                startActivity(new Intent(this, HomeActivity.class));
+                finish();
+            }
         }
     }
 }

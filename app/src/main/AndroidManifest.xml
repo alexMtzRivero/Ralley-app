@@ -16,7 +16,7 @@
         tools:ignore="GoogleAppIndexingWarning">
         <service
             android:name=".DBInteractionsService"
-            android:exported="false"></service>
+            android:exported="false"/>
         <service
             android:name=".GeolocalisationService"
             android:exported="false" />
