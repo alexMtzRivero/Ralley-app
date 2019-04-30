@@ -2,6 +2,8 @@ package com.example.qrallye;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -81,16 +83,30 @@ public class QRCodeFragment extends Fragment {
         scan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                IntentIntegrator integrator = new IntentIntegrator(getActivity());
-                integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES);
-                integrator.setPrompt("Scan");
-                integrator.setCameraId(0);
-                integrator.setBeepEnabled(false);
-                integrator.setBarcodeImageEnabled(false);
-                integrator.initiateScan();
+                if(isNetworkAvailable()){
+                    IntentIntegrator integrator = new IntentIntegrator(getActivity());
+                    integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES);
+                    integrator.setPrompt("Scan");
+                    integrator.setCameraId(0);
+                    integrator.setBeepEnabled(false);
+                    integrator.setBarcodeImageEnabled(false);
+                    integrator.initiateScan();
+                }
+                else Toast.makeText(getContext(), "Vous devez être connecté à internet", Toast.LENGTH_LONG).show();
             }
         });
         return view;
+    }
+
+    private boolean isNetworkAvailable() {
+        try{
+            ConnectivityManager connectivityManager = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+            return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+        }catch(Exception e){
+            Log.e(TAG, "isNetworkAvailable: ", e);
+            return false;
+        }
     }
 
     @Override

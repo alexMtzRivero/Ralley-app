@@ -1,8 +1,12 @@
 package com.example.qrallye;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -11,6 +15,8 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 public class ConnectionActivity extends AppCompatActivity {
+
+    private static final String TAG = "ConnectionActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +67,31 @@ public class ConnectionActivity extends AppCompatActivity {
         loadingView.setVisibility(View.GONE);
         Toast.makeText(getApplicationContext(),getString(R.string.wrong_password),Toast.LENGTH_SHORT).show();
     }
-    public  void notifyWrongUserName(){
+
+    public  void noTeamFound(){
+        if(isNetworkAvailable()){
+            notifyWrongUserName();
+        }else {
+            ProgressBar loadingView = findViewById(R.id.connectionProgressBar);
+            Button validateBtn = findViewById(R.id.validateBtn);
+            validateBtn.setVisibility(View.VISIBLE);
+            loadingView.setVisibility(View.GONE);
+            Toast.makeText(this, "Connexion impossible : vérifiez votre connexion internet", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private boolean isNetworkAvailable() {
+        try{
+            ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+            return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+        }catch(Exception e){
+            Log.e(TAG, "isNetworkAvailable: ", e);
+            return false;
+        }
+    }
+
+    private void notifyWrongUserName(){
         ProgressBar loadingView = findViewById(R.id.connectionProgressBar);
         Button validateBtn = findViewById(R.id.validateBtn);
         final EditText userText = findViewById(R.id.UserEdt);

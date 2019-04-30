@@ -31,7 +31,6 @@ public class LaunchScreenActivity extends AppCompatActivity {
 
             }
         }
-
     }
 
 

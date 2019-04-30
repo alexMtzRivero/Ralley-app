@@ -1,12 +1,12 @@
 package com.example.qrallye;
 
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.google.firebase.firestore.GeoPoint;
 
 import java.util.ArrayList;
 
-import static com.example.qrallye.SessionMGR.*;
 import static android.content.Context.MODE_PRIVATE;
 
 public class SessionMGR {
@@ -71,8 +71,7 @@ public class SessionMGR {
                     }
                     else toSend.notifyWrongPasword();
             }
-            else toSend.notifyWrongUserName();
-
+            else toSend.noTeamFound();
             toSend = null;
         }else
             if (connectionType == ConnectionType.ALLREADY_LOGGED && launchScreenActivity != null){
@@ -84,6 +83,7 @@ public class SessionMGR {
                     else launchScreenActivity.goToConnectionActivity();
                 }
                 else launchScreenActivity.goToConnectionActivity();
+                launchScreenActivity = null;
             }
     }
 
@@ -100,7 +100,11 @@ public class SessionMGR {
     //------------------Team Position MGR---------------------
 
     public void updatePosition(GeoPoint geoPoint){
-        this.team.setPosition(geoPoint);
+        try{
+            this.team.setPosition(geoPoint);
+        }catch(Exception e){
+            Log.e(TAG, "updatePosition: ", e);
+        }
     }
 
     public void sendGeopoint(){
