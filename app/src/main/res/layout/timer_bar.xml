@@ -10,10 +10,11 @@
         <ImageView
             android:id="@+id/imageView1"
             android:scaleType="fitStart"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/ic_logo_app"
-            android:layout_margin="5dp"/>
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp" />
 
         <ImageView
             android:id="@+id/imageView3"
@@ -21,7 +22,8 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:src="@drawable/ic_chrono"
-            android:layout_margin="10dp"
+            android:scaleX="0.70"
+            android:scaleY="0.70"
             android:layout_marginRight="5dp"/>
 
         <Chronometer

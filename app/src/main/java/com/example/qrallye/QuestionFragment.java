@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Chronometer;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.example.qrallye.databinding.ResponseListItemBinding;
@@ -122,6 +123,9 @@ public class QuestionFragment extends Fragment {
         responses.addAll(questions.get(index).getChoices());
         ResponsesListAdapter responsesListAdapter = new ResponsesListAdapter(responses);
         recyclerView.setAdapter(responsesListAdapter);
+
+        ScrollView scrollView = getView().findViewById(R.id.scrollView);
+        scrollView.smoothScrollTo(0,0);
     }
 
     @Override
