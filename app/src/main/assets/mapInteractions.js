@@ -48,3 +48,7 @@ mymap.locate({setView: false, watch: true, timeout: 100000})
        .on('locationerror', function(e){
             console.log("locationError : "+e.message);
         });
+
+function locateOnce(){
+    mymap.
+}

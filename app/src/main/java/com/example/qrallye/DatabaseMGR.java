@@ -12,6 +12,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Source;
@@ -31,15 +32,22 @@ public class DatabaseMGR {
     private final String TAG = "DatabaseMGR";
     private static final DatabaseMGR ourInstance = new DatabaseMGR();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference adminCollections = db.collection("Administrators");
-    private CollectionReference teamCollections = db.collection("Groups");
-    private CollectionReference quizzesCollections = db.collection("Quizzes");
+    private CollectionReference adminCollections;
+    private CollectionReference teamCollections;
+    private CollectionReference quizzesCollections;
     private Team team;
     public static DatabaseMGR getInstance() {
         return ourInstance;
     }
 
     private DatabaseMGR() {
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setPersistenceEnabled(false)
+                .build();
+        db.setFirestoreSettings(settings);
+        adminCollections = db.collection("Administrators");
+        teamCollections = db.collection("Groups");
+        quizzesCollections = db.collection("Quizzes");
     }
 
     public void getAdmin(){
