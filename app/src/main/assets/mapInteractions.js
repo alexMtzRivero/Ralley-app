@@ -1,4 +1,3 @@
-
 var mymap = L.map('map').setView([45.188096,5.718452], 13);
 
 var quizzesGroup = L.layerGroup().addTo(mymap);
@@ -29,7 +28,8 @@ var opponentIcon = L.icon({
 
 L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw',
 {
-    maxZoom: 18,
+    maxZoom: 20,
+    minZoom: 13,
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
     '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
     'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -50,5 +50,5 @@ mymap.locate({setView: false, watch: true, timeout: 100000})
         });
 
 function locateOnce(){
-    mymap.
+    mymap.flyTo(myMarker.getLatLng(), 20);
 }
