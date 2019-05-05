@@ -3,6 +3,7 @@ package com.example.qrallye;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -12,12 +13,13 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
+
+import static android.support.v7.widget.RecyclerView.VERTICAL;
 
 
 /**
@@ -47,6 +49,15 @@ public class ProgressFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_progress, container, false);
+        RecyclerView recyclerView = view.findViewById(R.id.progressList);
+        try{
+            DividerItemDecoration itemDecor = new DividerItemDecoration(getContext(), VERTICAL);
+            recyclerView.addItemDecoration(itemDecor);
+        }catch(Exception e){
+            Log.e(TAG, "onCreateView: ", e);
+        }
+
+
         changeDisplay(DisplayState.LOADING, view);
         return view;
     }
@@ -142,12 +153,11 @@ public class ProgressFragment extends Fragment {
             holder.quizzesCount.setText("x"+mDataset.get(position).getQuizzesCount());
 
             Long timeInMillis = mDataset.get(position).getChrono();
-            Date date = new Date(timeInMillis);
-            DateFormat formatter = new SimpleDateFormat("HH:mm");
-            String dateFormatted = formatter.format(date);
+            int hrs = (int) TimeUnit.MILLISECONDS.toHours(timeInMillis) % 24;
+            int min = (int) TimeUnit.MILLISECONDS.toMinutes(timeInMillis) % 60;
+            String dateFormatted = String.format(Locale.FRANCE, "%02d:%02d", hrs, min);
 
             holder.chrono.setText(dateFormatted);
-
         }
 
         @Override

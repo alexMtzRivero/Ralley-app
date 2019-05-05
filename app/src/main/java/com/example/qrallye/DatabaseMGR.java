@@ -42,7 +42,7 @@ public class DatabaseMGR {
 
     private DatabaseMGR() {
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
-                .setPersistenceEnabled(false)
+                .setPersistenceEnabled(true)
                 .build();
         db.setFirestoreSettings(settings);
         adminCollections = db.collection("Administrators");
@@ -299,13 +299,18 @@ public class DatabaseMGR {
                 if(task.isSuccessful()) {
                     if(task.getResult() != null) {
                         ArrayList<Team> opponentTeamList = new ArrayList<>();
-                        for (QueryDocumentSnapshot doc : task.getResult()) {
-                            if (doc.getGeoPoint("position") != null && !doc.getId().equals(SessionMGR.getInstance().getLogedTeam().getName())) {
-                                Team team = new Team(doc.getId(), 0, doc.getGeoPoint("position"), new Color(), "", null, null, "", "");
-                                opponentTeamList.add(team);
+                        try{
+                            for (QueryDocumentSnapshot doc : task.getResult()) {
+                                if (doc.getGeoPoint("position") != null && !doc.getId().equals(SessionMGR.getInstance().getLogedTeam().getName())) {
+                                    Team team = new Team(doc.getId(), 0, doc.getGeoPoint("position"), new Color(), "", null, null, "", "");
+                                    opponentTeamList.add(team);
+                                }
                             }
+                            QuizMGR.getInstance().setListOfOpponentPosition(opponentTeamList);
+                        }catch(Exception e){
+                            Log.e(TAG, "getListOfOpponent: ", e);
                         }
-                        QuizMGR.getInstance().setListOfOpponentPosition(opponentTeamList);
+
                     }
                 }
                 QuizMGR.getInstance().setWaitingForListOfOpponentPosition(false);

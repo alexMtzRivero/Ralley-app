@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,6 +53,12 @@ public class QuizzFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_quizz, container, false);
         recyclerView = view.findViewById(R.id.quizList);
+        try{
+            DividerItemDecoration itemDecor = new DividerItemDecoration(getContext(), VERTICAL);
+            recyclerView.addItemDecoration(itemDecor);
+        }catch (Exception e){
+            Log.e(TAG, "onCreateView: ", e);
+        }
 
         changeDisplay(DisplayState.LOADING, view);
 
@@ -176,11 +183,8 @@ public class QuizzFragment extends Fragment {
     private void refreshAdapter(){
         quizList = QuizMGR.getInstance().getQuizList();
         finishedQuizList = QuizMGR.getInstance().getFinishedQuizList();
-
         locationsListAdapter = new LocationsListAdapter(quizList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        DividerItemDecoration itemDecor = new DividerItemDecoration(getContext(), VERTICAL);
-        recyclerView.addItemDecoration(itemDecor);
         recyclerView.setAdapter(locationsListAdapter);
         changeDisplay(DisplayState.LIST, getView());
         }
