@@ -1,6 +1,8 @@
 package com.example.qrallye;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
@@ -121,12 +123,14 @@ public class ProgressFragment extends Fragment {
             TextView teamView;
             TextView chrono;
             TextView quizzesCount;
+            View itemView;
 
             MyViewHolder(View v) {
                 super(v);
                 teamView = v.findViewById(R.id.team);
                 chrono = v.findViewById(R.id.chrono);
                 quizzesCount = v.findViewById(R.id.quizzesCount);
+                itemView = v;
             }
         }
 
@@ -148,16 +152,25 @@ public class ProgressFragment extends Fragment {
 
         // Replace the contents of a view (invoked by the layout manager)
         @Override
-        public void onBindViewHolder(ProgressListAdapter.MyViewHolder holder, final int position) {
-            holder.teamView.setText(mDataset.get(position).getTeam());
-            holder.quizzesCount.setText("x"+mDataset.get(position).getQuizzesCount());
+        public void onBindViewHolder(MyViewHolder holder, final int position) {
+            ProgressItem pi = mDataset.get(position);
+            holder.teamView.setText(pi.getTeam());
+            holder.quizzesCount.setText("x"+pi.getQuizzesCount());
 
-            Long timeInMillis = mDataset.get(position).getChrono();
+            Long timeInMillis = pi.getChrono();
             int hrs = (int) TimeUnit.MILLISECONDS.toHours(timeInMillis) % 24;
             int min = (int) TimeUnit.MILLISECONDS.toMinutes(timeInMillis) % 60;
             String dateFormatted = String.format(Locale.FRANCE, "%02d:%02d", hrs, min);
 
             holder.chrono.setText(dateFormatted);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && pi.getTeam().equals(SessionMGR.getInstance().getLogedTeam().getName())) {
+                try{
+                    holder.itemView.setBackground(getResources().getDrawable(R.drawable.gradient));
+                }catch(Exception e){
+                    Log.e(TAG, "onBindViewHolder: ", e);
+                }
+            }
         }
 
         @Override
