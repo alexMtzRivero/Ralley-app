@@ -19,8 +19,6 @@ import com.google.firebase.firestore.Source;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -162,7 +160,6 @@ public class DatabaseMGR {
                                     (snapshot.getTimestamp("endQuiz") != null) ?snapshot.getTimestamp("endQuiz").toDate():null);
                             quizList.add(quiz);
                         }
-                        sortList(quizList);
                         QuizMGR.getInstance().setQuizList(quizList);
                         Log.i(TAG, "quizList retrieved");
                     }
@@ -259,26 +256,10 @@ public class DatabaseMGR {
                                     (snapshot.getTimestamp("endQuiz") != null) ?snapshot.getTimestamp("endQuiz").toDate():null);
                             finishedQuizList.add(quiz);
                         }
-                        sortList(finishedQuizList);
                         QuizMGR.getInstance().setFinishedQuizList(finishedQuizList);
                     }
                 }
                 QuizMGR.getInstance().setWaitingForListOfFinishedQuizDone(false);
-            }
-        });
-    }
-
-
-    private void sortList(ArrayList<Quiz> list) {
-        Collections.sort(list, new Comparator<Quiz>() {
-            public int compare(Quiz o1, Quiz o2) {
-                return extractInt(o1.getId()) - extractInt(o2.getId());
-            }
-
-            int extractInt(String s) {
-                String num = s.replaceAll("Quiz", "");
-                // return 0 if no digits found
-                return num.isEmpty() ? 0 : Integer.parseInt(num);
             }
         });
     }

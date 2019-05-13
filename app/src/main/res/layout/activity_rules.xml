@@ -14,10 +14,10 @@
         android:layout_weight="3"/>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_weight="1"
+        android:layout_weight="0.75"
         android:orientation="vertical"
         android:gravity="center"
-        android:layout_height="1dp">
+        android:layout_height="0dp">
 
         <View
             android:layout_width="200dp"
@@ -27,26 +27,35 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sécurité"
+            android:text="A NOTER :"
             android:textStyle="bold"
-            android:textSize="39dp"
+            android:textSize="30dp"
             />
 
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/rules"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="10dp"
         android:layout_weight="4"
-        android:textAlignment="center"
-        android:layout_margin="16dp"
-        android:layout_below="@+id/title"
-        android:text=" Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis mattis faucibus libero vitae ultricies. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer auctor malesuada dapibus. Maecenas lobortis consequat nibh eget mattis. Quisque ut tincidunt enim. Maecenas cursus diam sit amet ligula egestas, at aliquam turpis consectetur. Sed vel neque at massa dapibus pharetra id eget ligula. Integer auctor tincidunt accumsan.
+        android:layout_margin="5dp">
 
-Nunc et tincidunt lacus, a euismod leo. Praesent libero enim, dictum eu posuere nec, semper ut purus. Quisque id nulla ut ipsum laoreet sagittis. Suspendisse auctor mi lectus, sit amet euismod dui dapibus vulputate. Quisque viverra, ante vitae viverra condimentum, enim elit dictum mauris, ut ultricies enim libero eget metus. Fusce purus mi, mattis porta molestie at, facilisis nec massa. Fusce justo lectus, accumsan at augue eget, dictum venenatis sem. Proin id pulvinar lacus. In varius, justo placerat aliquet finibus, sem ex sagittis velit, eget ullamcorper sapien sem et arcu. Maecenas suscipit ligula eleifend dui laoreet, vitae pulvinar ex pretium. Donec dictum a ligula in efficitur. Suspendisse id volutpat dolor. Vestibulum vel leo quis odio sagittis tempus sit amet et ante. Sed auctor dui non dapibus sodales."/>
+        <TextView
+            android:id="@+id/rules"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:text="Le Rallye démarre à partir de 9h à l'IUT1.\n
+        Le parcours doit être réalise à pied ou en tramway. Durant vos déplacements, vous devez observer les règles du code de la route et avoir un titre de transport valable. Nous faisons appel à votre Fair-play et votre savoir-vivre durant ce Rallye.\n
+        Vous devez posséder par équipe un téléphone portable ANDROID bien chargé, capable d’avoir accès à Internet.\n
+        Le dernier site du Rallye se trouve à l'entrée de la FBTP, il doit être validée avant 11h30 maximum (sinon votre participation au Rallye sera compromise).\n
+        NB Après avoir validé la dernière borne, vous aurez le temps de visiter le Village Entreprises, localisé en face, à GreEn-ER\n
+        En cas de problème, voir les numéros de téléphone sur votre feuille de route ou dans l'application."/>
+
+    </ScrollView>
+
+
     <Button
         android:id="@+id/acceptRulesBtn"
         android:layout_width="match_parent"
