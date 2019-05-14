@@ -1,4 +1,4 @@
-package com.example.qrallye;
+package com.uga.qrallye;
 
 public class Administrators {
     private String username;

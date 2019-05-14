@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:781965245298:android:ca5c489020f31280",
         "android_client_info": {
-          "package_name": "com.example.qrallye"
+          "package_name": "com.uga.qrallye"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "781965245298-vlk3b26dl5sff057svlosuhbb9uonndr.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.qrallye",
+            "package_name": "com.uga.qrallye",
             "certificate_hash": "8a7f80ba2eb957ea553e7827e3f434cc3d891ddc"
           }
         },

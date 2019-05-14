@@ -1,6 +1,4 @@
-package com.example.qrallye;
-
-import java.util.Date;
+package com.uga.qrallye;
 
 class ProgressItem {
 

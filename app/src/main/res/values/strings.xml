@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">QRallye</string>
+    <string name="app_name" translatable="false">Rallye GCCD</string>
 
     <string name="name">Name</string>
     <string name="password">Password</string>

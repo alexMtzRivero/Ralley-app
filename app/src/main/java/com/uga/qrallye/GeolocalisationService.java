@@ -1,4 +1,4 @@
-package com.example.qrallye;
+package com.uga.qrallye;
 
 import android.annotation.SuppressLint;
 import android.app.IntentService;

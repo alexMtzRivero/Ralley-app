@@ -1,7 +1,6 @@
-package com.example.qrallye;
+package com.uga.qrallye;
 
 import com.google.firebase.firestore.GeoPoint;
-import com.google.type.LatLng;
 
 import java.util.Date;
 

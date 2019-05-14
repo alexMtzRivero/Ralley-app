@@ -1,4 +1,4 @@
-package com.example.qrallye;
+package com.uga.qrallye;
 
 import android.app.IntentService;
 import android.content.Intent;
@@ -16,11 +16,11 @@ import android.util.Log;
 public class DBInteractionsService extends IntentService {
     // TODO: Rename actions, choose action names that describe tasks that this
     // IntentService can perform, e.g. ACTION_FETCH_NEW_ITEMS
-    public static final String ACTION_getOpponentsPosition = "com.example.qrallye.action.getOpponentsPosition";
-    public static final String ACTION_getQuizzes = "com.example.qrallye.action.getQuizzes";
-    public static final String ACTION_getFinishedQuizzes = "com.example.qrallye.action.getFinishedQuizzes";
-    public static final String ACTION_getProgressList = "com.example.qrallye.action.getProgressList";
-    public static final String ACTION_getAnswersList = "com.example.qrallye.action.getAnswersList";
+    public static final String ACTION_getOpponentsPosition = "com.uga.qrallye.action.getOpponentsPosition";
+    public static final String ACTION_getQuizzes = "com.uga.qrallye.action.getQuizzes";
+    public static final String ACTION_getFinishedQuizzes = "com.uga.qrallye.action.getFinishedQuizzes";
+    public static final String ACTION_getProgressList = "com.uga.qrallye.action.getProgressList";
+    public static final String ACTION_getAnswersList = "com.uga.qrallye.action.getAnswersList";
     private static final String TAG = "DBInteractionsService";
     private ServiceCallbacks callbacks;
     private final IBinder mBinder = new LocalBinder();

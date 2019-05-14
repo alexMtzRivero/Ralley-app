@@ -1,7 +1,6 @@
-package com.example.qrallye;
+package com.uga.qrallye;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,10 +16,7 @@ import android.widget.Chronometer;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.example.qrallye.databinding.ResponseListItemBinding;
-
 import java.util.ArrayList;
-import java.util.List;
 
 
 /**

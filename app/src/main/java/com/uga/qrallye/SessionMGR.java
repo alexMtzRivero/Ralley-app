@@ -1,4 +1,4 @@
-package com.example.qrallye;
+package com.uga.qrallye;
 
 import android.content.SharedPreferences;
 import android.util.Log;

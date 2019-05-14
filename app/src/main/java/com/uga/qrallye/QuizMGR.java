@@ -1,7 +1,7 @@
-package com.example.qrallye;
+package com.uga.qrallye;
 
-import android.provider.ContactsContract;
 import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
