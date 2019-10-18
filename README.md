@@ -17,8 +17,10 @@ It has a crash recovery system that will, even when the application and all its 
 
 
  ## Visuals
-<img src="/docImgs/menu.png" alt="menu" width="200"/>
-<img src="/docImgs/qr.png" alt="qr" width="200"/>
+<div>
+<img src="/docImgs/menu.png" alt="menu" style="margin: 20px;" width="200"/>
+<img src="/docImgs/QR.png" alt="qr" width="200"/>
 <img src="/docImgs/map.png" alt="map" width="200"/>
 <img src="/docImgs/teams.png" alt="teams" width="200"/>
 <img src="/docImgs/progress.png" alt="progress" width="200"/>
+</div>
